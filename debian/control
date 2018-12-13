@@ -1,0 +1,30 @@
+Source: yoctolib-php
+Section: non-free/php
+Priority: extra
+Maintainer: Gabriel Roch <gabriel@g-roch.ch>
+Build-Depends:
+ debhelper (>= 10)
+Standards-Version: 3.9.8
+Homepage: https://www.yoctopuce.com/
+Vcs-Git: http://sodium.roch.website/git/pako/yoctolib_php.git/
+Vcs-Browser: http://sodium.roch.website/git/pako/yoctolib_php.git/
+
+Package: libphp-yocto
+Architecture: all
+Depends: ${misc:Depends}
+Description: PHP libraries for access to USB Yoctopuce devices
+ Yoctopuce designs, manufactures and sells USB devices for automatic system 
+ builders.
+ .
+ PHP libraries for access to USB Yoctopuce devices
+ 
+Package: libphp-yocto-doc
+Section: non-free/doc
+Architecture: all
+Depends: ${misc:Depends}
+Description: documentation for yoctolib-php
+ Yoctopuce designs, manufactures and sells USB devices for automatic system 
+ builders.
+ .
+ Documentation and example for yoctolib-php
+
