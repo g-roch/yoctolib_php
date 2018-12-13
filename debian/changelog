@@ -1,3 +1,15 @@
+yoctolib-php (1.10.33636-3) unstable; urgency=medium
+
+  *  Remove main package depends on doc package
+
+ -- Gabriel Roch <gabriel@g-roch.ch>  Thu, 13 Dec 2018 19:38:05 +0100
+
+yoctolib-php (1.10.33636-2) unstable; urgency=medium
+
+  * Update depends and suggests
+
+ -- Gabriel Roch <gabriel@g-roch.ch>  Thu, 13 Dec 2018 19:29:23 +0100
+
 yoctolib-php (1.10.33636-1) unstable; urgency=medium
 
   * Initial release

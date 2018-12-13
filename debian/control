@@ -11,7 +11,8 @@ Vcs-Browser: http://sodium.roch.website/git/pako/yoctolib_php.git/
 
 Package: libphp-yocto
 Architecture: all
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, php-common
+Suggests: libphp-yocto-doc
 Description: PHP libraries for access to USB Yoctopuce devices
  Yoctopuce designs, manufactures and sells USB devices for automatic system 
  builders.
