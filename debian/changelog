@@ -1,3 +1,9 @@
+yoctolib-php (1.10.33636-4) unstable; urgency=medium
+
+  * Change include path in all examples
+
+ -- Gabriel Roch <gabriel@g-roch.ch>  Thu, 13 Dec 2018 20:01:46 +0100
+
 yoctolib-php (1.10.33636-3) unstable; urgency=medium
 
   *  Remove main package depends on doc package

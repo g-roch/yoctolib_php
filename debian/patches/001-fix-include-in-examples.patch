@@ -1,0 +1,10 @@
+Change include line of yoctopuce lib file in all examples
+--- /dev/null
++++ b/Makefile
+@@ -0,0 +1,6 @@
++
++
++all:
++	sed -i "s/\.\.\/\.\.\/Sources\//yocto\//" Examples/*/*.php
++clean:
++	sed -i "s/yocto\//\.\.\/\.\.\/Sources\//" Examples/*/*.php
