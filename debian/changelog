@@ -1,3 +1,9 @@
+yoctolib-php (1.10.33636-5) unstable; urgency=medium
+
+  * Add suggests package (yocto-virtualhub)
+
+ -- Gabriel Roch <gabriel@g-roch.ch>  Fri, 14 Dec 2018 18:23:29 +0100
+
 yoctolib-php (1.10.33636-4) unstable; urgency=medium
 
   * Change include path in all examples
