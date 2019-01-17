@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_watchdog.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_watchdog.php 33716 2018-12-14 14:21:46Z seb $
  *
  *  Implements YWatchdog, the high-level API for Watchdog functions
  *
@@ -72,11 +72,11 @@ if(!defined('Y_TRIGGERDURATION_INVALID'))    define('Y_TRIGGERDURATION_INVALID',
 /**
  * YWatchdog Class: Watchdog function interface
  *
- * The watchog function works like a relay and can cause a brief power cut
+ * The watchdog function works like a relay and can cause a brief power cut
  * to an appliance after a preset delay to force this appliance to
  * reset. The Watchdog must be called from time to time to reset the
  * timer and prevent the appliance reset.
- * The watchdog can be driven direcly with <i>pulse</i> and <i>delayedpulse</i> methods to switch
+ * The watchdog can be driven directly with <i>pulse</i> and <i>delayedpulse</i> methods to switch
  * off an appliance for a given duration.
  */
 class YWatchdog extends YFunction
@@ -390,7 +390,7 @@ class YWatchdog extends YFunction
      * Sets the relay to output B (active) for a specified duration, then brings it
      * automatically back to output A (idle state).
      *
-     * @param integer $ms_duration : pulse duration, in millisecondes
+     * @param integer $ms_duration : pulse duration, in milliseconds
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.
      *
@@ -423,8 +423,8 @@ class YWatchdog extends YFunction
     /**
      * Schedules a pulse.
      *
-     * @param integer $ms_delay : waiting time before the pulse, in millisecondes
-     * @param integer $ms_duration : pulse duration, in millisecondes
+     * @param integer $ms_delay : waiting time before the pulse, in milliseconds
+     * @param integer $ms_duration : pulse duration, in milliseconds
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.
      *
@@ -459,9 +459,9 @@ class YWatchdog extends YFunction
     }
 
     /**
-     * Returns the watchdog runing state at module power on.
+     * Returns the watchdog running state at module power on.
      *
-     * @return integer : either Y_AUTOSTART_OFF or Y_AUTOSTART_ON, according to the watchdog runing state
+     * @return integer : either Y_AUTOSTART_OFF or Y_AUTOSTART_ON, according to the watchdog running state
      * at module power on
      *
      * On failure, throws an exception or returns Y_AUTOSTART_INVALID.
@@ -479,11 +479,11 @@ class YWatchdog extends YFunction
     }
 
     /**
-     * Changes the watchdog runningsttae at module power on. Remember to call the
+     * Changes the watchdog running state at module power on. Remember to call the
      * saveToFlash() method and then to reboot the module to apply this setting.
      *
      * @param integer $newval : either Y_AUTOSTART_OFF or Y_AUTOSTART_ON, according to the watchdog
-     * runningsttae at module power on
+     * running state at module power on
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.
      *
@@ -531,7 +531,7 @@ class YWatchdog extends YFunction
 
     /**
      * Resets the watchdog. When the watchdog is running, this function
-     * must be called on a regular basis to prevent the watchog to
+     * must be called on a regular basis to prevent the watchdog to
      * trigger
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.

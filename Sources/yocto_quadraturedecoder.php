@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_quadraturedecoder.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_quadraturedecoder.php 33716 2018-12-14 14:21:46Z seb $
  *
  *  Implements YQuadratureDecoder, the high-level API for QuadratureDecoder functions
  *
@@ -96,7 +96,7 @@ class YQuadratureDecoder extends YSensor
 
     /**
      * Changes the current expected position of the quadrature decoder.
-     * Invoking this function implicitely activates the quadrature decoder.
+     * Invoking this function implicitly activates the quadrature decoder.
      *
      * @param double $newval : a floating point number corresponding to the current expected position of
      * the quadrature decoder

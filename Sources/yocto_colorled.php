@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_colorled.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_colorled.php 33716 2018-12-14 14:21:46Z seb $
  *
  *  Implements YColorLed, the high-level API for ColorLed functions
  *
@@ -431,7 +431,7 @@ class YColorLed extends YFunction
      * Add a new transition to the blinking sequence, the move will
      * be performed in the HSL space.
      *
-     * @param integer $HSLcolor : desired HSL color when the traisntion is completed
+     * @param integer $HSLcolor : desired HSL color when the transition is completed
      * @param integer $msDelay : duration of the color transition, in milliseconds.
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.

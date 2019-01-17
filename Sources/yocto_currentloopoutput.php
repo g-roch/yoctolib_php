@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_currentloopoutput.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_currentloopoutput.php 33716 2018-12-14 14:21:46Z seb $
  *
  *  Implements YCurrentLoopOutput, the high-level API for CurrentLoopOutput functions
  *
@@ -109,7 +109,7 @@ class YCurrentLoopOutput extends YFunction
 
     /**
      * Changes the current loop, the valid range is from 3 to 21mA. If the loop is
-     * not propely powered, the  target current is not reached and
+     * not properly powered, the  target current is not reached and
      * loopPower is set to LOWPWR.
      *
      * @param double $newval : a floating point number corresponding to the current loop, the valid range
@@ -258,7 +258,7 @@ class YCurrentLoopOutput extends YFunction
     }
 
     /**
-     * Performs a smooth transistion of current flowing in the loop. Any current explicit
+     * Performs a smooth transition of current flowing in the loop. Any current explicit
      * change cancels any ongoing transition process.
      *
      * @param mA_target   : new current value at the end of the transition

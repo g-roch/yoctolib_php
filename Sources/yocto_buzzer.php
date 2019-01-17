@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_buzzer.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_buzzer.php 33716 2018-12-14 14:21:46Z seb $
  *
  *  Implements YBuzzer, the high-level API for Buzzer functions
  *
@@ -570,7 +570,7 @@ class YBuzzer extends YFunction
      * Activates the buzzer for a short duration.
      *
      * @param integer $frequency : pulse frequency, in hertz
-     * @param integer $duration : pulse duration in millseconds
+     * @param integer $duration : pulse duration in milliseconds
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.
      *
@@ -585,7 +585,7 @@ class YBuzzer extends YFunction
      * Makes the buzzer frequency change over a period of time.
      *
      * @param integer $frequency : frequency to reach, in hertz. A frequency under 25Hz stops the buzzer.
-     * @param integer $duration :  pulse duration in millseconds
+     * @param integer $duration :  pulse duration in milliseconds
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.
      *
@@ -600,7 +600,7 @@ class YBuzzer extends YFunction
      * Makes the buzzer volume change over a period of time, frequency  stays untouched.
      *
      * @param integer $volume : volume to reach in %
-     * @param integer $duration : change duration in millseconds
+     * @param integer $duration : change duration in milliseconds
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.
      *

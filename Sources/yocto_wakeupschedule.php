@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_wakeupschedule.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_wakeupschedule.php 33716 2018-12-14 14:21:46Z seb $
  *
  *  Implements YWakeUpSchedule, the high-level API for WakeUpSchedule functions
  *
@@ -157,9 +157,9 @@ class YWakeUpSchedule extends YFunction
     }
 
     /**
-     * Returns the minutes in the 30-59 intervalof each hour scheduled for wake up.
+     * Returns the minutes in the 30-59 interval of each hour scheduled for wake up.
      *
-     * @return integer : an integer corresponding to the minutes in the 30-59 intervalof each hour
+     * @return integer : an integer corresponding to the minutes in the 30-59 interval of each hour
      * scheduled for wake up
      *
      * On failure, throws an exception or returns Y_MINUTESB_INVALID.
@@ -329,9 +329,9 @@ class YWakeUpSchedule extends YFunction
     }
 
     /**
-     * Returns the date/time (seconds) of the next wake up occurence.
+     * Returns the date/time (seconds) of the next wake up occurrence.
      *
-     * @return integer : an integer corresponding to the date/time (seconds) of the next wake up occurence
+     * @return integer : an integer corresponding to the date/time (seconds) of the next wake up occurrence
      *
      * On failure, throws an exception or returns Y_NEXTOCCURENCE_INVALID.
      */

@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_voltageoutput.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_voltageoutput.php 33716 2018-12-14 14:21:46Z seb $
  *
  *  Implements YVoltageOutput, the high-level API for VoltageOutput functions
  *
@@ -220,7 +220,7 @@ class YVoltageOutput extends YFunction
     }
 
     /**
-     * Performs a smooth transistion of output voltage. Any explicit voltage
+     * Performs a smooth transition of output voltage. Any explicit voltage
      * change cancels any ongoing transition process.
      *
      * @param V_target   : new output voltage value at the end of the transition

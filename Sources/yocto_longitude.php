@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_longitude.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_longitude.php 33716 2018-12-14 14:21:46Z seb $
  *
  *  Implements YLongitude, the high-level API for Longitude functions
  *
@@ -50,7 +50,7 @@
  * YLongitude Class: Longitude function interface
  *
  * The Yoctopuce class YLongitude allows you to read the longitude from Yoctopuce
- * geolocalization sensors. It inherits from the YSensor class the core functions to
+ * geolocation sensors. It inherits from the YSensor class the core functions to
  * read measurements, register callback functions, access the autonomous
  * datalogger.
  */

@@ -1,3 +1,9 @@
+yoctolib-php (1.10.33736-1) unstable; urgency=medium
+
+  * Update from upstream
+
+ -- Gabriel Roch <gabriel@g-roch.ch>  Thu, 17 Jan 2019 12:40:22 +0100
+
 yoctolib-php (1.10.33636-5) unstable; urgency=medium
 
   * Add suggests package (yocto-virtualhub)

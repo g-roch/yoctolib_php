@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- * $Id: yocto_files.php 32907 2018-11-02 10:18:55Z seb $
+ * $Id: yocto_files.php 33716 2018-12-14 14:21:46Z seb $
  *
  * Implements yFindFiles(), the high-level API for Files functions
  *
@@ -253,7 +253,7 @@ class YFiles extends YFunction
      * in the filesystem.
      *
      * @param string $pattern : an optional filter pattern, using star and question marks
-     *         as wildcards. When an empty pattern is provided, all file records
+     *         as wild cards. When an empty pattern is provided, all file records
      *         are returned.
      *
      * @return YFileRecord[] : a list of YFileRecord objects, containing the file path
@@ -280,7 +280,7 @@ class YFiles extends YFunction
      *
      * @param string $filename : the file name to test.
      *
-     * @return boolean : a true if the file existe, false ortherwise.
+     * @return boolean : a true if the file exist, false otherwise.
      *
      * On failure, throws an exception.
      */

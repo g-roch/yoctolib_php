@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_temperature.php 33082 2018-11-08 18:08:16Z seb $
+ *  $Id: yocto_temperature.php 33716 2018-12-14 14:21:46Z seb $
  *
  *  Implements YTemperature, the high-level API for Temperature functions
  *
@@ -338,7 +338,7 @@ class YTemperature extends YSensor
      * sensor based on thermistors.
      *
      * @param double[] $tempValues : array of floating point numbers, corresponding to all
-     *         temperatures (in degrees Celcius) for which the resistance of the
+     *         temperatures (in degrees Celsius) for which the resistance of the
      *         thermistor is specified.
      * @param double[] $resValues : array of floating point numbers, corresponding to the resistance
      *         values (in Ohms) for each of the temperature included in the first
@@ -396,7 +396,7 @@ class YTemperature extends YSensor
      * temperature sensor based on thermistors.
      *
      * @param double[] $tempValues : array of floating point numbers, that is filled by the function
-     *         with all temperatures (in degrees Celcius) for which the resistance
+     *         with all temperatures (in degrees Celsius) for which the resistance
      *         of the thermistor is specified.
      * @param double[] $resValues : array of floating point numbers, that is filled by the function
      *         with the value (in Ohms) for each of the temperature included in the

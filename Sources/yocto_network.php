@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_network.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_network.php 33716 2018-12-14 14:21:46Z seb $
  *
  *  Implements YNetwork, the high-level API for Network functions
  *
@@ -628,7 +628,7 @@ class YNetwork extends YFunction
 
     /**
      * Changes the default HTML page returned by the hub. If not value are set the hub return
-     * "index.html" which is the web interface of the hub. It is possible de change this page
+     * "index.html" which is the web interface of the hub. It is possible to change this page
      * for file that has been uploaded on the hub.
      *
      * @param integer $newval : an integer corresponding to the default HTML page returned by the hub
@@ -664,7 +664,7 @@ class YNetwork extends YFunction
 
     /**
      * Changes the default HTML page returned by the hub. If not value are set the hub return
-     * "index.html" which is the web interface of the hub. It is possible de change this page
+     * "index.html" which is the web interface of the hub. It is possible to change this page
      * for file that has been uploaded on the hub.
      *
      * @param string $newval : a string corresponding to the default HTML page returned by the hub
@@ -1080,12 +1080,12 @@ class YNetwork extends YFunction
     }
 
     /**
-     * Returns the current consumed by the module from Power-over-Ethernet (PoE), in milli-amps.
+     * Returns the current consumed by the module from Power-over-Ethernet (PoE), in milliamps.
      * The current consumption is measured after converting PoE source to 5 Volt, and should
      * never exceed 1800 mA.
      *
      * @return integer : an integer corresponding to the current consumed by the module from
-     * Power-over-Ethernet (PoE), in milli-amps
+     * Power-over-Ethernet (PoE), in milliamps
      *
      * On failure, throws an exception or returns Y_POECURRENT_INVALID.
      */
@@ -1147,7 +1147,7 @@ class YNetwork extends YFunction
      *
      * @param string $fallbackIpAddr : fallback IP address, to be used when no DHCP reply is received
      * @param integer $fallbackSubnetMaskLen : fallback subnet mask length when no DHCP reply is received, as an
-     *         integer (eg. 24 means 255.255.255.0)
+     *         integer (e.g. 24 means 255.255.255.0)
      * @param string $fallbackRouter : fallback router IP address, to be used when no DHCP reply is received
      *
      * @return integer : YAPI_SUCCESS when the call succeeds.
@@ -1179,7 +1179,7 @@ class YNetwork extends YFunction
      * Remember to call the saveToFlash() method and then to reboot the module to apply this setting.
      *
      * @param string $ipAddress : device IP address
-     * @param integer $subnetMaskLen : subnet mask length, as an integer (eg. 24 means 255.255.255.0)
+     * @param integer $subnetMaskLen : subnet mask length, as an integer (e.g. 24 means 255.255.255.0)
      * @param string $router : router IP address (default gateway)
      *
      * @return integer : YAPI_SUCCESS when the call succeeds.
@@ -1224,7 +1224,7 @@ class YNetwork extends YFunction
     }
 
     /**
-     * Setup periodic HTTP callbacks (simplifed function).
+     * Setup periodic HTTP callbacks (simplified function).
      *
      * @param string $interval : a string representing the callback periodicity, expressed in
      *         seconds, minutes or hours, eg. "60s", "5m", "1h", "48h".

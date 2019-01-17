@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_spiport.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_spiport.php 33722 2018-12-14 15:04:43Z seb $
  *
  *  Implements YSpiPort, the high-level API for SpiPort functions
  *
@@ -52,9 +52,9 @@ if(!defined('Y_VOLTAGELEVEL_INVALID'))       define('Y_VOLTAGELEVEL_INVALID',   
 if(!defined('Y_SSPOLARITY_ACTIVE_LOW'))      define('Y_SSPOLARITY_ACTIVE_LOW',     0);
 if(!defined('Y_SSPOLARITY_ACTIVE_HIGH'))     define('Y_SSPOLARITY_ACTIVE_HIGH',    1);
 if(!defined('Y_SSPOLARITY_INVALID'))         define('Y_SSPOLARITY_INVALID',        -1);
-if(!defined('Y_SHITFTSAMPLING_OFF'))         define('Y_SHITFTSAMPLING_OFF',        0);
-if(!defined('Y_SHITFTSAMPLING_ON'))          define('Y_SHITFTSAMPLING_ON',         1);
-if(!defined('Y_SHITFTSAMPLING_INVALID'))     define('Y_SHITFTSAMPLING_INVALID',    -1);
+if(!defined('Y_SHIFTSAMPLING_OFF'))          define('Y_SHIFTSAMPLING_OFF',         0);
+if(!defined('Y_SHIFTSAMPLING_ON'))           define('Y_SHIFTSAMPLING_ON',          1);
+if(!defined('Y_SHIFTSAMPLING_INVALID'))      define('Y_SHIFTSAMPLING_INVALID',     -1);
 if(!defined('Y_RXCOUNT_INVALID'))            define('Y_RXCOUNT_INVALID',           YAPI_INVALID_UINT);
 if(!defined('Y_TXCOUNT_INVALID'))            define('Y_TXCOUNT_INVALID',           YAPI_INVALID_UINT);
 if(!defined('Y_ERRCOUNT_INVALID'))           define('Y_ERRCOUNT_INVALID',          YAPI_INVALID_UINT);
@@ -104,9 +104,9 @@ class YSpiPort extends YFunction
     const SSPOLARITY_ACTIVE_LOW          = 0;
     const SSPOLARITY_ACTIVE_HIGH         = 1;
     const SSPOLARITY_INVALID             = -1;
-    const SHITFTSAMPLING_OFF             = 0;
-    const SHITFTSAMPLING_ON              = 1;
-    const SHITFTSAMPLING_INVALID         = -1;
+    const SHIFTSAMPLING_OFF              = 0;
+    const SHIFTSAMPLING_ON               = 1;
+    const SHIFTSAMPLING_INVALID          = -1;
     //--- (end of YSpiPort declaration)
 
     //--- (YSpiPort attributes)
@@ -123,7 +123,7 @@ class YSpiPort extends YFunction
     protected $_protocol                 = Y_PROTOCOL_INVALID;           // Protocol
     protected $_spiMode                  = Y_SPIMODE_INVALID;            // SpiMode
     protected $_ssPolarity               = Y_SSPOLARITY_INVALID;         // Polarity
-    protected $_shitftSampling           = Y_SHITFTSAMPLING_INVALID;     // OnOff
+    protected $_shiftSampling            = Y_SHIFTSAMPLING_INVALID;      // OnOff
     protected $_rxptr                    = 0;                            // int
     protected $_rxbuff                   = "";                           // bin
     protected $_rxbuffptr                = 0;                            // int
@@ -182,8 +182,8 @@ class YSpiPort extends YFunction
         case 'ssPolarity':
             $this->_ssPolarity = intval($val);
             return 1;
-        case 'shitftSampling':
-            $this->_shitftSampling = intval($val);
+        case 'shiftSampling':
+            $this->_shiftSampling = intval($val);
             return 1;
         }
         return parent::_parseAttr($name, $val);
@@ -557,20 +557,20 @@ class YSpiPort extends YFunction
     /**
      * Returns true when the SDI line phase is shifted with regards to the SDO line.
      *
-     * @return integer : either Y_SHITFTSAMPLING_OFF or Y_SHITFTSAMPLING_ON, according to true when the
-     * SDI line phase is shifted with regards to the SDO line
+     * @return integer : either Y_SHIFTSAMPLING_OFF or Y_SHIFTSAMPLING_ON, according to true when the SDI
+     * line phase is shifted with regards to the SDO line
      *
-     * On failure, throws an exception or returns Y_SHITFTSAMPLING_INVALID.
+     * On failure, throws an exception or returns Y_SHIFTSAMPLING_INVALID.
      */
-    public function get_shitftSampling()
+    public function get_shiftSampling()
     {
         // $res                    is a enumONOFF;
         if ($this->_cacheExpiration <= YAPI::GetTickCount()) {
             if ($this->load(YAPI::$_yapiContext->GetCacheValidity()) != YAPI_SUCCESS) {
-                return Y_SHITFTSAMPLING_INVALID;
+                return Y_SHIFTSAMPLING_INVALID;
             }
         }
-        $res = $this->_shitftSampling;
+        $res = $this->_shiftSampling;
         return $res;
     }
 
@@ -579,17 +579,17 @@ class YSpiPort extends YFunction
      * sampled in the middle of data output time. When enabled, SDI line is
      * samples at the end of data output time.
      *
-     * @param integer $newval : either Y_SHITFTSAMPLING_OFF or Y_SHITFTSAMPLING_ON, according to the SDI
+     * @param integer $newval : either Y_SHIFTSAMPLING_OFF or Y_SHIFTSAMPLING_ON, according to the SDI
      * line sampling shift
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    public function set_shitftSampling($newval)
+    public function set_shiftSampling($newval)
     {
         $rest_val = strval($newval);
-        return $this->_setAttr("shitftSampling",$rest_val);
+        return $this->_setAttr("shiftSampling",$rest_val);
     }
 
     /**
@@ -1329,11 +1329,11 @@ class YSpiPort extends YFunction
     public function setSsPolarity($newval)
     { return $this->set_ssPolarity($newval); }
 
-    public function shitftSampling()
-    { return $this->get_shitftSampling(); }
+    public function shiftSampling()
+    { return $this->get_shiftSampling(); }
 
-    public function setShitftSampling($newval)
-    { return $this->set_shitftSampling($newval); }
+    public function setShiftSampling($newval)
+    { return $this->set_shiftSampling($newval); }
 
     /**
      * Continues the enumeration of SPI ports started using yFirstSpiPort().

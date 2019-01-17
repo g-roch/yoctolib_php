@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_relay.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_relay.php 33716 2018-12-14 14:21:46Z seb $
  *
  *  Implements YRelay, the high-level API for Relay functions
  *
@@ -359,7 +359,7 @@ class YRelay extends YFunction
      * Sets the relay to output B (active) for a specified duration, then brings it
      * automatically back to output A (idle state).
      *
-     * @param integer $ms_duration : pulse duration, in millisecondes
+     * @param integer $ms_duration : pulse duration, in milliseconds
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.
      *
@@ -392,8 +392,8 @@ class YRelay extends YFunction
     /**
      * Schedules a pulse.
      *
-     * @param integer $ms_delay : waiting time before the pulse, in millisecondes
-     * @param integer $ms_duration : pulse duration, in millisecondes
+     * @param integer $ms_delay : waiting time before the pulse, in milliseconds
+     * @param integer $ms_duration : pulse duration, in milliseconds
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.
      *

@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_pwmoutput.php 33313 2018-11-22 16:11:56Z seb $
+ *  $Id: yocto_pwmoutput.php 33716 2018-12-14 14:21:46Z seb $
  *
  *  Implements YPwmOutput, the high-level API for PwmOutput functions
  *
@@ -442,7 +442,7 @@ class YPwmOutput extends YFunction
     }
 
     /**
-     * Performs a smooth transistion of the pulse duration toward a given value.
+     * Performs a smooth transition of the pulse duration toward a given value.
      * Any period, frequency, duty cycle or pulse width change will cancel any ongoing transition process.
      *
      * @param ms_target   : new pulse duration at the end of the transition
@@ -492,7 +492,7 @@ class YPwmOutput extends YFunction
      * Performs a smooth frequency change toward a given value.
      * Any period, frequency, duty cycle or pulse width change will cancel any ongoing transition process.
      *
-     * @param target      : new freuency at the end of the transition (floating-point number)
+     * @param target      : new frequency at the end of the transition (floating-point number)
      * @param integer $ms_duration : total duration of the transition, in milliseconds
      *
      * @return integer : YAPI_SUCCESS when the call succeeds.

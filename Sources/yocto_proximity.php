@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_proximity.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_proximity.php 33716 2018-12-14 14:21:46Z seb $
  *
  *  Implements YProximity, the high-level API for Proximity functions
  *
@@ -257,10 +257,10 @@ class YProximity extends YSensor
     }
 
     /**
-     * Returns the minimal detection duration before signaling a presence event. Any shorter detection is
+     * Returns the minimal detection duration before signalling a presence event. Any shorter detection is
      * considered as noise or bounce (false positive) and filtered out.
      *
-     * @return integer : an integer corresponding to the minimal detection duration before signaling a presence event
+     * @return integer : an integer corresponding to the minimal detection duration before signalling a presence event
      *
      * On failure, throws an exception or returns Y_PRESENCEMINTIME_INVALID.
      */
@@ -277,11 +277,11 @@ class YProximity extends YSensor
     }
 
     /**
-     * Changes the minimal detection duration before signaling a presence event. Any shorter detection is
+     * Changes the minimal detection duration before signalling a presence event. Any shorter detection is
      * considered as noise or bounce (false positive) and filtered out.
      *
      * @param integer $newval : an integer corresponding to the minimal detection duration before
-     * signaling a presence event
+     * signalling a presence event
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.
      *
@@ -294,10 +294,10 @@ class YProximity extends YSensor
     }
 
     /**
-     * Returns the minimal detection duration before signaling a removal event. Any shorter detection is
+     * Returns the minimal detection duration before signalling a removal event. Any shorter detection is
      * considered as noise or bounce (false positive) and filtered out.
      *
-     * @return integer : an integer corresponding to the minimal detection duration before signaling a removal event
+     * @return integer : an integer corresponding to the minimal detection duration before signalling a removal event
      *
      * On failure, throws an exception or returns Y_REMOVALMINTIME_INVALID.
      */
@@ -314,11 +314,11 @@ class YProximity extends YSensor
     }
 
     /**
-     * Changes the minimal detection duration before signaling a removal event. Any shorter detection is
+     * Changes the minimal detection duration before signalling a removal event. Any shorter detection is
      * considered as noise or bounce (false positive) and filtered out.
      *
      * @param integer $newval : an integer corresponding to the minimal detection duration before
-     * signaling a removal event
+     * signalling a removal event
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.
      *

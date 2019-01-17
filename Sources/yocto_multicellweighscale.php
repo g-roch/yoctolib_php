@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_multicellweighscale.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_multicellweighscale.php 33716 2018-12-14 14:21:46Z seb $
  *
  *  Implements YMultiCellWeighScale, the high-level API for MultiCellWeighScale functions
  *
@@ -231,7 +231,7 @@ class YMultiCellWeighScale extends YSensor
      * Changes the averaged temperature update rate, in per mille.
      * The purpose of this adaptation ratio is to model the thermal inertia of the load cell.
      * The averaged temperature is updated every 10 seconds, by applying this adaptation rate
-     * to the difference between the measures ambiant temperature and the current compensation
+     * to the difference between the measures ambient temperature and the current compensation
      * temperature. The standard rate is 0.2 per mille, and the maximal rate is 65 per mille.
      *
      * @param double $newval : a floating point number corresponding to the averaged temperature update
@@ -251,7 +251,7 @@ class YMultiCellWeighScale extends YSensor
      * Returns the averaged temperature update rate, in per mille.
      * The purpose of this adaptation ratio is to model the thermal inertia of the load cell.
      * The averaged temperature is updated every 10 seconds, by applying this adaptation rate
-     * to the difference between the measures ambiant temperature and the current compensation
+     * to the difference between the measures ambient temperature and the current compensation
      * temperature. The standard rate is 0.2 per mille, and the maximal rate is 65 per mille.
      *
      * @return double : a floating point number corresponding to the averaged temperature update rate, in per mille
@@ -273,7 +273,7 @@ class YMultiCellWeighScale extends YSensor
     /**
      * Changes the temperature change update rate, in per mille.
      * The temperature change is updated every 10 seconds, by applying this adaptation rate
-     * to the difference between the measures ambiant temperature and the current temperature used for
+     * to the difference between the measures ambient temperature and the current temperature used for
      * change compensation. The standard rate is 0.6 per mille, and the maximal rate is 65 pour mille.
      *
      * @param double $newval : a floating point number corresponding to the temperature change update
@@ -292,7 +292,7 @@ class YMultiCellWeighScale extends YSensor
     /**
      * Returns the temperature change update rate, in per mille.
      * The temperature change is updated every 10 seconds, by applying this adaptation rate
-     * to the difference between the measures ambiant temperature and the current temperature used for
+     * to the difference between the measures ambient temperature and the current temperature used for
      * change compensation. The standard rate is 0.6 per mille, and the maximal rate is 65 pour mille.
      *
      * @return double : a floating point number corresponding to the temperature change update rate, in per mille
@@ -483,7 +483,7 @@ class YMultiCellWeighScale extends YSensor
      * so that the current signal corresponds to the specified reference weight.
      *
      * @param double $currWeight : reference weight presently on the load cell.
-     * @param double $maxWeight : maximum weight to be expectect on the load cell.
+     * @param double $maxWeight : maximum weight to be expected on the load cell.
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.
      *
