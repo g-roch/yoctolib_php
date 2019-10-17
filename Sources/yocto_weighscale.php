@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_weighscale.php 33716 2018-12-14 14:21:46Z seb $
+ *  $Id: yocto_weighscale.php 37165 2019-09-13 16:57:27Z mvuilleu $
  *
  *  Implements YWeighScale, the high-level API for WeighScale functions
  *
@@ -173,6 +173,8 @@ class YWeighScale extends YSensor
 
     /**
      * Changes the current load cell bridge excitation method.
+     * Remember to call the saveToFlash() method of the module if the
+     * modification must be kept.
      *
      * @param integer $newval : a value among Y_EXCITATION_OFF, Y_EXCITATION_DC and Y_EXCITATION_AC
      * corresponding to the current load cell bridge excitation method
@@ -193,6 +195,8 @@ class YWeighScale extends YSensor
      * The averaged temperature is updated every 10 seconds, by applying this adaptation rate
      * to the difference between the measures ambient temperature and the current compensation
      * temperature. The standard rate is 0.2 per mille, and the maximal rate is 65 per mille.
+     * Remember to call the saveToFlash() method of the module if the
+     * modification must be kept.
      *
      * @param double $newval : a floating point number corresponding to the averaged temperature update
      * rate, in per mille
@@ -234,7 +238,9 @@ class YWeighScale extends YSensor
      * Changes the temperature change update rate, in per mille.
      * The temperature change is updated every 10 seconds, by applying this adaptation rate
      * to the difference between the measures ambient temperature and the current temperature used for
-     * change compensation. The standard rate is 0.6 per mille, and the maximal rate is 65 pour mille.
+     * change compensation. The standard rate is 0.6 per mille, and the maximal rate is 65 per mille.
+     * Remember to call the saveToFlash() method of the module if the
+     * modification must be kept.
      *
      * @param double $newval : a floating point number corresponding to the temperature change update
      * rate, in per mille
@@ -253,7 +259,7 @@ class YWeighScale extends YSensor
      * Returns the temperature change update rate, in per mille.
      * The temperature change is updated every 10 seconds, by applying this adaptation rate
      * to the difference between the measures ambient temperature and the current temperature used for
-     * change compensation. The standard rate is 0.6 per mille, and the maximal rate is 65 pour mille.
+     * change compensation. The standard rate is 0.6 per mille, and the maximal rate is 65 per mille.
      *
      * @return double : a floating point number corresponding to the temperature change update rate, in per mille
      *
@@ -334,6 +340,8 @@ class YWeighScale extends YSensor
      * Changes the zero tracking threshold value. When this threshold is larger than
      * zero, any measure under the threshold will automatically be ignored and the
      * zero compensation will be updated.
+     * Remember to call the saveToFlash() method of the module if the
+     * modification must be kept.
      *
      * @param double $newval : a floating point number corresponding to the zero tracking threshold value
      *

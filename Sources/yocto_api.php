@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- * $Id: yocto_api.php 33716 2018-12-14 14:21:46Z seb $
+ * $Id: yocto_api.php 37269 2019-09-24 13:45:24Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -71,8 +71,8 @@ if(!defined('Y_LOGICALNAME_INVALID'))        define('Y_LOGICALNAME_INVALID',    
 if(!defined('Y_ADVERTISEDVALUE_INVALID'))    define('Y_ADVERTISEDVALUE_INVALID',   YAPI_INVALID_STRING);
 //--- (end of generated code: YFunction definitions)
 define('YAPI_HASH_BUF_SIZE', 28);
-define('YAPI_MIN_DOUBLE',              -INF);
-define('YAPI_MAX_DOUBLE',              INF);
+define('YAPI_MIN_DOUBLE', -INF);
+define('YAPI_MAX_DOUBLE', INF);
 
 //--- (generated code: YMeasure definitions)
 //--- (end of generated code: YMeasure definitions)
@@ -87,6 +87,9 @@ if (!defined('Y_DURATION_INVALID')) define('Y_DURATION_INVALID', YAPI_INVALID_IN
 
 //--- (generated code: YDataSet definitions)
 //--- (end of generated code: YDataSet definitions)
+
+//--- (generated code: YConsolidatedDataSet definitions)
+//--- (end of generated code: YConsolidatedDataSet definitions)
 
 //--- (generated code: YSensor definitions)
 if(!defined('Y_ADVMODE_IMMEDIATE'))          define('Y_ADVMODE_IMMEDIATE',         0);
@@ -127,16 +130,16 @@ if(!defined('Y_USERVAR_INVALID'))            define('Y_USERVAR_INVALID',        
 //--- (end of generated code: YModule definitions)
 
 // yInitAPI constants (not really useful in PHP, but defined for code portability)
-define('Y_DETECT_NONE',                  0);
-define('Y_DETECT_USB',                   1);
-define('Y_DETECT_NET',                   2);
-define('Y_DETECT_ALL',                   Y_DETECT_USB | Y_DETECT_NET);
+define('Y_DETECT_NONE', 0);
+define('Y_DETECT_USB', 1);
+define('Y_DETECT_NET', 2);
+define('Y_DETECT_ALL', Y_DETECT_USB | Y_DETECT_NET);
 
 // Calibration types
-define('YOCTO_CALIB_TYPE_OFS',           30);
+define('YOCTO_CALIB_TYPE_OFS', 30);
 
 // Maximum device request timeout
-define('YAPI_BLOCKING_REQUEST_TIMEOUT',  30000);
+define('YAPI_BLOCKING_REQUEST_TIMEOUT', 20000);
 
 
 define('NOTIFY_NETPKT_NAME', '0');
@@ -173,8 +176,8 @@ define('PUBVAL_C_FLOAT', 8);   // 32-bit C float
 define('PUBVAL_YOCTO_FLOAT_E3', 9);   // 32-bit Yocto fixed-point format (e-3)
 define('PUBVAL_YOCTO_FLOAT_E6', 10);   // 32-bit Yocto fixed-point format (e-6)
 
-define('YOCTO_PUBVAL_LEN',   16);
-define('YOCTO_PUBVAL_SIZE',   6);
+define('YOCTO_PUBVAL_LEN', 16);
+define('YOCTO_PUBVAL_SIZE', 6);
 define('YOCTO_SERIAL_LEN', 20);
 define('YOCTO_BASE_SERIAL_LEN', 8);
 
@@ -182,17 +185,21 @@ define('YOCTO_BASE_SERIAL_LEN', 8);
 // Class used to report exceptions within Yocto-API
 // Do not instantiate directly
 //
-class YAPI_Exception extends Exception {}
+class YAPI_Exception extends Exception
+{
+}
 
 // Pseudo class used to create structures in PHP
-class YAggregate {}
+class YAggregate
+{
+}
 
 // numeric strpos helper
 
 function Ystrpos($haystack, $needle)
 {
     $res = strpos($haystack, $needle);
-    if($res === false) $res = -1;
+    if ($res === false) $res = -1;
     return $res;
 }
 
@@ -202,8 +209,8 @@ function Ystrpos($haystack, $needle)
 //
 class YAPI_YReq
 {
-    public $hwid = "";
-    public $deviceid = "";
+    public $hwid       = "";
+    public $deviceid   = "";
     public $functionid = "";
     public $errorType;
     public $errorMsg;
@@ -245,16 +252,16 @@ class YTcpHub
     public $isNotifWorking;            // boolean that is true when we receive ping notification
     public $devListExpires;             // timestamp of next useful updateDeviceList
     /** @var  YTcpReq */
-    public $devListReq;                 // updateDeviceList request, or null if not open
-    public $serialByYdx;                // serials by hub-specific devYdx
-    public $retryDelay;                 // delay before reconnecting in case of error
-    public $retryExpires;               // timestamp of next reconnection attempt
-    public $missing;                    // list of missing devices during updateDeviceList
-    public $writeProtected;             // true if an adminPassword is set
-    public $user;                       // user for authentication
-    public $callbackData;               // raw HTTP callback data received
-    public $callbackCache;              // pre-parsed cache for callback-based API
-    public $reuseskt;                   // keep-alive socket to be reused
+    public    $devListReq;                 // updateDeviceList request, or null if not open
+    public    $serialByYdx;                // serials by hub-specific devYdx
+    public    $retryDelay;                 // delay before reconnecting in case of error
+    public    $retryExpires;               // timestamp of next reconnection attempt
+    public    $missing;                    // list of missing devices during updateDeviceList
+    public    $writeProtected;             // true if an adminPassword is set
+    public    $user;                       // user for authentication
+    public    $callbackData;               // raw HTTP callback data received
+    public    $callbackCache;              // pre-parsed cache for callback-based API
+    public    $reuseskt;                   // keep-alive socket to be reused
     protected $realm;                   // hub authentication realm
     protected $pwd;                     // password for authentication
     protected $nonce;                   // lasPrint(t received nonce
@@ -267,12 +274,12 @@ class YTcpHub
         $this->rooturl = $rooturl;
         $this->streamaddr = str_replace('http://', 'tcp://', $rooturl);
         $colon = strpos($auth, ':');
-        if($colon === false) {
+        if ($colon === false) {
             $this->user = $auth;
             $this->pwd = '';
         } else {
             $this->user = substr($auth, 0, $colon);
-            $this->pwd = substr($auth, $colon+1);
+            $this->pwd = substr($auth, $colon + 1);
         }
         $this->notifurl = 'not.byn';
         $this->notifHandle = null;
@@ -298,7 +305,7 @@ class YTcpHub
             foreach ($ref as $key => $value) {
                 if (key_exists($key, $jzon)) {
                     $res[$key] = self::decodeJZON($jzon[$key], $value);
-                } else if (isset($jzon[$ofs])){
+                } else if (isset($jzon[$ofs])) {
                     $res[$key] = self::decodeJZON($jzon[$ofs], $value);
                 }
                 $ofs++;
@@ -307,6 +314,7 @@ class YTcpHub
         }
         return $jzon;
     }
+
     /**
      * @param array
      * @return mixed
@@ -317,9 +325,9 @@ class YTcpHub
         foreach ($ref as $key => $value) {
             if (is_array($value)) {
                 $res[$key] = self::cleanJsonRef($value);
-            } else if ($key =="serialNumber"){
-                $res[$key] = substr($value,0, YOCTO_BASE_SERIAL_LEN);
-            } else if ($key =="firmwareRelease") {
+            } else if ($key == "serialNumber") {
+                $res[$key] = substr($value, 0, YOCTO_BASE_SERIAL_LEN);
+            } else if ($key == "firmwareRelease") {
                 $res[$key] = $value;
             } else {
                 $res[$key] = "";
@@ -327,7 +335,6 @@ class YTcpHub
         }
         return $res;
     }
-
 
 
     function verfiyStreamAddr($fullTest = true, &$errmsg = '')
@@ -422,7 +429,7 @@ class YTcpHub
                                         $serial = substr($req, 10, $pos - 10);
                                     }
                                     $firm = substr($req, $fwpos + 4);
-                                    $base = substr($serial,0, YOCTO_BASE_SERIAL_LEN);
+                                    $base = substr($serial, 0, YOCTO_BASE_SERIAL_LEN);
                                     if (!is_file("{$jzonCacheDir}{$base}_{$firm}.json")) {
                                         $errmsg = "No JZON reference file for {$serial}/{$firm}";
                                         Print("\n!YoctoAPI:$errmsg\n");
@@ -445,13 +452,13 @@ class YTcpHub
                                     //Print("Use jzon data for{$serial}/{$firm}\n");
                                 } else {
                                     $serial = $value['module']['serialNumber'];
-                                    $base = substr($serial,0, YOCTO_BASE_SERIAL_LEN);
+                                    $base = substr($serial, 0, YOCTO_BASE_SERIAL_LEN);
                                     $firm = $value['module']['firmwareRelease'];
                                     $clean_struct = self::cleanJsonRef($value);
                                     file_put_contents("{$jzonCacheDir}{$base}_{$firm}.json", json_encode($clean_struct));
                                     $mergedCache[$req] = $value;
                                     Print("\n@YoctoAPI:#{$serial}/{$firm}\n");
-                                    $upToDate=false;
+                                    $upToDate = false;
                                 }
                             }
                         }
@@ -472,52 +479,52 @@ class YTcpHub
     function parseWWWAuthenticate($header)
     {
         $pos = stripos($header, "\r\nWWW-Authenticate:");
-        if($pos === false) return;
-        $header = substr($header, $pos+19);
+        if ($pos === false) return;
+        $header = substr($header, $pos + 19);
         $eol = strpos($header, "\r");
-        if($eol !== false) {
+        if ($eol !== false) {
             $header = substr($header, 0, $eol);
         }
         $tags = null;
-        if(preg_match_all('~(?<tag>\w+)="(?<value>[^"]*)"~m', $header, $tags) == false) {
+        if (preg_match_all('~(?<tag>\w+)="(?<value>[^"]*)"~m', $header, $tags) == false) {
             return;
         }
         $this->realm = '';
         $this->qop = '';
         $this->nonce = '';
         $this->opaque = '';
-        for($i = 0; $i < sizeof($tags['tag']); $i++) {
-            if($tags['tag'][$i] == "realm") {
+        for ($i = 0; $i < sizeof($tags['tag']); $i++) {
+            if ($tags['tag'][$i] == "realm") {
                 $this->realm = $tags['value'][$i];
-            } else if($tags['tag'][$i] == "qop") {
+            } else if ($tags['tag'][$i] == "qop") {
                 $this->qop = $tags['value'][$i];
-            } else if($tags['tag'][$i] == "nonce") {
+            } else if ($tags['tag'][$i] == "nonce") {
                 $this->nonce = $tags['value'][$i];
-            } else if($tags['tag'][$i] == "opaque") {
+            } else if ($tags['tag'][$i] == "opaque") {
                 $this->opaque = $tags['value'][$i];
             }
         }
         $this->nc = 0;
-        $this->ha1 = md5($this->user.':'.$this->realm.':'.$this->pwd);
+        $this->ha1 = md5($this->user . ':' . $this->realm . ':' . $this->pwd);
     }
 
     // Return an Authorization header for a given request
     function getAuthorization($request)
     {
-        if($this->user == '' || $this->realm == '') return '';
+        if ($this->user == '' || $this->realm == '') return '';
         $this->nc++;
         $pos = strpos($request, ' ');
         $method = substr($request, 0, $pos);
-        $uri = substr($request, $pos+1);
+        $uri = substr($request, $pos + 1);
         $nc = sprintf("%08x", $this->nc);
-        $cnonce = sprintf("%08x", mt_rand(0,0x7fffffff));
+        $cnonce = sprintf("%08x", mt_rand(0, 0x7fffffff));
         $ha1 = $this->ha1;
         $ha2 = md5("{$method}:{$uri}");
         $nonce = $this->nonce;
         $response = md5("{$ha1}:{$nonce}:{$nc}:{$cnonce}:auth:{$ha2}");
-        $res = 'Authorization: Digest username="'.$this->user.'", realm="'.$this->realm.'",'.
-               ' nonce="'.$this->nonce.'", uri="'.$uri.'", qop=auth, nc='.$nc.','.
-               ' cnonce="'.$cnonce.'", response="'.$response.'", opaque="'.$this->opaque.'"';
+        $res = 'Authorization: Digest username="' . $this->user . '", realm="' . $this->realm . '",' .
+            ' nonce="' . $this->nonce . '", uri="' . $uri . '", qop=auth, nc=' . $nc . ',' .
+            ' cnonce="' . $cnonce . '", response="' . $response . '", opaque="' . $this->opaque . '"';
         return "$res\r\n";
     }
 
@@ -531,44 +538,44 @@ class YTcpHub
     function cachedQuery($str_query, $str_body)
     {
         // apply POST remotely
-        if(substr($str_query, 0, 5) == 'POST ') {
+        if (substr($str_query, 0, 5) == 'POST ') {
             $boundary = '???';
             $endb = strpos($str_body, "\r");
-            if(substr($str_body, 0, 2)=='--' && $endb > 2 && $endb < 20) {
-                $boundary = substr($str_body, 2, $endb-2);
+            if (substr($str_body, 0, 2) == '--' && $endb > 2 && $endb < 20) {
+                $boundary = substr($str_body, 2, $endb - 2);
             }
             Printf("\n@YoctoAPI:$str_query %d:%s\n%s", strlen($str_body), $boundary, $str_body);
             return "OK\r\n\r\n";
         }
-        if(substr($str_query, 0, 4) != 'GET ')
+        if (substr($str_query, 0, 4) != 'GET ')
             return NULL;
         // remove JZON trigger if present (not relevant in callback mode)
         $jzon = strpos($str_query, '?fw=');
-        if($jzon !== FALSE && strpos($str_query, '&', $jzon) === FALSE) {
+        if ($jzon !== FALSE && strpos($str_query, '&', $jzon) === FALSE) {
             $str_query = substr($str_query, 0, $jzon);
         }
         // dispatch between cached get and remote set
-        if(strpos($str_query, '?') === FALSE ||
-           strpos($str_query, '/logs.txt') !== FALSE ||
-           strpos($str_query, '/logger.json') !== FALSE ||
-           strpos($str_query, '/ping.txt') !== FALSE ||
-           strpos($str_query, '/files.json?a=dir') !== FALSE) {
+        if (strpos($str_query, '?') === FALSE ||
+            strpos($str_query, '/logs.txt') !== FALSE ||
+            strpos($str_query, '/logger.json') !== FALSE ||
+            strpos($str_query, '/ping.txt') !== FALSE ||
+            strpos($str_query, '/files.json?a=dir') !== FALSE) {
             // read request, load from cache
-            $parts = explode(' ',$str_query);
+            $parts = explode(' ', $str_query);
             $url = $parts[1];
             $getmodule = (strpos($url, 'api/module.json') !== FALSE);
-            if($getmodule) {
-                $url = str_replace('api/module.json','api.json',$url);
+            if ($getmodule) {
+                $url = str_replace('api/module.json', 'api.json', $url);
             }
-            if(!isset($this->callbackCache[$url])) {
+            if (!isset($this->callbackCache[$url])) {
                 Print("\n!YoctoAPI:$url is not preloaded, adding to list");
                 Print("\n@YoctoAPI:+$url\n");
                 return NULL;
             }
             // Print("\n[$url found]\n");
             $jsonres = $this->callbackCache[$url];
-            if($getmodule) $jsonres = $jsonres['module'];
-            if(strpos($str_query, '.json') !== FALSE) {
+            if ($getmodule) $jsonres = $jsonres['module'];
+            if (strpos($str_query, '.json') !== FALSE) {
                 $jsonres = json_encode($jsonres);
             }
             return "OK\r\n\r\n$jsonres";
@@ -606,17 +613,17 @@ class YTcpReq
 
     public static $totalTcpReqs = 0;
 
-    function __construct($hub, $request, $async, $reqbody='', $mstimeout = YAPI_BLOCKING_REQUEST_TIMEOUT)
+    function __construct($hub, $request, $async, $reqbody = '', $mstimeout = YAPI_BLOCKING_REQUEST_TIMEOUT)
     {
         $pos = strpos($request, "\r");
-        if($pos !== false) {
+        if ($pos !== false) {
             $request = substr($request, 0, $pos);
         }
         $boundary = '';
-        if($reqbody != '') {
+        if ($reqbody != '') {
             do {
                 $boundary = sprintf("Zz%06xzZ", mt_rand(0, 0xffffff));
-            } while(strpos($reqbody, $boundary) !== false);
+            } while (strpos($reqbody, $boundary) !== false);
             $reqbody = "--{$boundary}\r\n{$reqbody}\r\n--{$boundary}--\r\n";
         }
         $this->hub = $hub;
@@ -635,15 +642,15 @@ class YTcpReq
 
     function eof()
     {
-        if(!is_null($this->skt)) {
+        if (!is_null($this->skt)) {
             // there is still activity going on
             return false;
         }
-        if($this->meta != '' && $this->errorType == YAPI_SUCCESS) {
+        if ($this->meta != '' && $this->errorType == YAPI_SUCCESS) {
             // connection was done and ended successfully
             return true;
         }
-        if($this->retryCount > 3) {
+        if ($this->retryCount > 3) {
             // connection permanently failed
             return true;
         }
@@ -657,7 +664,7 @@ class YTcpReq
         // for callbacks are not reliably available on a public server
         $addr = $this->hub->streamaddr;
         $pos = strpos($addr, '/', 9);
-        if($pos !== FALSE) {
+        if ($pos !== FALSE) {
             $addr = substr($addr, 0, $pos);
         }
         return @stream_socket_client($addr, $errno, $errstr, $mstimeout / 1000);
@@ -666,28 +673,28 @@ class YTcpReq
 
     function process(&$errmsg = '')
     {
-        if($this->eof()) {
-            if($this->errorType != YAPI_SUCCESS) {
+        if ($this->eof()) {
+            if ($this->errorType != YAPI_SUCCESS) {
                 $errmsg = $this->errorMsg;
             }
             return $this->errorType;
         }
-        if(!is_null($this->skt) && !is_resource($this->skt)) {
+        if (!is_null($this->skt) && !is_resource($this->skt)) {
             // connection died, need to reopen
             $this->skt = null;
         }
-        if(is_null($this->skt)) {
+        if (is_null($this->skt)) {
             // need to reopen connection
-            if($this->hub->isCachedHub()) {
+            if ($this->hub->isCachedHub()) {
                 // special handling for "connection-less" callback mode
                 $data = $this->hub->cachedQuery($this->request, $this->reqbody);
-                if(is_null($data)) {
+                if (is_null($data)) {
                     $this->errorType = YAPI_NOT_SUPPORTED;
                     $this->errorMsg = "query is not available in callback mode";
                     $this->retryCount = 99;
                     return YAPI_SUCCESS; // will propagate error later if needed
                 }
-                $skt = fopen('data:text/plain;base64,'.base64_encode($data), 'rb');
+                $skt = fopen('data:text/plain;base64,' . base64_encode($data), 'rb');
                 if ($skt === false) {
                     $this->errorType = YAPI_IO_ERROR;
                     $this->errorMsg = "failed to open data stream";
@@ -698,15 +705,15 @@ class YTcpReq
                 $this->skt = $skt;
             } else {
                 $skt = null;
-                if(!is_null($this->hub->reuseskt)) {
+                if (!is_null($this->hub->reuseskt)) {
                     $skt = $this->hub->reuseskt;
                     $this->hub->reuseskt = null;
-                    if(!is_resource($skt)) {
+                    if (!is_resource($skt)) {
                         // reusable socket is no more valid
                         $skt = null;
                     }
                 }
-                if(is_null($skt)) {
+                if (is_null($skt)) {
                     $errno = 0;
                     $errstr = '';
                     $skt = $this->newsocket($errno, $errstr, $this->mstimeout);
@@ -719,11 +726,11 @@ class YTcpReq
                 }
                 stream_set_blocking($skt, 0);
                 $request = $this->request . " \r\n" . // no HTTP/1.1 suffix for light queries
-                   $this->hub->getAuthorization($this->request);
-                if($this->boundary != '') {
+                    $this->hub->getAuthorization($this->request);
+                if ($this->boundary != '') {
                     $request .= "Content-Type: multipart/form-data; boundary={$this->boundary}\r\n";
                 }
-                if(substr($this->request,-2) == "&.") {
+                if (substr($this->request, -2) == "&.") {
                     $request .= "\r\n";
                 } else {
                     $request .= "Connection: close\r\n\r\n";
@@ -740,32 +747,32 @@ class YTcpReq
             }
         } else {
             // read anything available on current socket, and process authentication headers
-            while(true) {
+            while (true) {
                 $data = fread($this->skt, 8192);
-                if($data === false) {
+                if ($data === false) {
                     $this->errorType = YAPI_IO_ERROR;
                     $this->errorMsg = "failed to read from socket";
                     $this->retryCount++;
                     return YAPI_SUCCESS; // will retry later
                 }
                 //Printf("[read %d bytes]\n",strlen($data));
-                if(strlen($data) == 0) break;
-                if($this->reply == '' && strpos($this->meta, "\r\n\r\n") === false) {
+                if (strlen($data) == 0) break;
+                if ($this->reply == '' && strpos($this->meta, "\r\n\r\n") === false) {
                     $this->meta .= $data;
                     $eoh = strpos($this->meta, "\r\n\r\n");
-                    if($eoh !== false) {
+                    if ($eoh !== false) {
                         // fully received header
-                        $this->reply = substr($this->meta, $eoh+4);
-                        $this->meta = substr($this->meta, 0, $eoh+4);
+                        $this->reply = substr($this->meta, $eoh + 4);
+                        $this->meta = substr($this->meta, 0, $eoh + 4);
                         $firstline = substr($this->meta, 0, strpos($this->meta, "\r"));
-                        if(substr($firstline, 0, 12) == 'HTTP/1.1 401') {
+                        if (substr($firstline, 0, 12) == 'HTTP/1.1 401') {
                             // authentication required
                             $this->errorType = YAPI_UNAUTHORIZED;
                             $this->errorMsg = "Authentication required";
                             fclose($this->skt);
                             $this->skt = null;
                             $this->hub->parseWWWAuthenticate($this->meta);
-                            if($this->hub->user != '') {
+                            if ($this->hub->user != '') {
                                 $this->meta = '';
                                 $this->reply = '';
                                 $this->retryCount++;
@@ -782,21 +789,21 @@ class YTcpReq
                 $this->errorType = YAPI_SUCCESS;
             }
             // write request body, if any, once header is fully received
-            if($this->reqbody != '' && strpos($this->meta, "\r\n\r\n") !== false) {
+            if ($this->reqbody != '' && strpos($this->meta, "\r\n\r\n") !== false) {
                 $bodylen = strlen($this->reqbody);
                 $written = fwrite($this->skt, $this->reqbody, $bodylen);
-                if($written > 0) {
+                if ($written > 0) {
                     $this->reqbody = substr($this->reqbody, $written);
                 }
             }
-            if(!is_resource($this->skt)) {
+            if (!is_resource($this->skt)) {
                 // socket dropped dead
                 $this->skt = null;
-            } else if(feof($this->skt)) {
+            } else if (feof($this->skt)) {
                 fclose($this->skt);
                 $this->skt = null;
-            } else if($this->meta == "0K\r\n\r\n" && $this->reply == "\r\n") {
-                if(is_null($this->hub->reuseskt)) {
+            } else if ($this->meta == "0K\r\n\r\n" && $this->reply == "\r\n") {
+                if (is_null($this->hub->reuseskt)) {
                     $this->hub->reuseskt = $this->skt;
                 } else {
                     fclose($this->skt);
@@ -809,7 +816,7 @@ class YTcpReq
 
     function close()
     {
-        if($this->skt) fclose($this->skt);
+        if ($this->skt) fclose($this->skt);
     }
 }
 
@@ -842,14 +849,14 @@ class YFunctionType
      */
     function __construct($str_classname)
     {
-        if(ord($str_classname[strlen($str_classname)-1]) <= 57) throw new Exception("Invalid function type",-1);
-        $this->_className     = $str_classname;
-        $this->_connectedFns  = Array();
-        $this->_requestedFns  = Array();
-        $this->_hwIdByName    = Array();
-        $this->_nameByHwId    = Array();
-        $this->_valueByHwId   = Array();
-        $this->_baseType      = 0;
+        if (ord($str_classname[strlen($str_classname) - 1]) <= 57) throw new Exception("Invalid function type", -1);
+        $this->_className = $str_classname;
+        $this->_connectedFns = Array();
+        $this->_requestedFns = Array();
+        $this->_hwIdByName = Array();
+        $this->_nameByHwId = Array();
+        $this->_valueByHwId = Array();
+        $this->_baseType = 0;
     }
 
 
@@ -859,36 +866,36 @@ class YFunctionType
     {
         $currname = '';
         $res = false;
-        if(isset($this->_nameByHwId[$str_hwid])) {
+        if (isset($this->_nameByHwId[$str_hwid])) {
             $currname = $this->_nameByHwId[$str_hwid];
         }
-        if($currname == '') {
-            if($str_name != '') {
+        if ($currname == '') {
+            if ($str_name != '') {
                 $this->_nameByHwId[$str_hwid] = $str_name;
                 $res = true;
             }
-        } else if($currname != $str_name) {
-            if($this->_hwIdByName[$currname] == $str_hwid)
+        } else if ($currname != $str_name) {
+            if ($this->_hwIdByName[$currname] == $str_hwid)
                 unset($this->_hwIdByName[$currname]);
-            if($str_name != '') {
+            if ($str_name != '') {
                 $this->_nameByHwId[$str_hwid] = $str_name;
             } else {
                 unset($this->_nameByHwId[$str_hwid]);
             }
             $res = true;
         }
-        if($str_name != '') {
+        if ($str_name != '') {
             $this->_hwIdByName[$str_name] = $str_hwid;
         }
-        if(!is_null($str_val)) {
+        if (!is_null($str_val)) {
             $this->_valueByHwId[$str_hwid] = $str_val;
         } else {
-            if(!isset($this->_valueByHwId[$str_hwid])) {
+            if (!isset($this->_valueByHwId[$str_hwid])) {
                 $this->_valueByHwId[$str_hwid] = '';
             }
         }
-        if(!is_null($int_basetype)) {
-            if($this->_baseType == 0) {
+        if (!is_null($int_basetype)) {
+            if ($this->_baseType == 0) {
                 $this->_baseType = $int_basetype;
             }
         }
@@ -898,14 +905,14 @@ class YFunctionType
     // Forget a disconnected function given by HardwareId
     public function forgetFunction($str_hwid)
     {
-        if(isset($this->_nameByHwId[$str_hwid])) {
+        if (isset($this->_nameByHwId[$str_hwid])) {
             $currname = $this->_nameByHwId[$str_hwid];
-            if($currname != '' && $this->_hwIdByName[$currname] == $str_hwid) {
+            if ($currname != '' && $this->_hwIdByName[$currname] == $str_hwid) {
                 unset($this->_hwIdByName[$currname]);
             }
             unset($this->_nameByHwId[$str_hwid]);
         }
-        if(isset($this->_valueByHwId[$str_hwid])) {
+        if (isset($this->_valueByHwId[$str_hwid])) {
             unset($this->_valueByHwId[$str_hwid]);
         }
     }
@@ -917,61 +924,61 @@ class YFunctionType
     {
         // Try to resolve str_func to a known Function instance, if possible, without any device access
         $dotpos = strpos($str_func, '.');
-        if($dotpos === false) {
+        if ($dotpos === false) {
             // First case: str_func is the logicalname of a function
-            if(isset($this->_hwIdByName[$str_func])) {
+            if (isset($this->_hwIdByName[$str_func])) {
                 return new YAPI_YReq($this->_hwIdByName[$str_func],
-                                     YAPI_SUCCESS,
-                                     'no error',
-                                     $this->_hwIdByName[$str_func]);
+                    YAPI_SUCCESS,
+                    'no error',
+                    $this->_hwIdByName[$str_func]);
             }
 
             // fallback to assuming that str_func is a logicalname or serial number of a module
             // with an implicit function name (like serial.module for instance)
             $dotpos = strlen($str_func);
-            $str_func .= '.'.strtolower($this->_className[0]).substr($this->_className,1);
+            $str_func .= '.' . strtolower($this->_className[0]) . substr($this->_className, 1);
         }
 
         // Second case: str_func is in the form: device_id.function_id
 
         // quick lookup for a known pure hardware id
-        if(isset($this->_valueByHwId[$str_func])) {
+        if (isset($this->_valueByHwId[$str_func])) {
             return new YAPI_YReq($this->_valueByHwId[$str_func],
-                                 YAPI_SUCCESS,
-                                 'no error',
-                                 $str_func);
+                YAPI_SUCCESS,
+                'no error',
+                $str_func);
         }
-        if($dotpos>0){
+        if ($dotpos > 0) {
             // either the device id is a logical name, or the function is unknown
             $devid = substr($str_func, 0, $dotpos);
-            $funcid = substr($str_func, $dotpos+1);
+            $funcid = substr($str_func, $dotpos + 1);
             $dev = YAPI::getDevice($devid);
-            if(!$dev) {
+            if (!$dev) {
                 return new YAPI_YReq($str_func,
-                                     YAPI_DEVICE_NOT_FOUND,
-                                     "Device [$devid] not online",
-                                     null);
+                    YAPI_DEVICE_NOT_FOUND,
+                    "Device [$devid] not online",
+                    null);
             }
             $serial = $dev->getSerialNumber();
             $res = "$serial.$funcid";
-            if(isset($this->_valueByHwId[$res])) {
+            if (isset($this->_valueByHwId[$res])) {
                 return new YAPI_YReq($res,
-                                     YAPI_SUCCESS,
-                                     'no error',
-                                     $res);
+                    YAPI_SUCCESS,
+                    'no error',
+                    $res);
             }
 
             // not found neither, may be funcid is a function logicalname
             $nfun = $dev->functionCount();
-            for($i = 0; $i < $nfun; $i++) {
-                $res = "$serial.".$dev->functionId($i);
-                if(isset($this->_nameByHwId[$res])) {
+            for ($i = 0; $i < $nfun; $i++) {
+                $res = "$serial." . $dev->functionId($i);
+                if (isset($this->_nameByHwId[$res])) {
                     $name = $this->_nameByHwId[$res];
-                    if($name == $funcid) {
+                    if ($name == $funcid) {
                         return new YAPI_YReq($res,
-                                             YAPI_SUCCESS,
-                                             'no error',
-                                             $res);
+                            YAPI_SUCCESS,
+                            'no error',
+                            $res);
                     }
                 }
             }
@@ -979,53 +986,53 @@ class YFunctionType
             $serial = '';
             $funcid = substr($str_func, 1);
             // only functionId  (ie ".temperature")
-            foreach(array_keys($this->_connectedFns) as $hwid_str){
+            foreach (array_keys($this->_connectedFns) as $hwid_str) {
                 $pos = strpos($hwid_str, '.');
-                $function = substr($hwid_str, $pos+1);
+                $function = substr($hwid_str, $pos + 1);
                 //print("search for $funcid in {$this->_className} $function\n");
-                if($function == $funcid){
+                if ($function == $funcid) {
                     return new YAPI_YReq($hwid_str,
-                                         YAPI_SUCCESS,
-                                         'no error',
-                                         $hwid_str);
+                        YAPI_SUCCESS,
+                        'no error',
+                        $hwid_str);
                 }
             }
         }
 
         return new YAPI_YReq("$serial.$funcid",
-                             YAPI_DEVICE_NOT_FOUND,
-                             "No function [$funcid] found on device [$serial]",
-                             null);
+            YAPI_DEVICE_NOT_FOUND,
+            "No function [$funcid] found on device [$serial]",
+            null);
     }
 
     public function getFriendlyName($str_func)
     {
         $resolved = $this->resolve($str_func);
-        if($resolved->errorType != YAPI_SUCCESS) {
+        if ($resolved->errorType != YAPI_SUCCESS) {
             return $resolved;
         }
 
-        if($this->_className =="Module"){
-            $friend =$resolved->result;
-            if(isset($this->_nameByHwId[$resolved->result]))
+        if ($this->_className == "Module") {
+            $friend = $resolved->result;
+            if (isset($this->_nameByHwId[$resolved->result]))
                 $friend = $this->_nameByHwId[$resolved->result];
             return new YAPI_YReq($resolved->result,
-                                 YAPI_SUCCESS,
-                                 'no error',
-                                 $friend);
+                YAPI_SUCCESS,
+                'no error',
+                $friend);
         } else {
-            $pos = strpos($resolved->result,'.');
-            $serial_mod = substr($resolved->result,0,$pos);
+            $pos = strpos($resolved->result, '.');
+            $serial_mod = substr($resolved->result, 0, $pos);
             $friend_mod_full = YAPI::getFriendlyNameFunction("Module", $serial_mod)->result;
-            $friend_mod_dot = strpos($friend_mod_full,'.');
-            $friend_mod = ($friend_mod_dot ? substr($friend_mod_full,0,$friend_mod_dot) : $friend_mod_full);
-            $friend_func = substr($resolved->result,$pos+1);
-            if(isset($this->_nameByHwId[$resolved->result]) && $this->_nameByHwId[$resolved->result]!= '')
+            $friend_mod_dot = strpos($friend_mod_full, '.');
+            $friend_mod = ($friend_mod_dot ? substr($friend_mod_full, 0, $friend_mod_dot) : $friend_mod_full);
+            $friend_func = substr($resolved->result, $pos + 1);
+            if (isset($this->_nameByHwId[$resolved->result]) && $this->_nameByHwId[$resolved->result] != '')
                 $friend_func = $this->_nameByHwId[$resolved->result];
             return new YAPI_YReq($resolved->result,
-                                 YAPI_SUCCESS,
-                                 'no error',
-                                 $friend_mod.'.'.$friend_func);
+                YAPI_SUCCESS,
+                'no error',
+                $friend_mod . '.' . $friend_func);
         }
     }
 
@@ -1033,7 +1040,7 @@ class YFunctionType
     public function setFunction($str_func, $obj_func)
     {
         $funres = $this->resolve($str_func);
-        if($funres->errorType == YAPI_SUCCESS) {
+        if ($funres->errorType == YAPI_SUCCESS) {
             // the function has been located on a device
             $this->_connectedFns[$funres->result] = $obj_func;
         } else {
@@ -1046,12 +1053,12 @@ class YFunctionType
     public function getFunction($str_func)
     {
         $funres = $this->resolve($str_func);
-        if($funres->errorType == YAPI_SUCCESS) {
+        if ($funres->errorType == YAPI_SUCCESS) {
             // the function has been located on a device
-            if(isset($this->_connectedFns[$funres->result]))
+            if (isset($this->_connectedFns[$funres->result]))
                 return $this->_connectedFns[$funres->result];
 
-            if(isset($this->_requestedFns[$str_func])) {
+            if (isset($this->_requestedFns[$str_func])) {
                 $req_fn = $this->_requestedFns[$str_func];
                 $this->_connectedFns[$funres->result] = $req_fn;
                 unset($this->_requestedFns[$str_func]);
@@ -1059,7 +1066,7 @@ class YFunctionType
             }
         } else {
             // the function is still abstract
-            if(isset($this->_requestedFns[$str_func]))
+            if (isset($this->_requestedFns[$str_func]))
                 return $this->_requestedFns[$str_func];
         }
         return null;
@@ -1068,15 +1075,15 @@ class YFunctionType
     // Stores a function advertised value by hardware id, queue an event if needed
     public function setFunctionValue($str_hwid, $str_pubval)
     {
-        if(isset($this->_valueByHwId[$str_hwid]) &&
-           $this->_valueByHwId[$str_hwid] == $str_pubval) {
+        if (isset($this->_valueByHwId[$str_hwid]) &&
+            $this->_valueByHwId[$str_hwid] == $str_pubval) {
             return;
         }
         $this->_valueByHwId[$str_hwid] = $str_pubval;
-        foreach(YFunction::$_ValueCallbackList as $fun) {
+        foreach (YFunction::$_ValueCallbackList as $fun) {
             $hwId = $fun->_getHwId();
-            if(!$hwId) continue;
-            if($hwId == $str_hwid) {
+            if (!$hwId) continue;
+            if ($hwId == $str_hwid) {
                 YAPI::addValueEvent($fun, $str_pubval);
             }
         }
@@ -1091,10 +1098,10 @@ class YFunctionType
     // Stores a function advertised value by hardware id, queue an event if needed
     public function setTimedReport($str_hwid, $float_timestamp, $float_duration, $arr_report)
     {
-        foreach(YFunction::$_TimedReportCallbackList as $fun) {
+        foreach (YFunction::$_TimedReportCallbackList as $fun) {
             $hwId = $fun->_getHwId();
-            if(!$hwId) continue;
-            if($hwId == $str_hwid) {
+            if (!$hwId) continue;
+            if ($hwId == $str_hwid) {
                 YAPI::addTimedReportEvent($fun, $float_timestamp, $float_duration, $arr_report);
             }
         }
@@ -1116,7 +1123,7 @@ class YFunctionType
     // Find the the hardwareId of the first instance of a given function class
     public function getFirstHardwareId()
     {
-        foreach(array_keys($this->_valueByHwId) as $res) {
+        foreach (array_keys($this->_valueByHwId) as $res) {
             return $res;
         }
         return null;
@@ -1125,10 +1132,10 @@ class YFunctionType
     // Find the hardwareId for the next instance of a given function class
     public function getNextHardwareId($str_hwid)
     {
-        foreach(array_keys($this->_valueByHwId) as $iter_hwid) {
-            if($str_hwid == "!")
+        foreach (array_keys($this->_valueByHwId) as $iter_hwid) {
+            if ($str_hwid == "!")
                 return $iter_hwid;
-            if($str_hwid == $iter_hwid)
+            if ($str_hwid == $iter_hwid)
                 $str_hwid = "!";
         }
         return null; // no more instance found
@@ -1176,28 +1183,28 @@ class YDevice
     private   $_logCallback;
     private   $_logpos;
 
-    function __construct($str_rooturl, $obj_wpRec=null, $obj_ypRecs=null)
+    function __construct($str_rooturl, $obj_wpRec = null, $obj_ypRecs = null)
     {
-        $this->_rootUrl       = $str_rooturl;
-        $this->_serialNumber  = '';
-        $this->_logicalName   = '';
-        $this->_productName   = '';
-        $this->_productId     = 0;
-        $this->_beacon        = 0;
-        $this->_devYdx        = -1;
-        $this->_cache         = Array('_expiration' => 0, '_json' => '');
-        $this->_functions     = Array();
+        $this->_rootUrl = $str_rooturl;
+        $this->_serialNumber = '';
+        $this->_logicalName = '';
+        $this->_productName = '';
+        $this->_productId = 0;
+        $this->_beacon = 0;
+        $this->_devYdx = -1;
+        $this->_cache = Array('_expiration' => 0, '_json' => '');
+        $this->_functions = Array();
         $this->_lastErrorType = YAPI_SUCCESS;
-        $this->_lastErrorMsg  = 'no error';
+        $this->_lastErrorMsg = 'no error';
 
-        if(!is_null($obj_wpRec)) {
+        if (!is_null($obj_wpRec)) {
             // preload values from white pages, if provided
             $this->_serialNumber = $obj_wpRec['serialNumber'];
-            $this->_logicalName  = $obj_wpRec['logicalName'];
-            $this->_productName  = $obj_wpRec['productName'];
-            $this->_productId    = $obj_wpRec['productId'];
-            $this->_beacon       = $obj_wpRec['beacon'];
-            $this->_devYdx       = (isset($obj_wpRec['index']) ? $obj_wpRec['index'] : -1);
+            $this->_logicalName = $obj_wpRec['logicalName'];
+            $this->_productName = $obj_wpRec['productName'];
+            $this->_productId = $obj_wpRec['productId'];
+            $this->_beacon = $obj_wpRec['beacon'];
+            $this->_devYdx = (isset($obj_wpRec['index']) ? $obj_wpRec['index'] : -1);
             $this->_updateFromYP($obj_ypRecs);
             YAPI::reindexDevice($this);
         } else {
@@ -1220,7 +1227,7 @@ class YDevice
         $this->_lastErrorType = $int_errType;
         $this->_lastErrorMsg = $str_errMsg;
 
-        if(YAPI::$exceptionsDisabled) {
+        if (YAPI::$exceptionsDisabled) {
             return $obj_retVal;
         }
         // throw an exception
@@ -1231,17 +1238,17 @@ class YDevice
     protected function _updateFromYP($obj_ypRecs)
     {
         $funidx = 0;
-        foreach($obj_ypRecs as  $ypRec) {
-            foreach($ypRec as $rec) {
+        foreach ($obj_ypRecs as $ypRec) {
+            foreach ($ypRec as $rec) {
                 $hwid = $rec['hardwareId'];
                 $dotpos = strpos($hwid, '.');
-                if(substr($hwid, 0, $dotpos) == $this->_serialNumber) {
-                    if(isset($rec['index'])) {
+                if (substr($hwid, 0, $dotpos) == $this->_serialNumber) {
+                    if (isset($rec['index'])) {
                         $funydx = $rec['index'];
                     } else {
                         $funydx = $funidx;
                     }
-                    $this->_functions[$funydx] = Array(substr($hwid, $dotpos+1), $rec["logicalName"]);
+                    $this->_functions[$funydx] = Array(substr($hwid, $dotpos + 1), $rec["logicalName"]);
                 }
             }
         }
@@ -1315,13 +1322,13 @@ class YDevice
             return;
         }
         $resultStr = iconv("ISO-8859-1", "UTF-8", $yreq->result);
-        $pos = strrpos($resultStr,"\n@");
+        $pos = strrpos($resultStr, "\n@");
         if ($pos < 0) {
             $this->_logIsPulling = false;
             return;
         }
         $logs = substr($resultStr, 0, $pos);
-        if (strlen($logs)>0) {
+        if (strlen($logs) > 0) {
             $posStr = substr($resultStr, $pos + 2);
             $this->_logpos = (int)$posStr;
             $module = YModule::FindModule($this->_serialNumber . ".module");
@@ -1356,13 +1363,13 @@ class YDevice
     public function describe()
     {
         $res = $this->_rootUrl;
-        if($this->_serialNumber != '') {
+        if ($this->_serialNumber != '') {
             $res = $this->_serialNumber;
-            if($this->_logicalName != '') {
-                $res .= ' ('.($this->_logicalName).')';
+            if ($this->_logicalName != '') {
+                $res .= ' (' . ($this->_logicalName) . ')';
             }
         }
-        return $this->_productName.' '.$res;
+        return $this->_productName . ' ' . $res;
     }
 
     /**
@@ -1372,8 +1379,8 @@ class YDevice
      */
     public function prepRequest($tcpreq)
     {
-        if(!is_null($this->_ongoingReq)) {
-            while(!$this->_ongoingReq->eof()) {
+        if (!is_null($this->_ongoingReq)) {
+            while (!$this->_ongoingReq->eof()) {
                 YAPI::_handleEvents_internal(100);
             }
         }
@@ -1431,7 +1438,7 @@ class YDevice
         if ($yreq->errorType != YAPI_SUCCESS) {
             return $this->_throw($yreq->errorType, $yreq->errorMsg, $yreq->errorType);
         }
-        $loadval = $yreq->result;
+        $loadval = $yreq->obj_result;
         $reindex = false;
         if ($this->_productName == "") {
             // parse module and function names for the first time
@@ -1519,7 +1526,7 @@ class YDevice
     {
         $funcPos = 0;
         foreach ($this->_functions as $funydx => $fundef) {
-            if($functionIndex == $funcPos) {
+            if ($functionIndex == $funcPos) {
                 return $fundef[0];
             }
             $funcPos++;
@@ -1530,10 +1537,10 @@ class YDevice
     public function functionBaseType($functionIndex)
     {
         $fid = $this->functionId($functionIndex);
-        if($fid != '') {
-            $ftype =  YAPI::getFunctionBaseType($this->_serialNumber.'.'.$fid);
+        if ($fid != '') {
+            $ftype = YAPI::getFunctionBaseType($this->_serialNumber . '.' . $fid);
             foreach (YAPI::$BASETYPES as $name => $type) {
-                if ($ftype === $type){
+                if ($ftype === $type) {
                     return $name;
                 }
             }
@@ -1544,9 +1551,9 @@ class YDevice
     public function functionType($functionIndex)
     {
         $fid = $this->functionId($functionIndex);
-        if($fid != '') {
-            for ($i = 0; $i < strlen($fid); $i++) {
-                if ($fid[$i] >= '0' && $fid[$i] <= '9') {
+        if ($fid != '') {
+            for ($i = strlen($fid); $i > 0; $i--) {
+                if ($fid[$i-1] > '9') {
                     break;
                 }
             }
@@ -1569,7 +1576,7 @@ class YDevice
     {
         $funcPos = 0;
         foreach ($this->_functions as $funydx => $fundef) {
-            if($functionIndex == $funcPos) {
+            if ($functionIndex == $funcPos) {
                 return $fundef[1];
             }
             $funcPos++;
@@ -1591,18 +1598,18 @@ class YDevice
     public function functionValue($functionIndex)
     {
         $fid = $this->functionId($functionIndex);
-        if($fid != '') {
-            return YAPI::getFunctionValue($this->_serialNumber.'.'.$fid);
+        if ($fid != '') {
+            return YAPI::getFunctionValue($this->_serialNumber . '.' . $fid);
         }
         return '';
     }
 }
 
 
-
-
 //--- (generated code: YAPIContext definitions)
 //--- (end of generated code: YAPIContext definitions)
+
+
 
 //--- (generated code: YAPIContext declaration)
 /**
@@ -1614,7 +1621,8 @@ class YAPIContext
 {
     //--- (end of generated code: YAPIContext declaration)
 
-    public $_deviceListValidityMs     = 10000;                        // ulong
+    public $_deviceListValidityMs = 10000;                        // ulong
+    public $_networkTimeoutMs = YAPI_BLOCKING_REQUEST_TIMEOUT;
     //--- (generated code: YAPIContext attributes)
     protected $_defaultCacheValidity     = 5;                            // ulong
     //--- (end of generated code: YAPIContext attributes)
@@ -1628,15 +1636,15 @@ class YAPIContext
     //--- (generated code: YAPIContext implementation)
 
     /**
-     * Change the time between each forced enumeration of the YoctoHub used.
-     * By default, the library performs a complete enumeration every 10 seconds.
-     * To reduce network traffic it is possible to increase this delay.
-     * This is particularly useful when a YoctoHub is connected to a GSM network
-     * where the traffic is charged. This setting does not affect modules connected by USB,
-     * nor the operation of arrival/removal callbacks.
-     * Note: This function must be called after yInitAPI.
+     * Modifies the delay between each forced enumeration of the used YoctoHubs.
+     * By default, the library performs a full enumeration every 10 seconds.
+     * To reduce network traffic, you can increase this delay.
+     * It's particularly useful when a YoctoHub is connected to the GSM network
+     * where traffic is billed. This parameter doesn't impact modules connected by USB,
+     * nor the working of module arrival/removal callbacks.
+     * Note: you must call this function after yInitAPI.
      *
-     * @param integer $deviceListValidity : number of seconds between each enumeration.
+     * @param integer $deviceListValidity : nubmer of seconds between each enumeration.
      * @noreturn
      */
     public function SetDeviceListValidity($deviceListValidity)
@@ -1648,8 +1656,8 @@ class YAPIContext
     //private function SetDeviceListValidity_internal($deviceListValidity)
 
     /**
-     * Returns the time between each forced enumeration of the YoctoHub used.
-     * Note: This function must be called after yInitAPI.
+     * Returns the delay between each forced enumeration of the used YoctoHubs.
+     * Note: you must call this function after yInitAPI.
      *
      * @return integer : the number of seconds between each enumeration.
      */
@@ -1660,6 +1668,41 @@ class YAPIContext
 
     //cannot be generated for PHP:
     //private function GetDeviceListValidity_internal()
+
+    /**
+     * Modifies the network connection delay for YAPI.RegisterHub() and
+     * YAPI.UpdateDeviceList(). This delay impacts only the YoctoHubs and VirtualHub
+     * which are accessible through the network. By default, this delay is of 20000 milliseconds,
+     * but depending or you network you may want to change this delay.
+     * For example if your network infrastructure uses a GSM connection.
+     *
+     * @param integer $networkMsTimeout : the network connection delay in milliseconds.
+     * @noreturn
+     */
+    public function SetNetworkTimeout($networkMsTimeout)
+    {
+        $this->SetNetworkTimeout_internal($networkMsTimeout);
+    }
+
+    //cannot be generated for PHP:
+    //private function SetNetworkTimeout_internal($networkMsTimeout)
+
+    /**
+     * Returns the network connection delay for YAPI.RegisterHub() and
+     * YAPI.UpdateDeviceList(). This delay impacts only the YoctoHubs and VirtualHub
+     * which are accessible through the network. By default, this delay is of 20000 milliseconds,
+     * but depending or you network you may want to change this delay.
+     * For example if your network infrastructure uses a GSM connection.
+     *
+     * @return integer : the network connection delay in milliseconds.
+     */
+    public function GetNetworkTimeout()
+    {
+        return $this->GetNetworkTimeout_internal();
+    }
+
+    //cannot be generated for PHP:
+    //private function GetNetworkTimeout_internal()
 
     /**
      * Change the validity period of the data loaded by the library.
@@ -1702,7 +1745,18 @@ class YAPIContext
 
     public function GetDeviceListValidity_internal()
     {
-        return intval ($this->_deviceListValidityMs /1000);
+        return intval($this->_deviceListValidityMs / 1000);
+    }
+
+
+    public function SetNetworkTimeout_internal($networkMsTimeout)
+    {
+        $this->_networkTimeoutMs = $networkMsTimeout;
+    }
+
+    public function GetNetworkTimeout_internal()
+    {
+        return $this->_networkTimeoutMs;
     }
 
 
@@ -1718,11 +1772,11 @@ class YAPIContext
 
 class YAPI
 {
-    const INVALID_STRING    = YAPI_INVALID_STRING;
-    const INVALID_INT       = YAPI_INVALID_INT;
-    const INVALID_UINT      = YAPI_INVALID_UINT;
-    const INVALID_DOUBLE    = YAPI_INVALID_DOUBLE;
-    const INVALID_LONG      = YAPI_INVALID_LONG;
+    const INVALID_STRING = YAPI_INVALID_STRING;
+    const INVALID_INT = YAPI_INVALID_INT;
+    const INVALID_UINT = YAPI_INVALID_UINT;
+    const INVALID_DOUBLE = YAPI_INVALID_DOUBLE;
+    const INVALID_LONG = YAPI_INVALID_LONG;
 
 //--- (generated code: YFunction return codes)
     const SUCCESS               = 0;       // everything worked all right
@@ -1743,14 +1797,14 @@ class YAPI
 //--- (end of generated code: YFunction return codes)
 
     // yInitAPI constants (not really useful in JavaScript)
-    const DETECT_NONE           = 0;
-    const DETECT_USB            = 1;
-    const DETECT_NET            = 2;
-    const DETECT_ALL            = 3;
+    const DETECT_NONE = 0;
+    const DETECT_USB = 1;
+    const DETECT_NET = 2;
+    const DETECT_ALL = 3;
 
     // Abstract function BaseTypes
     public static $BASETYPES = Array('Function' => 0,
-                                        'Sensor'   => 1);
+        'Sensor' => 1);
 
     /**
      * @var YTcpHub[]
@@ -1834,7 +1888,7 @@ class YAPI
         self::$_lastErrorType = $int_errType;
         self::$_lastErrorMsg = $str_errMsg;
 
-        if(self::$exceptionsDisabled) {
+        if (self::$exceptionsDisabled) {
             return $obj_retVal;
         }
         // throw an exception
@@ -1844,21 +1898,21 @@ class YAPI
     // Update the list of known devices internally
     public static function _updateDeviceList_internal($bool_forceupdate, $bool_invokecallbacks)
     {
-        if(self::$_firstArrival && $bool_invokecallbacks && !is_null(self::$_arrivalCallback)) {
+        if (self::$_firstArrival && $bool_invokecallbacks && !is_null(self::$_arrivalCallback)) {
             $bool_forceupdate = true;
         }
         $now = self::GetTickCount();
-        if($bool_forceupdate) {
-            foreach(self::$_hubs as $hub) {
+        if ($bool_forceupdate) {
+            foreach (self::$_hubs as $hub) {
                 $hub->devListExpires = $now;
             }
         }
 
         // Prepare to scan all expired hubs
         $hubs = Array();
-        foreach(self::$_hubs as $hub) {
-            if($hub->devListExpires <= $now) {
-                $tcpreq = new YTcpReq($hub, 'GET /api.json', false);
+        foreach (self::$_hubs as $hub) {
+            if ($hub->devListExpires <= $now) {
+                $tcpreq = new YTcpReq($hub, 'GET /api.json', false, YAPI::$_yapiContext->_networkTimeoutMs);
                 self::$_pendingRequests[] = $tcpreq;
                 $hubs[] = $hub;
                 $hub->devListReq = $tcpreq;
@@ -1867,33 +1921,33 @@ class YAPI
         }
 
         // assume all device as unpluged, unless proved wrong
-        foreach(self::$_devs as $serial => $dev) {
+        foreach (self::$_devs as $serial => $dev) {
             $rooturl = $dev->getRootUrl();
-            foreach($hubs as $hub) {
+            foreach ($hubs as $hub) {
                 $huburl = $hub->rooturl;
-                if(substr($rooturl,0,strlen($huburl)) == $huburl) {
+                if (substr($rooturl, 0, strlen($huburl)) == $huburl) {
                     $hub->missing[$serial] = true;
                 }
             }
         }
 
         // Wait until all hubs are complete, and process replies as they come
-        $timeout = self::GetTickCount() + YAPI_BLOCKING_REQUEST_TIMEOUT;
-        while(self::GetTickCount() < $timeout) {
+        $timeout = self::GetTickCount() + YAPI::$_yapiContext->_networkTimeoutMs;
+        while (self::GetTickCount() < $timeout) {
             self::_handleEvents_internal(100);
             $alldone = true;
             foreach ($hubs as $hub) {
                 /** @var $hub YTcpHub */
                 $req = $hub->devListReq;
-                if(!$req->eof()) {
+                if (!$req->eof()) {
                     $alldone = false;
                     continue;
                 }
-                if($req->errorType != YAPI_SUCCESS) {
+                if ($req->errorType != YAPI_SUCCESS) {
                     // report problems later
                     continue;
                 }
-                $loadval = json_decode(iconv("ISO-8859-1","UTF-8", $req->reply), true);
+                $loadval = json_decode(iconv("ISO-8859-1", "UTF-8", $req->reply), true);
                 if (!$loadval) {
                     $req->errorType = YAPI_IO_ERROR;
                     continue;
@@ -1954,7 +2008,7 @@ class YAPI
                             self::$_pendingCallbacks[] = "/$serial";
                         }
                     } else if (isset($refresh[$serial]) || $currdev->getRootUrl() != $rooturl ||
-                            $currdev->getBeacon() != $devinfo['beacon']) {
+                        $currdev->getBeacon() != $devinfo['beacon']) {
                         // Reindex device from its own data in case of discrepency
                         $currdev->refresh();
                     }
@@ -1980,39 +2034,39 @@ class YAPI
                     $hub->devListExpires = $now + 500;
                 }
             }
-            if($alldone) break;
+            if ($alldone) break;
         }
 
         // after processing all hubs, invoke pending callbacks if required
-        if($bool_invokecallbacks) {
+        if ($bool_invokecallbacks) {
             $nbevents = sizeof(self::$_pendingCallbacks);
-            for($i = 0; $i < $nbevents; $i++) {
+            for ($i = 0; $i < $nbevents; $i++) {
                 $evt = self::$_pendingCallbacks[$i];
-                $serial = substr($evt,1);
-                switch(substr($evt,0,1)) {
-                case '+':
-                    if(!is_null(self::$_arrivalCallback)) {
-                        $cb = self::$_arrivalCallback;
-                        $cb(yFindModule($serial.".module"));
-                    }
-                    break;
-                case '/':
-                    if(!is_null(self::$_namechgCallback)) {
-                        $cb = self::$_namechgCallback;
-                        $cb(yFindModule($serial.".module"));
-                    }
-                    break;
-                case '-':
-                    if(!is_null(self::$_removalCallback)) {
-                        $cb = self::$_removalCallback;
-                        $cb(yFindModule($serial.".module"));
-                    }
-                    self::forgetDevice(self::$_devs[$serial]);
-                    break;
+                $serial = substr($evt, 1);
+                switch (substr($evt, 0, 1)) {
+                    case '+':
+                        if (!is_null(self::$_arrivalCallback)) {
+                            $cb = self::$_arrivalCallback;
+                            $cb(yFindModule($serial . ".module"));
+                        }
+                        break;
+                    case '/':
+                        if (!is_null(self::$_namechgCallback)) {
+                            $cb = self::$_namechgCallback;
+                            $cb(yFindModule($serial . ".module"));
+                        }
+                        break;
+                    case '-':
+                        if (!is_null(self::$_removalCallback)) {
+                            $cb = self::$_removalCallback;
+                            $cb(yFindModule($serial . ".module"));
+                        }
+                        self::forgetDevice(self::$_devs[$serial]);
+                        break;
                 }
             }
             self::$_pendingCallbacks = array_slice(self::$_pendingCallbacks, $nbevents);
-            if(!is_null(self::$_arrivalCallback) && self::$_firstArrival) {
+            if (!is_null(self::$_arrivalCallback) && self::$_firstArrival) {
                 self::$_firstArrival = false;
             }
         }
@@ -2020,10 +2074,10 @@ class YAPI
         // report any error seen during scan
         foreach ($hubs as $hub) {
             $req = $hub->devListReq;
-            if($req->errorType != YAPI_SUCCESS) {
+            if ($req->errorType != YAPI_SUCCESS) {
                 return new YAPI_YReq("", $req->errorType,
-                                     'Error while scanning '.$hub->rooturl.': '.$req->errorMsg,
-                                     $req->errorType);
+                    'Error while scanning ' . $hub->rooturl . ': ' . $req->errorMsg,
+                    $req->errorType);
             }
         }
         return new YAPI_YReq("", YAPI_SUCCESS, "no error", YAPI_SUCCESS);
@@ -2034,16 +2088,16 @@ class YAPI
         $something_done = false;
 
         // start event monitoring if needed
-        foreach(self::$_hubs as $hub) {
+        foreach (self::$_hubs as $hub) {
             $req = $hub->notifReq;
-            if($req) {
-                if($req->eof()) {
+            if ($req) {
+                if ($req->eof()) {
                     Printf("Event channel at eof, reopen\n");
                     $something_done = true;
                     $hub->notifReq = $req = null;
                     self::monitorEvents($hub);
                 }
-            } else if($hub->retryExpires > 0 && $hub->retryExpires <= self::GetTickCount()) {
+            } else if ($hub->retryExpires > 0 && $hub->retryExpires <= self::GetTickCount()) {
                 Printf("RetryExpires, calling monitorEvents\n");
                 $something_done = true;
                 self::monitorEvents($hub);
@@ -2051,49 +2105,49 @@ class YAPI
         }
 
         // Monitor all pending request for logs
-        foreach(self::$_devs as $serial => $dev) {
+        foreach (self::$_devs as $serial => $dev) {
             $dev->triggerLogPull();
         }
 
 
         // monitor all pending requests
         $streams = Array();
-        foreach(self::$_pendingRequests as $req) {
-            if(is_null($req->skt) || !is_resource($req->skt)) {
+        foreach (self::$_pendingRequests as $req) {
+            if (is_null($req->skt) || !is_resource($req->skt)) {
                 $req->process();
             }
-            if(!is_null($req->skt) && is_resource($req->skt)) {
+            if (!is_null($req->skt) && is_resource($req->skt)) {
                 $streams[] = $req->skt;
             }
         }
 
-        if(sizeof($streams) == 0) {
-            usleep($int_maxwait*1000);
+        if (sizeof($streams) == 0) {
+            usleep($int_maxwait * 1000);
             return false;
         }
         $wr = NULL;
         $ex = NULL;
-        if(false === ($select_res = stream_select($streams, $wr, $ex, 0, $int_maxwait * 1000))) {
+        if (false === ($select_res = stream_select($streams, $wr, $ex, 0, $int_maxwait * 1000))) {
             Printf("stream_select error\n");
             return false;
         }
-        for($idx = 0; $idx < sizeof(self::$_pendingRequests); $idx++) {
+        for ($idx = 0; $idx < sizeof(self::$_pendingRequests); $idx++) {
             $req = self::$_pendingRequests[$idx];
             $hub = $req->hub;
             // generic request processing
             $req->process();
-            if($req->eof()) {
+            if ($req->eof()) {
                 array_splice(self::$_pendingRequests, $idx, 1);
             }
             // handle notification channel
             if ($req === $hub->notifReq) {
                 $linepos = strpos($req->reply, "\n");
-                while($linepos !== false) {
+                while ($linepos !== false) {
                     $ev = trim(substr($req->reply, 0, $linepos));
-                    $req->reply = substr($req->reply, $linepos+1);
+                    $req->reply = substr($req->reply, $linepos + 1);
                     $linepos = strpos($req->reply, "\n");
                     $firstCode = substr($ev, 0, 1);
-                    if (strlen($ev)==0){
+                    if (strlen($ev) == 0) {
                         // empty line to send ping
                         continue;
                     }
@@ -2112,7 +2166,7 @@ class YAPI
                         }
                         if (isset($hub->serialByYdx[$devydx])) {
                             $serial = $hub->serialByYdx[$devydx];
-                            if(isset(self::$_devs[$serial])) {
+                            if (isset(self::$_devs[$serial])) {
                                 $funcid = ($funydx == 0xf ? 'time' : self::$_devs[$serial]->functionId($funydx));
                                 if ($funcid != "") {
                                     $value = substr($ev, 3);
@@ -2137,28 +2191,28 @@ class YAPI
                                         case NOTIFY_NETPKT_TIMEV2YDX:
                                             // timed value report
                                             $arr = Array($firstCode == 'x' ? 0 : ($firstCode == 'z' ? 1 : 2));
-                                            for($pos = 0; $pos < strlen($value); $pos += 2) {
+                                            for ($pos = 0; $pos < strlen($value); $pos += 2) {
                                                 $arr[] = hexdec(substr($value, $pos, 2));
                                             }
                                             $dev = self::$_devs[$serial];
-                                            if($funcid == 'time') {
-                                                $time = $arr[1]+0x100*$arr[2]+0x10000*$arr[3]+0x1000000*$arr[4];
+                                            if ($funcid == 'time') {
+                                                $time = $arr[1] + 0x100 * $arr[2] + 0x10000 * $arr[3] + 0x1000000 * $arr[4];
                                                 $ms = $arr[5] * 4;
-                                                if (sizeof($arr)>=7) {
+                                                if (sizeof($arr) >= 7) {
                                                     $ms += $arr[6] >> 6;
                                                     $duration_ms = $arr[7];
                                                     $duration_ms += ($arr[6] & 0xf) * 0x100;
                                                     if ($arr[6] & 0x10) {
-                                                        $duration= $duration_ms;
+                                                        $duration = $duration_ms;
                                                     } else {
                                                         $duration = $duration_ms / 1000.0;
                                                     }
                                                 } else {
                                                     $duration = 0.0;
                                                 }
-                                                $dev->setTimeRef( $time + $ms / 1000.0, $duration);
+                                                $dev->setTimeRef($time + $ms / 1000.0, $duration);
                                             } else {
-                                                YAPI::setTimedReport($serial . '.' . $funcid, $dev->getLastTimeRef(), $dev->getLastDuration() , $arr);
+                                                YAPI::setTimedReport($serial . '.' . $funcid, $dev->getLastTimeRef(), $dev->getLastDuration(), $arr);
                                             }
                                             break;
                                         case NOTIFY_NETPKT_FUNCV2YDX:
@@ -2219,9 +2273,9 @@ class YAPI
 
     public static function flushConnections()
     {
-        foreach(self::$_pendingRequests as $req) {
-            if($req->async) {
-                while(!$req->eof()) {
+        foreach (self::$_pendingRequests as $req) {
+            if ($req->async) {
+                while (!$req->eof()) {
                     self::_handleEvents_internal(200);
                 }
             }
@@ -2231,18 +2285,18 @@ class YAPI
     public static function monitorEvents($hub)
     {
         /** @var $hub YTcpHub */
-        if(!is_null($hub->notifReq)) return;
-        if($hub->retryExpires > self::GetTickCount()) return;
-        if($hub->isCachedHub()) return;
+        if (!is_null($hub->notifReq)) return;
+        if ($hub->retryExpires > self::GetTickCount()) return;
+        if ($hub->isCachedHub()) return;
 
-        $url = $hub->notifurl.'?len=0';
-        if($hub->notifPos >= 0) $url .= '&abs='.$hub->notifPos;
-        $req = new YTcpReq($hub, 'GET /'.$url, false);
+        $url = $hub->notifurl . '?len=0';
+        if ($hub->notifPos >= 0) $url .= '&abs=' . $hub->notifPos;
+        $req = new YTcpReq($hub, 'GET /' . $url, false);
         $errmsg = '';
-        if($req->process($errmsg) != YAPI_SUCCESS) {
-            if($hub->retryDelay == 0) {
+        if ($req->process($errmsg) != YAPI_SUCCESS) {
+            if ($hub->retryDelay == 0) {
                 $hub->retryDelay = 15;
-            } else if($hub->retryDelay < 15000) {
+            } else if ($hub->retryDelay < 15000) {
                 $hub->retryDelay = 2 * $hub->retryDelay;
             }
             $hub->retryExpires = self::GetTickCount() + $hub->retryDelay;
@@ -2258,19 +2312,19 @@ class YAPI
     {
         $negate = false;
         $mantis = $val & 2047;
-        if($mantis == 0) return 0.0;
-        if($val > 32767) {
+        if ($mantis == 0) return 0.0;
+        if ($val > 32767) {
             $negate = true;
-            $val = 65536-$val;
-        } else if($val < 0) {
+            $val = 65536 - $val;
+        } else if ($val < 0) {
             $negate = true;
             $val = -$val;
         }
         $decexp = self::$_decExp[$val >> 11];
-        if($decexp >= 1.0) {
+        if ($decexp >= 1.0) {
             $res = ($mantis) * $decexp;
         } else {
-            $res = ($mantis) / round(1.0/$decexp);
+            $res = ($mantis) / round(1.0 / $decexp);
         }
 
         return ($negate ? -$res : $res);
@@ -2282,20 +2336,20 @@ class YAPI
     {
         $negate = false;
 
-        if($val == 0.0) {
+        if ($val == 0.0) {
             return 0;
         }
-        if($val < 0) {
+        if ($val < 0) {
             $negate = true;
             $val = -$val;
         }
         $comp = $val / 1999.0;
         $decpow = 0;
-        while($comp > self::$_decExp[$decpow] && $decpow < 15) {
+        while ($comp > self::$_decExp[$decpow] && $decpow < 15) {
             $decpow++;
         }
         $mant = $val / self::$_decExp[$decpow];
-        if($decpow == 15 && $mant > 2047.0) {
+        if ($decpow == 15 && $mant > 2047.0) {
             $res = (15 << 11) + 2047; // overflow
         } else {
             $res = ($decpow << 11) + round($mant);
@@ -2306,7 +2360,7 @@ class YAPI
     // Return a the calibration handler for a given type
     public static function _getCalibrationHandler($calibType)
     {
-        if(!isset(self::$_calibHandlers[strVal($calibType)])) {
+        if (!isset(self::$_calibHandlers[strVal($calibType)])) {
             return null;
         }
         return self::$_calibHandlers[strVal($calibType)];
@@ -2317,29 +2371,29 @@ class YAPI
     {
         $datalen = strlen($data);
         $udata = Array();
-        for($i = 0; $i < $datalen;) {
+        for ($i = 0; $i < $datalen;) {
             $c = $data[$i];
-            if($c == '*') {
+            if ($c == '*') {
                 $val = 0;
                 $i++;
-            } else if($c == 'X') {
+            } else if ($c == 'X') {
                 $val = 0xffff;
                 $i++;
-            } else if($c == 'Y') {
+            } else if ($c == 'Y') {
                 $val = 0x7fff;
                 $i++;
-            } else if($c >= 'a') {
-                $srcpos = sizeof($udata)-1-(ord($data[$i++])-97);
-                if($srcpos < 0) {
+            } else if ($c >= 'a') {
+                $srcpos = sizeof($udata) - 1 - (ord($data[$i++]) - 97);
+                if ($srcpos < 0) {
                     $val = 0;
                 } else {
                     $val = $udata[$srcpos];
                 }
             } else {
-                if($i+2 > $datalen) return YAPI_IO_ERROR;
+                if ($i + 2 > $datalen) return YAPI_IO_ERROR;
                 $val = ord($data[$i++]) - 48;
                 $val += (ord($data[$i++]) - 48) << 5;
-                if($data[$i] == 'z') $data[$i] = '\\';
+                if ($data[$i] == 'z') $data[$i] = '\\';
                 $val += (ord($data[$i++]) - 48) << 10;
             }
             $udata[] = $val;
@@ -2359,38 +2413,38 @@ class YAPI
             $dec = 0;
             $decInc = 0;
             $c = $data[$p++];
-            while($c != '-' && ($c < '0' || $c > '9')) {
-                if($p >= $datalen) {
+            while ($c != '-' && ($c < '0' || $c > '9')) {
+                if ($p >= $datalen) {
                     return $idata;
                 }
                 $c = $data[$p++];
             }
-            if($c == '-') {
-                if($p >= $datalen) {
+            if ($c == '-') {
+                if ($p >= $datalen) {
                     return $idata;
                 }
                 $sign = -$sign;
                 $c = $data[$p++];
             }
-            while(($c >= '0' && $c <= '9') || $c == '.') {
-                if($c == '.') {
+            while (($c >= '0' && $c <= '9') || $c == '.') {
+                if ($c == '.') {
                     $decInc = 1;
-                } else if($dec < 3) {
+                } else if ($dec < 3) {
                     $val = $val * 10 + (ord($c) - 48);
                     $dec += $decInc;
                 }
-                if($p < $datalen) {
+                if ($p < $datalen) {
                     $c = $data[$p++];
                 } else {
                     $c = '\0';
                 }
             }
-            if($dec < 3) {
-                if($dec == 0) $val *= 1000;
-                else if($dec == 1) $val *= 100;
+            if ($dec < 3) {
+                if ($dec == 0) $val *= 1000;
+                else if ($dec == 1) $val *= 100;
                 else $val *= 10;
             }
-            $idata[] = $sign*$val;
+            $idata[] = $sign * $val;
         }
         return $idata;
     }
@@ -2423,20 +2477,20 @@ class YAPI
     {
         $dev = null;
 
-        if(substr($str_device, 0, 7) == 'http://') {
-            if(isset(self::$_snByUrl[$str_device])) {
+        if (substr($str_device, 0, 7) == 'http://') {
+            if (isset(self::$_snByUrl[$str_device])) {
                 $serial = self::$_snByUrl[$str_device];
-                if(isset(self::$_devs[$serial])) {
+                if (isset(self::$_devs[$serial])) {
                     $dev = self::$_devs[$serial];
                 }
             }
         } else {
             // lookup by serial
-            if(isset(self::$_devs[$str_device])) {
+            if (isset(self::$_devs[$str_device])) {
                 $dev = self::$_devs[$str_device];
             } else {
                 // fallback to lookup by logical name
-                if(isset(self::$_snByName[$str_device])) {
+                if (isset(self::$_snByName[$str_device])) {
                     $serial = self::$_snByName[$str_device];
                     $dev = self::$_devs[$serial];
                 }
@@ -2450,13 +2504,13 @@ class YAPI
     public static function functionClass($str_funcid)
     {
         $dotpos = strpos($str_funcid, '.');
-        if($dotpos !== false) $str_funcid = substr($str_funcid, $dotpos+1);
+        if ($dotpos !== false) $str_funcid = substr($str_funcid, $dotpos + 1);
         $classlen = strlen($str_funcid);
-        while(ord($str_funcid[$classlen-1]) <= 57) {
+        while (ord($str_funcid[$classlen - 1]) <= 57) {
             $classlen--;
         }
-        $classname = strtoupper($str_funcid[0]).substr($str_funcid,1,$classlen-1);
-        if(!isset(self::$_fnByType[$classname])) {
+        $classname = strtoupper($str_funcid[0]) . substr($str_funcid, 1, $classlen - 1);
+        if (!isset(self::$_fnByType[$classname])) {
             self::$_fnByType[$classname] = new YFunctionType($classname);
         }
 
@@ -2472,10 +2526,10 @@ class YAPI
         $lname = $obj_dev->getLogicalName();
         self::$_devs[$serial] = $obj_dev;
         self::$_snByUrl[$rootUrl] = $serial;
-        if($lname != '') self::$_snByName[$lname] = $serial;
+        if ($lname != '') self::$_snByName[$lname] = $serial;
         self::$_fnByType['Module']->reindexFunction("$serial.module", $lname, null, null);
         $count = $obj_dev->functionCount();
-        for($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             $funcid = $obj_dev->functionId($i);
             $funcname = $obj_dev->functionName($i);
             $classname = self::functionClass($funcid);
@@ -2492,12 +2546,12 @@ class YAPI
         $lname = $obj_dev->getLogicalName();
         unset(self::$_devs[$serial]);
         unset(self::$_snByUrl[$rootUrl]);
-        if(isset(self::$_snByName[$lname]) && self::$_snByName[$lname] == $serial) {
+        if (isset(self::$_snByName[$lname]) && self::$_snByName[$lname] == $serial) {
             unset(self::$_snByName[$lname]);
         }
         self::$_fnByType['Module']->forgetFunction("$serial.module");
         $count = $obj_dev->functionCount();
-        for($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             $funcid = $obj_dev->functionId($i);
             $classname = self::functionClass($funcid);
             self::$_fnByType[$classname]->forgetFunction("$serial.$funcid");
@@ -2510,56 +2564,56 @@ class YAPI
      */
     public static function resolveFunction($str_className, $str_func)
     {
-        if(!isset(self::$BASETYPES[$str_className])) {
+        if (!isset(self::$BASETYPES[$str_className])) {
             // using a regular function type
-            if(!isset(self::$_fnByType[$str_className]))
+            if (!isset(self::$_fnByType[$str_className]))
                 self::$_fnByType[$str_className] = new YFunctionType($str_className);
             return self::$_fnByType[$str_className]->resolve($str_func);
         }
         // using an abstract baseType
         $baseType = self::$BASETYPES[$str_className];
         $res = null;
-        foreach(self::$_fnByType as $str_className => $funtype) {
-            if($funtype->matchBaseType($baseType)) {
+        foreach (self::$_fnByType as $str_className => $funtype) {
+            if ($funtype->matchBaseType($baseType)) {
                 $res = $funtype->resolve($str_func);
-                if($res->errorType == YAPI_SUCCESS) return $res;
+                if ($res->errorType == YAPI_SUCCESS) return $res;
             }
         }
         return new YAPI_YReq($str_func,
-                             YAPI_DEVICE_NOT_FOUND,
-                             "No $str_className [$str_func] found (old firmware?)",
-                             null);
+            YAPI_DEVICE_NOT_FOUND,
+            "No $str_className [$str_func] found (old firmware?)",
+            null);
     }
 
     // return a firendly name for of a given function
     public static function getFriendlyNameFunction($str_className, $str_func)
     {
-        if(!isset(self::$BASETYPES[$str_className])) {
+        if (!isset(self::$BASETYPES[$str_className])) {
             // using a regular function type
-            if(!isset(self::$_fnByType[$str_className]))
+            if (!isset(self::$_fnByType[$str_className]))
                 self::$_fnByType[$str_className] = new YFunctionType($str_className);
             return self::$_fnByType[$str_className]->getFriendlyName($str_func);
         }
         // using an abstract baseType
         $baseType = self::$BASETYPES[$str_className];
         $res = null;
-        foreach(self::$_fnByType as $str_className => $funtype) {
-            if($funtype->matchBaseType($baseType)) {
+        foreach (self::$_fnByType as $str_className => $funtype) {
+            if ($funtype->matchBaseType($baseType)) {
                 $res = $funtype->getFriendlyName($str_func);
-                if($res->errorType == YAPI_SUCCESS) return $res;
+                if ($res->errorType == YAPI_SUCCESS) return $res;
             }
         }
         return new YAPI_YReq($str_func,
-                             YAPI_DEVICE_NOT_FOUND,
-                             "No $str_className [$str_func] found (old firmware?)",
-                             null);
+            YAPI_DEVICE_NOT_FOUND,
+            "No $str_className [$str_func] found (old firmware?)",
+            null);
     }
 
 
     // Retrieve a function object by hardware id, updating the indexes on the fly if needed
     public static function setFunction($str_className, $str_func, $obj_func)
     {
-        if(!isset(self::$_fnByType[$str_className]))
+        if (!isset(self::$_fnByType[$str_className]))
             self::$_fnByType[$str_className] = new YFunctionType($str_className);
         self::$_fnByType[$str_className]->setFunction($str_func, $obj_func);
     }
@@ -2567,9 +2621,9 @@ class YAPI
     // Retrieve a function object by hardware id, updating the indexes on the fly if needed
     public static function getFunction($str_className, $str_func)
     {
-        if(is_null(self::$_hubs)) self::_init();
+        if (is_null(self::$_hubs)) self::_init();
 
-        if(!isset(self::$_fnByType[$str_className]))
+        if (!isset(self::$_fnByType[$str_className]))
             self::$_fnByType[$str_className] = new YFunctionType($str_className);
         return self::$_fnByType[$str_className]->getFunction($str_func);
     }
@@ -2591,14 +2645,14 @@ class YAPI
     // Publish a configuration change event
     public static function setConfChange($str_serial)
     {
-        $module = yFindModule($str_serial.".module");
+        $module = yFindModule($str_serial . ".module");
         $module->_invokeConfigChangeCallback();
     }
 
     // Publish a configuration change event
     public static function setBeaconChange($str_serial, $int_beacon)
     {
-        if (!array_key_exists($str_serial ,self::$_beacons) || self::$_beacons[$str_serial] != $int_beacon) {
+        if (!array_key_exists($str_serial, self::$_beacons) || self::$_beacons[$str_serial] != $int_beacon) {
             self::$_beacons[$str_serial] = $int_beacon;
             $module = yFindModule($str_serial . ".module");
             $module->_invokeBeaconCallback($int_beacon);
@@ -2635,21 +2689,21 @@ class YAPI
     // Find the hardwareId for the first instance of a given function class
     public static function getFirstHardwareId($str_className)
     {
-        if(is_null(self::$_hubs)) self::_init();
+        if (is_null(self::$_hubs)) self::_init();
 
-        if(!isset(self::$BASETYPES[$str_className])) {
+        if (!isset(self::$BASETYPES[$str_className])) {
             // enumeration of a regular function type
-            if(!isset(self::$_fnByType[$str_className]))
+            if (!isset(self::$_fnByType[$str_className]))
                 self::$_fnByType[$str_className] = new YFunctionType($str_className);
             return self::$_fnByType[$str_className]->getFirstHardwareId();
         }
         // enumeration of an abstract class
         $baseType = self::$BASETYPES[$str_className];
         $res = null;
-        foreach(self::$_fnByType as $funtype) {
-            if($funtype->matchBaseType($baseType)) {
+        foreach (self::$_fnByType as $funtype) {
+            if ($funtype->matchBaseType($baseType)) {
                 $res = $funtype->getFirstHardwareId();
-                if(!is_null($res)) return $res;
+                if (!is_null($res)) return $res;
             }
         }
         return null;
@@ -2658,7 +2712,7 @@ class YAPI
     // Find the hardwareId for the next instance of a given function class
     public static function getNextHardwareId($str_className, $str_hwid)
     {
-        if(!isset(self::$BASETYPES[$str_className])) {
+        if (!isset(self::$BASETYPES[$str_className])) {
             // enumeration of a regular function type
             return self::$_fnByType[$str_className]->getNextHardwareId($str_hwid);
         }
@@ -2667,16 +2721,16 @@ class YAPI
         $baseType = self::$BASETYPES[$str_className];
         $prevclass = self::functionClass($str_hwid);
         $res = self::$_fnByType[$prevclass]->getNextHardwareId($str_hwid);
-        if(!is_null($res)) return $res;
-        foreach(self::$_fnByType as $str_className => $funtype) {
-            if($prevclass != "") {
-                if($str_className != $prevclass) continue;
+        if (!is_null($res)) return $res;
+        foreach (self::$_fnByType as $str_className => $funtype) {
+            if ($prevclass != "") {
+                if ($str_className != $prevclass) continue;
                 $prevclass = "";
                 continue;
             }
-            if($funtype->matchBaseType($baseType)) {
+            if ($funtype->matchBaseType($baseType)) {
                 $res = $funtype->getFirstHardwareId();
-                if(!is_null($res)) return $res;
+                if (!is_null($res)) return $res;
             }
         }
         return $res;
@@ -2691,121 +2745,148 @@ class YAPI
      * @param string $body
      * @return YAPI_YReq a strucure including errorType, errorMsg and result
      */
-    public static function devRequest($str_device, $str_request, $async=false, $body='')
+    public static function devRequest($str_device, $str_request, $async = false, $body = '')
     {
         $lines = explode("\n", $str_request);
         $dev = null;
         $baseUrl = $str_device;
-        if(substr($str_device, 0, 7) == 'http://') {
-            if(substr($baseUrl, -1) != '/') $baseUrl .= '/';
-            if(isset(self::$_snByUrl[$baseUrl])) {
+        if (substr($str_device, 0, 7) == 'http://') {
+            if (substr($baseUrl, -1) != '/') $baseUrl .= '/';
+            if (isset(self::$_snByUrl[$baseUrl])) {
                 $serial = self::$_snByUrl[$baseUrl];
-                if(isset(self::$_devs[$serial])) {
+                if (isset(self::$_devs[$serial])) {
                     $dev = self::$_devs[$serial];
                 }
             }
         } else {
             $dev = self::getDevice($str_device);
-            if(!$dev) {
+            if (!$dev) {
                 return new YAPI_YReq("", YAPI_DEVICE_NOT_FOUND,
-                                     "Device [$str_device] not online",
-                                     null);
+                    "Device [$str_device] not online",
+                    null);
             }
             // use the device cache when loading the whole API
-            if($lines[0] == 'GET /api.json') {
+            if ($lines[0] == 'GET /api.json') {
                 return $dev->requestAPI();
             }
             $baseUrl = $dev->getRootUrl();
         }
         // map str_device to a URL
         $words = explode(' ', $lines[0]);
-        if(sizeof($words) < 2) {
+        if (sizeof($words) < 2) {
             return new YAPI_YReq("", YAPI_INVALID_ARGUMENT,
-                                 'Invalid request, not enough words; expected a method name and a URL',
-                                 null);
-        } else if(sizeof($words) > 2) {
+                'Invalid request, not enough words; expected a method name and a URL',
+                null);
+        } else if (sizeof($words) > 2) {
             return new YAPI_YReq("", YAPI_INVALID_ARGUMENT,
-                                 'Invalid request, too many words; make sure the URL is URI-encoded',
-                                 null);
+                'Invalid request, too many words; make sure the URL is URI-encoded',
+                null);
         }
         $method = $words[0];
         $devUrl = $words[1];
-        if(substr($devUrl,0,1) == '/') $devUrl = substr($devUrl, 1);
+        if (substr($devUrl, 0, 1) == '/') $devUrl = substr($devUrl, 1);
         $baseUrl = str_replace('http://', '', $baseUrl);
         $pos = strpos($baseUrl, '/');
-        if($pos !== false) {
-            $devUrl = substr($baseUrl, $pos).$devUrl;
+        if ($pos !== false) {
+            $devUrl = substr($baseUrl, $pos) . $devUrl;
             $baseUrl = substr($baseUrl, 0, $pos);
         } else {
             $devUrl = "/$devUrl";
         }
         $rooturl = "http://$baseUrl/";
-        if(!isset(self::$_hubs[$rooturl])) {
-            return new YAPI_YReq("", YAPI_DEVICE_NOT_FOUND, 'No hub registered on '.$baseUrl, null);
+        if (!isset(self::$_hubs[$rooturl])) {
+            return new YAPI_YReq("", YAPI_DEVICE_NOT_FOUND, 'No hub registered on ' . $baseUrl, null);
         }
         $hub = self::$_hubs[$rooturl];
-        if($async && $hub->writeProtected && $hub->user != 'admin' && !$hub->isCachedHub()) {
+        if ($async && $hub->writeProtected && $hub->user != 'admin' && !$hub->isCachedHub()) {
             // async query, make sure the hub is not write-protected
             return new YAPI_YReq("", YAPI_UNAUTHORIZED,
-                                 'Access denied: admin credentials required',
-                                 null);
+                'Access denied: admin credentials required',
+                null);
         }
         $tcpreq = new YTcpReq($hub, "$method $devUrl", $async, $body);
-        if(!is_null($dev)) {
+        if (!is_null($dev)) {
             $dev->prepRequest($tcpreq);
         }
-        if($tcpreq->process() != YAPI_SUCCESS) {
+        if ($tcpreq->process() != YAPI_SUCCESS) {
             return new YAPI_YReq("", $tcpreq->errorType, $tcpreq->errorMsg, null);
         }
         self::$_pendingRequests[] = $tcpreq;
-        if(!$async) {
+        if (!$async) {
             // normal query, wait for completion until timeout
-            $timeout = YAPI::GetTickCount() + YAPI_BLOCKING_REQUEST_TIMEOUT;
+            $timeout = YAPI::GetTickCount() +  YAPI::$_yapiContext->_networkTimeoutMs;
             do {
                 self::_handleEvents_internal(100);
-            } while(!$tcpreq->eof() && YAPI::GetTickCount() < $timeout);
-            if(!$tcpreq->eof()) {
+            } while (!$tcpreq->eof() && YAPI::GetTickCount() < $timeout);
+            if (!$tcpreq->eof()) {
                 $tcpreq->close();
                 return new YAPI_YReq("", YAPI_TIMEOUT,
-                                     'Timeout waiting for device reply',
-                                     null);
+                    'Timeout waiting for device reply',
+                    null);
             }
             if ($tcpreq->errorType == YAPI_UNAUTHORIZED) {
                 return new YAPI_YReq("", YAPI_UNAUTHORIZED,
-                                     'Access denied, authorization required',
-                                     null);
+                    'Access denied, authorization required',
+                    null);
             } else if ($tcpreq->errorType != YAPI_SUCCESS) {
                 return new YAPI_YReq("", $tcpreq->errorType,
-                                     'Network error while reading from device',
-                                     null);
+                    'Network error while reading from device',
+                    null);
             }
-            if(strpos($tcpreq->meta, "OK\r\n") === 0) {
+            if (strpos($tcpreq->meta, "OK\r\n") === 0) {
                 return new YAPI_YReq("", YAPI_SUCCESS,
-                                     'no error',
-                                     $tcpreq->reply);
+                    'no error',
+                    $tcpreq->reply);
             }
-            if(strpos($tcpreq->meta, "0K\r\n") === 0) {
+            if (strpos($tcpreq->meta, "0K\r\n") === 0) {
                 return new YAPI_YReq("", YAPI_SUCCESS,
-                                     'no error',
-                                     $tcpreq->reply);
+                    'no error',
+                    $tcpreq->reply);
             }
             $matches = null;
-            if(!preg_match('/^HTTP[^ ]* (?P<status>\d+) (?P<statusmsg>.)+$/', $tcpreq->meta, $matches)) {
+            if (!preg_match('/^HTTP[^ ]* (?P<status>\d+) (?P<statusmsg>.)+$/', $tcpreq->meta, $matches)) {
                 return new YAPI_YReq("", YAPI_IO_ERROR,
-                                     'Unexpected HTTP response header: '.$tcpreq->meta,
-                                     null);
+                    'Unexpected HTTP response header: ' . $tcpreq->meta,
+                    null);
             }
-            if($matches['status'] != '200' && $matches['status'] != '304') {
+            if ($matches['status'] != '200' && $matches['status'] != '304') {
                 return new YAPI_YReq("", YAPI_IO_ERROR,
-                                     'Received HTTP status '.$matches['status'].' ('.$matches['statusmsg'].')',
-                                     null);
+                    'Received HTTP status ' . $matches['status'] . ' (' . $matches['statusmsg'] . ')',
+                    null);
             }
         }
 
         return new YAPI_YReq("", YAPI_SUCCESS,
-                             'no error',
-                             $tcpreq->reply);
+            'no error',
+            $tcpreq->reply);
     }
+
+
+    public static function isReadOnly($str_device)
+    {
+        $dev = self::getDevice($str_device);
+        if (!$dev) {
+            return true;
+        }
+        $rooturl = $dev->getRootUrl();
+        $pos = strpos($rooturl, '/',7);
+        if ($pos >= 0) {
+            $rooturl = substr($rooturl,0, $pos+1);
+        }
+
+        if (!isset(self::$_hubs[$rooturl])) {
+            return true;
+        }
+
+        $hub = self::$_hubs[$rooturl];
+        if ($hub->writeProtected && $hub->user != 'admin' && !$hub->isCachedHub()) {
+            // async query, make sure the hub is not write-protected
+            return true;
+        }
+        return false;
+    }
+
+
     /**
      * Retrun the serialnummber of all subdevcies
      * @param string $str_device
@@ -2814,21 +2895,21 @@ class YAPI
     public static function getSubDevicesFrom($str_device)
     {
         $dev = self::getDevice($str_device);
-        if(!$dev) {
+        if (!$dev) {
             return '';
         }
         $baseUrl = $dev->getRootUrl();
         $baseUrl = str_replace('http://', '', $baseUrl);
         $pos = strpos($baseUrl, '/');
-        if($pos !== false) {
+        if ($pos !== false) {
             $baseUrl = substr($baseUrl, 0, $pos);
         }
         $rooturl = "http://$baseUrl/";
-        if(!isset(self::$_hubs[$rooturl])) {
+        if (!isset(self::$_hubs[$rooturl])) {
             return new YAPI_YReq("", YAPI_DEVICE_NOT_FOUND, 'No hub registered on ' . $baseUrl, null);
         }
         $hub = self::$_hubs[$rooturl];
-        if($hub->serialByYdx[0] == $str_device) {
+        if ($hub->serialByYdx[0] == $str_device) {
             return array_slice($hub->serialByYdx, 1);
         }
         return array();
@@ -2843,18 +2924,18 @@ class YAPI
     public static function getHubSerialFrom($str_device)
     {
         $dev = self::getDevice($str_device);
-        if(!$dev) {
+        if (!$dev) {
             return '';
         }
         $baseUrl = $dev->getRootUrl();
         $baseUrl = str_replace('http://', '', $baseUrl);
         $pos = strpos($baseUrl, '/');
-        if($pos !== false) {
+        if ($pos !== false) {
             $baseUrl = substr($baseUrl, 0, $pos);
         }
         $rooturl = "http://$baseUrl/";
-        if(!isset(self::$_hubs[$rooturl])) {
-            return new YAPI_YReq("", YAPI_DEVICE_NOT_FOUND, 'No hub registered on '.$baseUrl, null);
+        if (!isset(self::$_hubs[$rooturl])) {
+            return new YAPI_YReq("", YAPI_DEVICE_NOT_FOUND, 'No hub registered on ' . $baseUrl, null);
         }
         $hub = self::$_hubs[$rooturl];
         return $hub->serialByYdx[0];
@@ -2869,78 +2950,78 @@ class YAPI
     public static function funcRequest($str_className, $str_func, $str_extra)
     {
         $resolve = self::resolveFunction($str_className, $str_func);
-        if($resolve->errorType != YAPI_SUCCESS) {
-            if($resolve->errorType == YAPI_DEVICE_NOT_FOUND && sizeof(self::$_hubs) == 0) {
+        if ($resolve->errorType != YAPI_SUCCESS) {
+            if ($resolve->errorType == YAPI_DEVICE_NOT_FOUND && sizeof(self::$_hubs) == 0) {
                 // when USB is supported, check if no USB device is connected before outputing this message
                 $resolve->errorMsg = "Impossible to contact any device because no hub has been registered";
             } else {
                 $resolve = self::_updateDeviceList_internal(true, false);
-                if($resolve->errorType != YAPI_SUCCESS) {
+                if ($resolve->errorType != YAPI_SUCCESS) {
                     return $resolve;
                 }
                 $resolve = self::resolveFunction($str_className, $str_func);
             }
-            if($resolve->errorType != YAPI_SUCCESS) {
+            if ($resolve->errorType != YAPI_SUCCESS) {
                 return $resolve;
             }
         }
         $str_func = $resolve->result;
         $dotpos = strpos($str_func, '.');
-        $devid = substr($str_func,0,$dotpos);
-        $funcid = substr($str_func,$dotpos+1);
+        $devid = substr($str_func, 0, $dotpos);
+        $funcid = substr($str_func, $dotpos + 1);
         $dev = self::getDevice($devid);
-        if(!$dev) {
+        if (!$dev) {
             // try to force a device list update to check if the device arrived in between
             $resolve = self::_updateDeviceList_internal(true, false);
-            if($resolve->errorType != YAPI_SUCCESS) {
+            if ($resolve->errorType != YAPI_SUCCESS) {
                 return $resolve;
             }
             $dev = self::getDevice($devid);
-            if(!$dev) {
+            if (!$dev) {
                 return new YAPI_YReq("{$devid}.{$funcid}", YAPI_DEVICE_NOT_FOUND,
-                                     "Device [$devid] not online",
-                                     null);
+                    "Device [$devid] not online",
+                    null);
             }
         }
         $loadval = false;
-        if($str_extra == '') {
+        if ($str_extra == '') {
             // use a cached API string, without reloading unless module is requested
             $yreq = $dev->requestAPI();
-            if(!is_null($yreq)) {
+            if (!is_null($yreq)) {
                 $yreq->hwid = "{$devid}.{$funcid}";
-                $yreq->deviceid  = $devid;
+                $yreq->deviceid = $devid;
                 $yreq->functionid = $funcid;
-                if($yreq->errorType != YAPI_SUCCESS) return $yreq;
-                $loadval = json_decode(iconv("ISO-8859-1","UTF-8", $yreq->result), true);
+                if ($yreq->errorType != YAPI_SUCCESS) return $yreq;
+                $loadval = json_decode(iconv("ISO-8859-1", "UTF-8", $yreq->result), true);
                 $loadval = $loadval[$funcid];
             }
         } else {
             $dev->dropCache();
             $yreq = new YAPI_YReq("{$devid}.{$funcid}", YAPI_NOT_INITIALIZED, "dummy", null);
         }
-        if(!$loadval) {
+        if (!$loadval) {
             // request specified function only to minimize traffic
-            if($str_extra == "") {
+            if ($str_extra == "") {
                 $httpreq = "GET /api/{$funcid}.json";
                 $yreq = self::devRequest($devid, $httpreq);
                 $yreq->hwid = "{$devid}.{$funcid}";
-                $yreq->deviceid  = $devid;
+                $yreq->deviceid = $devid;
                 $yreq->functionid = $funcid;
-                if($yreq->errorType != YAPI_SUCCESS) return $yreq;
-                $loadval = json_decode(iconv("ISO-8859-1","UTF-8", $yreq->result), true);
+                if ($yreq->errorType != YAPI_SUCCESS) return $yreq;
+                $loadval = json_decode(iconv("ISO-8859-1", "UTF-8", $yreq->result), true);
             } else {
                 $httpreq = "GET /api/{$funcid}{$str_extra}";
                 $yreq = self::devRequest($devid, $httpreq, true);
                 $yreq->hwid = "{$devid}.{$funcid}";
-                $yreq->deviceid  = $devid;
+                $yreq->deviceid = $devid;
                 $yreq->functionid = $funcid;
                 return $yreq;
             }
         }
-        if(!$loadval) {
+        if (!$loadval) {
             return new YAPI_YReq("{$devid}.{$funcid}", YAPI_IO_ERROR,
-                                 "Request failed, could not parse API value for function $str_func",
-                                 null);
+                "Request failed, could not parse API value for function $str_func",
+                null);
         }
         $yreq->result = $loadval;
         return $yreq;
@@ -2951,7 +3032,7 @@ class YAPI
     public static function HTTPRequest($str_device, $str_request)
     {
         $res = self::devRequest($str_device, $str_request);
-        if($res->errorType != YAPI_SUCCESS) {
+        if ($res->errorType != YAPI_SUCCESS) {
             return self::_throw($res->errorType, $res->errorMsg, null);
         }
         return $res->result;
@@ -2960,15 +3041,15 @@ class YAPI
 
     //--- (generated code: YAPIContext yapiwrapper)
     /**
-     * Change the time between each forced enumeration of the YoctoHub used.
-     * By default, the library performs a complete enumeration every 10 seconds.
-     * To reduce network traffic it is possible to increase this delay.
-     * This is particularly useful when a YoctoHub is connected to a GSM network
-     * where the traffic is charged. This setting does not affect modules connected by USB,
-     * nor the operation of arrival/removal callbacks.
-     * Note: This function must be called after yInitAPI.
+     * Modifies the delay between each forced enumeration of the used YoctoHubs.
+     * By default, the library performs a full enumeration every 10 seconds.
+     * To reduce network traffic, you can increase this delay.
+     * It's particularly useful when a YoctoHub is connected to the GSM network
+     * where traffic is billed. This parameter doesn't impact modules connected by USB,
+     * nor the working of module arrival/removal callbacks.
+     * Note: you must call this function after yInitAPI.
      *
-     * @param integer $deviceListValidity : number of seconds between each enumeration.
+     * @param integer $deviceListValidity : nubmer of seconds between each enumeration.
      * @noreturn
      */
     public static function SetDeviceListValidity($deviceListValidity)
@@ -2976,14 +3057,41 @@ class YAPI
         self::$_yapiContext->SetDeviceListValidity($deviceListValidity);
     }
     /**
-     * Returns the time between each forced enumeration of the YoctoHub used.
-     * Note: This function must be called after yInitAPI.
+     * Returns the delay between each forced enumeration of the used YoctoHubs.
+     * Note: you must call this function after yInitAPI.
      *
      * @return integer : the number of seconds between each enumeration.
      */
     public static function GetDeviceListValidity()
     {
         return self::$_yapiContext->GetDeviceListValidity();
+    }
+    /**
+     * Modifies the network connection delay for YAPI.RegisterHub() and
+     * YAPI.UpdateDeviceList(). This delay impacts only the YoctoHubs and VirtualHub
+     * which are accessible through the network. By default, this delay is of 20000 milliseconds,
+     * but depending or you network you may want to change this delay.
+     * For example if your network infrastructure uses a GSM connection.
+     *
+     * @param integer $networkMsTimeout : the network connection delay in milliseconds.
+     * @noreturn
+     */
+    public static function SetNetworkTimeout($networkMsTimeout)
+    {
+        self::$_yapiContext->SetNetworkTimeout($networkMsTimeout);
+    }
+    /**
+     * Returns the network connection delay for YAPI.RegisterHub() and
+     * YAPI.UpdateDeviceList(). This delay impacts only the YoctoHubs and VirtualHub
+     * which are accessible through the network. By default, this delay is of 20000 milliseconds,
+     * but depending or you network you may want to change this delay.
+     * For example if your network infrastructure uses a GSM connection.
+     *
+     * @return integer : the network connection delay in milliseconds.
+     */
+    public static function GetNetworkTimeout()
+    {
+        return self::$_yapiContext->GetNetworkTimeout();
     }
     /**
      * Change the validity period of the data loaded by the library.
@@ -3036,7 +3144,7 @@ class YAPI
      */
     public static function GetAPIVersion()
     {
-        return "1.10.33736";
+        return "1.10.37304";
     }
 
     /**
@@ -3115,9 +3223,9 @@ class YAPI
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    public static function InitAPI($mode=Y_DETECT_NET, &$errmsg='')
+    public static function InitAPI($mode = Y_DETECT_NET, &$errmsg = '')
     {
-        if(is_null(self::$_hubs)) self::_init();
+        if (is_null(self::$_hubs)) self::_init();
         $errmsg = '';
 
         return YAPI_SUCCESS;
@@ -3156,7 +3264,7 @@ class YAPI
      */
     public static function DisableExceptions()
     {
-        if(is_null(self::$_hubs)) self::_init();
+        if (is_null(self::$_hubs)) self::_init();
 
         self::$exceptionsDisabled = true;
     }
@@ -3170,7 +3278,7 @@ class YAPI
      */
     public static function EnableExceptions()
     {
-        if(is_null(self::$_hubs)) self::_init();
+        if (is_null(self::$_hubs)) self::_init();
 
         self::$exceptionsDisabled = false;
     }
@@ -3178,13 +3286,13 @@ class YAPI
     private static function _parseRegisteredURL($str_url, &$rooturl, &$auth)
     {
         $proto = 'http';
-        if(substr($str_url, 0, 7) == 'http://') {
+        if (substr($str_url, 0, 7) == 'http://') {
             $str_url = substr($str_url, 7);
-        } else if(substr($str_url, 0, 5) == 'ws://') {
+        } else if (substr($str_url, 0, 5) == 'ws://') {
             $str_url = substr($str_url, 5);
             $proto = "ws";
         }
-        while(substr($str_url, -1) == '/') {
+        while (substr($str_url, -1) == '/') {
             $str_url = substr($str_url, 0, -1);
         }
         $authpos = strpos($str_url, '@');
@@ -3192,12 +3300,12 @@ class YAPI
             $auth = '';
         } else {
             $auth = substr($str_url, 0, $authpos);
-            $str_url = substr($str_url, $authpos+1);
+            $str_url = substr($str_url, $authpos + 1);
         }
-        if(strcasecmp(substr($str_url,0,8),"callback")==0) {
-            $rooturl = "http://".strtoupper($str_url)."/";
+        if (strcasecmp(substr($str_url, 0, 8), "callback") == 0) {
+            $rooturl = "http://" . strtoupper($str_url) . "/";
         } else {
-            if(strpos($str_url, ':') === false) {
+            if (strpos($str_url, ':') === false) {
                 $str_url .= ':4444';
             }
             $rooturl = "{$proto}://{$str_url}/";
@@ -3248,9 +3356,9 @@ class YAPI
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    public static function RegisterHub($url,&$errmsg='')
+    public static function RegisterHub($url, &$errmsg = '')
     {
-        if(is_null(self::$_hubs)) self::_init();
+        if (is_null(self::$_hubs)) self::_init();
 
         $rooturl = $url;
         $auth = '';
@@ -3259,39 +3367,40 @@ class YAPI
         // Test hub
         $tcphub = new YTcpHub($rooturl, $auth);
         $res = $tcphub->verfiyStreamAddr(true, $errmsg);
-        if($res < 0) {
+        if ($res < 0) {
             return self::_throw(YAPI_IO_ERROR, $errmsg, YAPI_IO_ERROR);
         }
-        $tcpreq = new YTcpReq($tcphub, "GET /api/module.json", false);
-        if($tcpreq->process($errmsg) != YAPI_SUCCESS) {
+
+        $timeout = YAPI::GetTickCount() + YAPI::$_yapiContext->_networkTimeoutMs;
+        $tcpreq = new YTcpReq($tcphub, "GET /api/module.json", false, '', YAPI::$_yapiContext->_networkTimeoutMs);
+        if ($tcpreq->process($errmsg) != YAPI_SUCCESS) {
             return self::_throw($tcpreq->errorType, $errmsg, $tcpreq->errorType);
         }
         self::$_pendingRequests[] = $tcpreq;
-        $timeout = YAPI::GetTickCount() + YAPI_BLOCKING_REQUEST_TIMEOUT;
         do {
             self::_handleEvents_internal(100);
         } while (!$tcpreq->eof() && YAPI::GetTickCount() < $timeout);
         if (!$tcpreq->eof()) {
             $tcpreq->close();
             $errmsg = 'Timeout waiting for device reply';
-            return self::_throw(YAPI_TIMEOUT,$errmsg , YAPI_TIMEOUT);
+            return self::_throw(YAPI_TIMEOUT, $errmsg, YAPI_TIMEOUT);
         }
         if ($tcpreq->errorType == YAPI_UNAUTHORIZED) {
             $errmsg = 'Access denied, authorization required';
             return self::_throw(YAPI_UNAUTHORIZED, $errmsg, YAPI_UNAUTHORIZED);
         } else if ($tcpreq->errorType != YAPI_SUCCESS) {
-            $errmsg = 'Network error while testing hub :'. $tcpreq->errorMsg;
+            $errmsg = 'Network error while testing hub :' . $tcpreq->errorMsg;
             return self::_throw($tcpreq->errorType, $errmsg, $tcpreq->errorType);
         }
 
         // Add hub to known list
-        if(!isset(self::$_hubs[$rooturl])) {
+        if (!isset(self::$_hubs[$rooturl])) {
             self::$_hubs[$rooturl] = $tcphub;
         }
 
         // Register device list
         $yreq = self::_updateDeviceList_internal(true, false);
-        if($yreq->errorType != YAPI_SUCCESS) {
+        if ($yreq->errorType != YAPI_SUCCESS) {
             $errmsg = $yreq->errorMsg;
             return self::_throw($yreq->errorType, $yreq->errorMsg, $yreq->errorType);
         }
@@ -3314,18 +3423,18 @@ class YAPI
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    public static function PreregisterHub($url,&$errmsg='')
+    public static function PreregisterHub($url, &$errmsg = '')
     {
-        if(is_null(self::$_hubs)) self::_init();
+        if (is_null(self::$_hubs)) self::_init();
 
         $rooturl = $url;
         $auth = '';
         self::_parseRegisteredURL($url, $rooturl, $auth);
 
         // Add hub to known list
-        if(!isset(self::$_hubs[$rooturl])) {
+        if (!isset(self::$_hubs[$rooturl])) {
             self::$_hubs[$rooturl] = new YTcpHub($rooturl, $auth);
-            if(self::$_hubs[$rooturl]->verfiyStreamAddr(true, $errmsg)<0){
+            if (self::$_hubs[$rooturl]->verfiyStreamAddr(true, $errmsg) < 0) {
                 return self::_throw(YAPI_IO_ERROR, $errmsg, YAPI_IO_ERROR);
             }
         }
@@ -3350,11 +3459,27 @@ class YAPI
         $auth = '';
         self::_parseRegisteredURL($url, $str_url, $auth);
         $new_hubs = array();
-        foreach(self::$_hubs as $hub_url=> $hubst){
+        foreach (self::$_hubs as $hub_url => $hubst) {
             if ($hub_url == $str_url) {
+                // leave max 10 second to finish pending requests
+                $timeout = YAPI::GetTickCount() + 10000;
+                foreach (self::$_pendingRequests as $tcpreq) {
+                    if ($tcpreq->hub->rooturl === $hubst->rooturl) {
+                        $request = trim($tcpreq->request);
+                        if (substr($request, 0, 12) == 'GET /not.byn') {
+                            continue;
+                        }
+                        while (!$tcpreq->eof() && YAPI::GetTickCount() < $timeout) {
+                            self::_handleEvents_internal(100);
+                        }
+                    }
+                }
                 // remove all connected devices
                 foreach (self::$_hubs[$hub_url]->serialByYdx as $serial) {
                     self::forgetDevice(self::$_devs[$serial]);
+                }
+                if ($hubst->notifReq) {
+                    $hubst->notifReq->close();
                 }
             } else {
                 $new_hubs[$hub_url] = self::$_hubs[$hub_url];
@@ -3378,9 +3503,9 @@ class YAPI
      *
      * On failure returns a negative error code.
      */
-    public static function TestHub($url, $mstimeout, &$errmsg='')
+    public static function TestHub($url, $mstimeout, &$errmsg = '')
     {
-        if(is_null(self::$_hubs)) self::_init();
+        if (is_null(self::$_hubs)) self::_init();
 
         $rooturl = $url;
         $auth = '';
@@ -3389,16 +3514,16 @@ class YAPI
         // Test hub
         $tcphub = new YTcpHub($rooturl, $auth);
         $res = $tcphub->verfiyStreamAddr(false, $errmsg);
-        if($res < 0) {
+        if ($res < 0) {
             return YAPI_IO_ERROR;
         }
-        if($tcphub->streamaddr == 'tcp://CALLBACK/') {
+        if ($tcphub->streamaddr == 'tcp://CALLBACK/') {
             return YAPI_SUCCESS;
         }
         $tcpreq = new YTcpReq($tcphub, "GET /api/module.json", false, '', $mstimeout);
         $timeout = YAPI::GetTickCount() + $mstimeout;
         do {
-            if($tcpreq->process($errmsg) != YAPI_SUCCESS) {
+            if ($tcpreq->process($errmsg) != YAPI_SUCCESS) {
                 return $tcpreq->errorType;
             }
         } while (!$tcpreq->eof() && YAPI::GetTickCount() < $timeout);
@@ -3411,7 +3536,7 @@ class YAPI
             $errmsg = 'Access denied, authorization required';
             return YAPI_UNAUTHORIZED;
         } else if ($tcpreq->errorType != YAPI_SUCCESS) {
-            $errmsg = 'Network error while testing hub :'. $tcpreq->errorMsg;
+            $errmsg = 'Network error while testing hub :' . $tcpreq->errorMsg;
             return $tcpreq->errorType;
         }
         return YAPI_SUCCESS;
@@ -3429,7 +3554,7 @@ class YAPI
         $errno = 0;
         $errstr = '';
         $implicitPort = '';
-        if(strpos($host,':') === false) {
+        if (strpos($host, ':') === false) {
             $implicitPort = ':80';
         }
         $skt = stream_socket_client("tcp://$host$implicitPort", $errno, $errstr, 10);
@@ -3438,9 +3563,9 @@ class YAPI
             return YAPI_IO_ERROR;
         }
         $request = "POST $relurl HTTP/1.1\r\nHost: $host\r\nConnection: close\r\n";
-        $request .= "User-Agent: ".$_SERVER['HTTP_USER_AGENT']."\r\n";
+        $request .= "User-Agent: " . $_SERVER['HTTP_USER_AGENT'] . "\r\n";
         $request .= "Content-Type: application/json\r\n";
-        $request .= "Content-Length: ".strlen($cbdata)."\r\n\r\n";
+        $request .= "Content-Length: " . strlen($cbdata) . "\r\n\r\n";
         $reqlen = strlen($request);
         if (fwrite($skt, $request, $reqlen) != $reqlen) {
             fclose($skt);
@@ -3455,17 +3580,17 @@ class YAPI
         $chunked = false;
         $chunkhdr = '';
         $chunksize = 0;
-        while(true) {
+        while (true) {
             $data = fread($skt, 8192);
-            if($data === false || !is_resource($skt)) {
+            if ($data === false || !is_resource($skt)) {
                 fclose($skt);
                 $errmsg = "failed to read from socket";
                 return YAPI_IO_ERROR;
             }
-            if(strlen($data) == 0) {
-                if(feof($skt)) {
+            if (strlen($data) == 0) {
+                if (feof($skt)) {
                     fclose($skt);
-                    if(!$headerOK) {
+                    if (!$headerOK) {
                         $errmsg = "connection closed unexpectly";
                         return YAPI_IO_ERROR;
                     }
@@ -3474,68 +3599,70 @@ class YAPI
                     $rd = Array($skt);
                     $wr = NULL;
                     $ex = NULL;
-                    if(false === ($select_res = stream_select($rd, $wr, $ex, 0, 1000000))) {
+                    if (false === ($select_res = stream_select($rd, $wr, $ex, 0, 1000000))) {
                         $errmsg = "stream select error";
                         return YAPI_IO_ERROR;
                     }
                 }
                 continue;
             }
-            if(!$headerOK) {
+            if (!$headerOK) {
                 $header .= $data;
                 $data = '';
                 $eoh = strpos($header, "\r\n\r\n");
-                if($eoh !== false) {
+                if ($eoh !== false) {
                     // fully received header
                     $headerOK = true;
-                    $data = substr($header, $eoh+4);
-                    $header = substr($header, 0, $eoh+4);
+                    $data = substr($header, $eoh + 4);
+                    $header = substr($header, 0, $eoh + 4);
                     $lines = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $header));
                     $meta = array();
-                    foreach($lines as $line) {
-                        if(preg_match('/([^:]+): (.+)/m', $line, $match)) {
-                            $match[1] = preg_replace_callback('/(?<=^|[\x09\x20\x2D])./', function($matches) { return strtoupper($matches[0]); }, strtolower(trim($match[1])));
+                    foreach ($lines as $line) {
+                        if (preg_match('/([^:]+): (.+)/m', $line, $match)) {
+                            $match[1] = preg_replace_callback('/(?<=^|[\x09\x20\x2D])./', function ($matches) {
+                                return strtoupper($matches[0]);
+                            }, strtolower(trim($match[1])));
                             $meta[$match[1]] = trim($match[2]);
                         }
                     }
                     $firstline = $lines[0];
                     $words = explode(' ', $firstline);
                     $code = $words[1];
-                    if($code == '401') {
+                    if ($code == '401') {
                         fclose($skt);
                         $errmsg = "HTTP Authentication not supported";
                         return YAPI_UNAUTHORIZED;
-                    } else if($code == '101') {
+                    } else if ($code == '101') {
                         fclose($skt);
                         $errmsg = "Websocket not supported";
                         return YAPI_NOT_SUPPORTED;
-                    } else if($code >= '300' && $code <= '302' && isset($meta['Location'])) {
+                    } else if ($code >= '300' && $code <= '302' && isset($meta['Location'])) {
                         fclose($skt);
                         return self::_forwardHTTPreq($host, $meta['Location'], $cbdata, $errmsg);
-                    } else if(substr($code,0,2) != '20' || $code[2] == '3') {
+                    } else if (substr($code, 0, 2) != '20' || $code[2] == '3') {
                         fclose($skt);
-                        $errmsg = "HTTP error".substr($firstline, strlen($words[0]));
+                        $errmsg = "HTTP error" . substr($firstline, strlen($words[0]));
                         return YAPI_NOT_SUPPORTED;
                     }
                     $chunked = isset($meta['Transfer-Encoding']) && strtolower($meta['Transfer-Encoding']) == 'chunked';
                 }
             }
             // process body according to encoding
-            if(!$chunked) {
+            if (!$chunked) {
                 print $data;
                 continue;
             }
             // chunk decoding
-            while(strlen($data) > 0) {
-                if($chunksize == 0) {
+            while (strlen($data) > 0) {
+                if ($chunksize == 0) {
                     // reading chunk size
                     $chunkhdr .= $data;
-                    if(substr($chunkhdr, 0, 2) == "\r\n") {
-                        $chunkhdr = substr($chunkhdr,2);
+                    if (substr($chunkhdr, 0, 2) == "\r\n") {
+                        $chunkhdr = substr($chunkhdr, 2);
                     }
                     $endhdr = strpos($chunkhdr, "\r\n");
-                    if($endhdr !== false) {
-                        $data = substr($chunkhdr, $endhdr+2);
+                    if ($endhdr !== false) {
+                        $data = substr($chunkhdr, $endhdr + 2);
                         $sizestr = substr($chunkhdr, 0, $endhdr);
                         $chunksize = hexdec($sizestr);
                         $chunkhdr = '';
@@ -3545,11 +3672,11 @@ class YAPI
                 } else {
                     // reading chunk data
                     $datalen = strlen($data);
-                    if($datalen > $chunksize) {
+                    if ($datalen > $chunksize) {
                         $datalen = $chunksize;
                     }
-                    print(substr($data,0,$datalen));
-                    $data = substr($data,$datalen);
+                    print(substr($data, 0, $datalen));
+                    $data = substr($data, $datalen);
                     $chunksize -= $datalen;
                 }
             }
@@ -3569,17 +3696,17 @@ class YAPI
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    public static function ForwardHTTPCallback($url,&$errmsg="")
+    public static function ForwardHTTPCallback($url, &$errmsg = "")
     {
         $rooturl = 'callback';
         $auth = '';
         self::_parseRegisteredURL('callback', $rooturl, $auth);
-        if(isset(self::$_hubs[$rooturl])) {
+        if (isset(self::$_hubs[$rooturl])) {
             $cb_hub = self::$_hubs[$rooturl];
             // data to post is found in $cb_hub->callbackData
             $url = str_replace('http://', '', $url);
             $pos = strpos($url, '/');
-            if($pos === FALSE) {
+            if ($pos === FALSE) {
                 $relurl = '/';
             } else {
                 $relurl = substr($url, $pos);
@@ -3599,7 +3726,9 @@ class YAPI
      * in case a change in the list of connected devices is detected.
      *
      * This function can be called as frequently as desired to refresh the device list
-     * and to make the application aware of hot-plug events.
+     * and to make the application aware of hot-plug events. However, since device
+     * detection is quite a heavy process, UpdateDeviceList shouldn't be called more
+     * than once every two seconds.
      *
      * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
      *
@@ -3607,10 +3736,10 @@ class YAPI
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    public static function UpdateDeviceList(&$errmsg='')
+    public static function UpdateDeviceList(&$errmsg = '')
     {
         $yreq = self::_updateDeviceList_internal(false, true);
-        if($yreq->errorType != YAPI_SUCCESS) {
+        if ($yreq->errorType != YAPI_SUCCESS) {
             $errmsg = $yreq->errorMsg;
             return self::_throw($yreq->errorType, $yreq->errorMsg, $yreq->errorType);
         }
@@ -3634,7 +3763,7 @@ class YAPI
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    public static function HandleEvents(&$errmsg='')
+    public static function HandleEvents(&$errmsg = '')
     {
         // monitor hubs for events
         /** @noinspection PhpStatementHasEmptyBodyInspection */
@@ -3642,9 +3771,9 @@ class YAPI
 
         // handle pending events
         $nEvents = sizeof(self::$_data_events);
-        for($i = 0; $i < $nEvents; $i++) {
+        for ($i = 0; $i < $nEvents; $i++) {
             $evt = self::$_data_events[$i];
-            if(is_string($evt[1])) {
+            if (is_string($evt[1])) {
                 /** @var $fun YFunction */
                 $fun = $evt[0];
                 // event object is an advertised value
@@ -3655,8 +3784,8 @@ class YAPI
                 // event object is an array of bytes (encoded timed report)
                 /** @noinspection PhpUndefinedMethodInspection */
                 $dev = YAPI::getDevice($ysensor->get_module()->get_serialNumber());
-                if(!is_null($dev)) {
-                    $report = $ysensor->_decodeTimedReport($evt[1],$evt[2],$evt[3]);
+                if (!is_null($dev)) {
+                    $report = $ysensor->_decodeTimedReport($evt[1], $evt[2], $evt[3]);
                     $ysensor->_invokeTimedReportCallback($report);
                 }
             }
@@ -3686,13 +3815,13 @@ class YAPI
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    public static function Sleep($ms_duration, &$errmsg='')
+    public static function Sleep($ms_duration, &$errmsg = '')
     {
         $end = YAPI::GetTickCount() + $ms_duration;
         self::HandleEvents($errmsg);
         $remain = $end - YAPI::GetTickCount();
-        while($remain > 0) {
-            if($remain > 999) $remain = 999;
+        while ($remain > 0) {
+            if ($remain > 999) $remain = 999;
             self::_handleEvents_internal($remain);
             self::HandleEvents($errmsg);
             $remain = $end - YAPI::GetTickCount();
@@ -3727,9 +3856,9 @@ class YAPI
      */
     public static function CheckLogicalName($name)
     {
-        if($name == '') return true;
-        if(!$name) return false;
-        if(strlen($name) > 19) return false;
+        if ($name == '') return true;
+        if (!$name) return false;
+        if (strlen($name) > 19) return false;
         return preg_match('/^[A-Za-z0-9_\-]*$/', $name);
     }
 
@@ -3779,24 +3908,24 @@ class YAPI
     public static function LinearCalibrationHandler($float_rawValue, $int_calibType, $arr_calibParams,
                                                     $arr_calibRawValues, $arr_calibRefValues)
     {
-        $x   = $arr_calibRawValues[0];
+        $x = $arr_calibRawValues[0];
         $adj = $arr_calibRefValues[0] - $x;
-        $i   = 0;
+        $i = 0;
 
-        if($int_calibType < YOCTO_CALIB_TYPE_OFS) {
+        if ($int_calibType < YOCTO_CALIB_TYPE_OFS) {
             // calibration types n=1..10 are meant for linear calibration using n points
             $npt = min($int_calibType % 10, sizeof($arr_calibRawValues), sizeof($arr_calibRefValues));
         } else {
             $npt = sizeof($arr_calibRefValues);
         }
-        while($float_rawValue > $arr_calibRawValues[$i] && ++$i < $npt) {
-            $x2   = $x;
+        while ($float_rawValue > $arr_calibRawValues[$i] && ++$i < $npt) {
+            $x2 = $x;
             $adj2 = $adj;
 
-            $x   = $arr_calibRawValues[$i];
+            $x = $arr_calibRawValues[$i];
             $adj = $arr_calibRefValues[$i] - $x;
 
-            if($float_rawValue < $x && $x > $x2) {
+            if ($float_rawValue < $x && $x > $x2) {
                 $adj = $adj2 + ($adj - $adj2) * ($float_rawValue - $x2) / ($x - $x2);
             }
         }
@@ -3813,43 +3942,43 @@ class YAPI
     //
     private static function decodeNetFuncValV2($p)
     {
-        $p_ofs=0;
+        $p_ofs = 0;
         $ch = ord($p[$p_ofs]);
         $len = 0;
         $funcVal = array_fill(0, 7, 0);
 
-        if($ch < 32 || $ch > 32 + 127) {
+        if ($ch < 32 || $ch > 32 + 127) {
             return null;
         }
         // get the 7 first bits
         $ch -= 32;
         $funcVal[0] = (($ch & 0x40) != 0 ? NOTIFY_V2_6RAWBYTES : NOTIFY_V2_TYPEDDATA);
-            // clear flag
-            $ch &= 0x3f;
-            while($len < YOCTO_PUBVAL_SIZE) {
-                $p_ofs++;
-                if ($p_ofs >= strlen($p))
-                    break;
-                $newCh = ord($p[$p_ofs]);
-                if ($newCh == NOTIFY_NETPKT_STOP) {
-                    break;
-                }
-                if($newCh < 32 || $newCh > 32+127) {
-                    return null;
-                }
-                $newCh -= 32;
-                $ch = ($ch << 7) + $newCh;
-                $funcVal[$len + 1] = ($ch >> (5 - $len)) & 0xff;
-                $len++;
+        // clear flag
+        $ch &= 0x3f;
+        while ($len < YOCTO_PUBVAL_SIZE) {
+            $p_ofs++;
+            if ($p_ofs >= strlen($p))
+                break;
+            $newCh = ord($p[$p_ofs]);
+            if ($newCh == NOTIFY_NETPKT_STOP) {
+                break;
             }
-            return $funcVal;
+            if ($newCh < 32 || $newCh > 32 + 127) {
+                return null;
+            }
+            $newCh -= 32;
+            $ch = ($ch << 7) + $newCh;
+            $funcVal[$len + 1] = ($ch >> (5 - $len)) & 0xff;
+            $len++;
         }
+        return $funcVal;
+    }
 
     private static function decodePubVal($typeV2, $funcval, $ofs, $funcvalen)
     {
         $buffer = "";
         if ($typeV2 == NOTIFY_V2_6RAWBYTES || $typeV2 == NOTIFY_V2_TYPEDDATA) {
-            if($typeV2 == NOTIFY_V2_6RAWBYTES) {
+            if ($typeV2 == NOTIFY_V2_6RAWBYTES) {
                 $funcValType = PUBVAL_6RAWBYTES;
             } else {
                 $funcValType = $funcval[$ofs++];
@@ -3871,7 +4000,7 @@ class YAPI
                         $buffer .= dechex($b);
                         $b = $c & 0xf;
                         $buffer .= dechex($b);
-                   }
+                    }
                     return $buffer;
                 case PUBVAL_C_LONG:
                 case PUBVAL_YOCTO_FLOAT_E3:
@@ -3880,7 +4009,7 @@ class YAPI
                     $numVal += $funcval[$ofs++] << 8;
                     $numVal += $funcval[$ofs++] << 16;
                     $numVal += $funcval[$ofs++] << 24;
-                    if($funcValType == PUBVAL_C_LONG) {
+                    if ($funcValType == PUBVAL_C_LONG) {
                         return sprintf("%d", $numVal);
                     } else {
                         $buffer = sprintf("%.3f", $numVal / 1000.0);
@@ -3888,9 +4017,9 @@ class YAPI
                         while ($endp > 0 && $buffer[$endp - 1] == '0') {
                             --$endp;
                         }
-                        if($endp > 0 && $buffer[$endp - 1] == '.') {
+                        if ($endp > 0 && $buffer[$endp - 1] == '.') {
                             --$endp;
-                            $buffer = substr($buffer,0, $endp);
+                            $buffer = substr($buffer, 0, $endp);
                         }
                         return $buffer;
                     }
@@ -3908,9 +4037,9 @@ class YAPI
                     while ($endp > 0 && $buffer[$endp - 1] == '0') {
                         --$endp;
                     }
-                    if($endp > 0 && $buffer[$endp - 1] == '.') {
+                    if ($endp > 0 && $buffer[$endp - 1] == '.') {
                         --$endp;
-                        $buffer = substr($buffer,0, $endp);
+                        $buffer = substr($buffer, 0, $endp);
                     }
                     return $buffer;
                 default:
@@ -3957,11 +4086,11 @@ class YMeasure
         //--- (generated code: YMeasure constructor)
         //--- (end of generated code: YMeasure constructor)
 
-        $this->_start                        = $float_start;
-        $this->_end                          = $float_end;
-        $this->_minVal                       = $float_minVal;
-        $this->_avgVal                       = $float_avgVal;
-        $this->_maxVal                       = $float_maxVal;
+        $this->_start = $float_start;
+        $this->_end = $float_end;
+        $this->_minVal = $float_minVal;
+        $this->_avgVal = $float_avgVal;
+        $this->_maxVal = $float_maxVal;
     }
 
     //--- (generated code: YMeasure implementation)
@@ -4070,28 +4199,28 @@ class YFirmwareUpdate
         return $this->_progress;
     }
 
-    private static function CheckFirmware_internal($serial,$path,$minrelease)
+    private static function CheckFirmware_internal($serial, $path, $minrelease)
     {
         if ($path == "http://www.yoctopuce.com" || $path == "www.yoctopuce.com") {
             $yoctopuce_infos = file_get_contents('http://www.yoctopuce.com/FR/common/getLastFirmwareLink.php?serial=' . $serial);
             if ($yoctopuce_infos === false) {
                 return 'error: Unable to get last firmware info from www.yoctopuce.com';
             }
-            $jsonData = json_decode($yoctopuce_infos,true);
-            if (!array_key_exists('link',$jsonData) || !array_key_exists('version',$jsonData)) {
+            $jsonData = json_decode($yoctopuce_infos, true);
+            if (!array_key_exists('link', $jsonData) || !array_key_exists('version', $jsonData)) {
                 return 'error: Invalid JSON response from www.yoctopuce.com';
             }
             $link = $jsonData['link'];
             $version = $jsonData['version'];
-            if($minrelease != "") {
-                if($version >$minrelease) {
+            if ($minrelease != "") {
+                if ($version > $minrelease) {
                     return $link;
                 }
             } else {
                 return $link;
             }
             return '';
-        }else {
+        } else {
             return 'error: Not yet supported in PHP';
         }
     }
@@ -4256,7 +4385,7 @@ class YDataStream
         //--- (end of generated code: YDataStream constructor)
         $this->_parent = $obj_parent;
         $this->_calhdl = null;
-        if(!is_null($obj_dataset)) {
+        if (!is_null($obj_dataset)) {
             $this->_initFromDataSet($obj_dataset, $encoded);
         }
     }
@@ -4305,7 +4434,15 @@ class YDataStream
             $val = 0;
         }
         $this->_nRows = $val;
-        $this->_duration = $this->_nRows * $this->_dataSamplesInterval;
+        if ($this->_nRows > 0) {
+            if ($this->_firstMeasureDuration > 0) {
+                $this->_duration = $this->_firstMeasureDuration + ($this->_nRows - 1) * $this->_dataSamplesInterval;
+            } else {
+                $this->_duration = $this->_nRows * $this->_dataSamplesInterval;
+            }
+        } else {
+            $this->_duration = 0;
+        }
         // precompute decoding parameters
         $iCalib = $dataset->_get_calibration();
         $this->_caltyp = $iCalib[0];
@@ -4742,19 +4879,19 @@ class YDataSet
         //--- (generated code: YDataSet constructor)
         //--- (end of generated code: YDataSet constructor)
         $this->_summary = new YMeasure(0, 0, 0, 0, 0);
-        if(is_null($str_unit)) {
+        if (is_null($str_unit)) {
             // 1st version of constructor, called from YDataLogger
-            $this->_parent     = $obj_parent;
+            $this->_parent = $obj_parent;
             $this->_startTime = 0;
-            $this->_endTime   = 0;
+            $this->_endTime = 0;
         } else {
             // 2nd version of constructor, called from YFunction
-            $this->_parent     = $obj_parent;
+            $this->_parent = $obj_parent;
             $this->_functionId = $str_functionId;
-            $this->_unit       = $str_unit;
-            $this->_startTimeMs= $float_startTime * 1000;
-            $this->_endTimeMs  = $float_endTime * 1000;
-            $this->_progress   = -1;
+            $this->_unit = $str_unit;
+            $this->_startTimeMs = $float_startTime * 1000;
+            $this->_endTimeMs = $float_endTime * 1000;
+            $this->_progress = -1;
         }
     }
 
@@ -5301,28 +5438,28 @@ class YDataSet
     // YDataSet parser for stream list
     public function _parse($str_json)
     {
-        $loadval = json_decode(iconv("ISO-8859-1","UTF-8", $str_json), true);
+        $loadval = json_decode(iconv("ISO-8859-1", "UTF-8", $str_json), true);
 
         $this->_functionId = $loadval['id'];
-        $this->_unit       = $loadval['unit'];
-        if(isset($loadval['calib'])) {
-            $this->_calib  = YAPI::_decodeFloats($loadval['calib']);
+        $this->_unit = $loadval['unit'];
+        if (isset($loadval['calib'])) {
+            $this->_calib = YAPI::_decodeFloats($loadval['calib']);
             $this->_calib[0] = intVal($this->_calib[0] / 1000);
         } else {
-            $this->_calib  = YAPI::_decodeWords($loadval['cal']);
+            $this->_calib = YAPI::_decodeWords($loadval['cal']);
         }
-        $this->_summary    = new YMeasure(0,0,0,0,0);
-        $this->_streams    = Array();
-        $this->_preview    = Array();
-        $this->_measures   = Array();
-        for($i = 0; $i < sizeof($loadval['streams']); $i++) {
+        $this->_summary = new YMeasure(0, 0, 0, 0, 0);
+        $this->_streams = Array();
+        $this->_preview = Array();
+        $this->_measures = Array();
+        for ($i = 0; $i < sizeof($loadval['streams']); $i++) {
             /** @var $stream YDataStream */
             $stream = $this->_parent->_findDataStream($this, $loadval['streams'][$i]);
             $streamStartTime = $stream->get_realstartTimeUTC() * 1000;
             $streamEndTime = $streamStartTime + $stream->get_realDuration() * 1000;
-            if($this->_startTimeMs > 0 && $streamEndTime <= $this->_startTimeMs) {
+            if ($this->_startTimeMs > 0 && $streamEndTime <= $this->_startTimeMs) {
                 // this stream is too early, drop it
-            } else if($this->_endTimeMs > 0 && $streamStartTime >= $this->_endTimeMs) {
+            } else if ($this->_endTimeMs > 0 && $streamStartTime >= $this->_endTimeMs) {
                 // this stream is too late, drop it
             } else {
                 $this->_streams[] = $stream;
@@ -5331,6 +5468,162 @@ class YDataSet
         $this->_progress = 0;
         return $this->get_progress();
     }
+}
+
+//--- (generated code: YConsolidatedDataSet declaration)
+/**
+ * YConsolidatedDataSet Class: Cross-sensor consolidated data sequence
+ *
+ * YConsolidatedDataSet objects make it possible to retrieve a set of
+ * recorded measures from multiple sensors, for a specified time interval.
+ * They can be used to load data points progressively, and to receive
+ * data records by timestamp, one by one..
+ */
+class YConsolidatedDataSet
+{
+    //--- (end of generated code: YConsolidatedDataSet declaration)
+ 
+    //--- (generated code: YConsolidatedDataSet attributes)
+    protected $_start                    = 0;                            // float
+    protected $_end                      = 0;                            // float
+    protected $_nsensors                 = 0;                            // int
+    protected $_sensors                  = Array();                      // YSensorArr
+    protected $_datasets                 = Array();                      // YDataSetArr
+    protected $_progresss                = Array();                      // intArr
+    protected $_nextidx                  = Array();                      // intArr
+    protected $_nexttim                  = Array();                      // floatArr
+    //--- (end of generated code: YConsolidatedDataSet attributes)
+
+    public function __construct($float_startTime, $float_endTime, $obj_sensorList)
+    {
+        //--- (generated code: YConsolidatedDataSet constructor)
+        //--- (end of generated code: YConsolidatedDataSet constructor)
+        $this->_init($float_startTime, $float_endTime, $obj_sensorList);
+    }
+
+    //--- (generated code: YConsolidatedDataSet implementation)
+
+    public function _init($startt,$endt,$sensorList)
+    {
+        $this->_start = $startt;
+        $this->_end = $endt;
+        $this->_sensors = $sensorList;
+        $this->_nsensors = -1;
+        return YAPI_SUCCESS;
+    }
+
+    /**
+     * Extracts the next data record from the dataLogger of all sensors linked to this
+     * object.
+     *
+     * @param double[] $datarec : array of floating point numbers, that will be filled by the
+     *         function with the timestamp of the measure in first position,
+     *         followed by the measured value in next positions.
+     *
+     * @return integer : an integer in the range 0 to 100 (percentage of completion),
+     *         or a negative error code in case of failure.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    public function nextRecord(&$datarec)
+    {
+        // $s                      is a int;
+        // $idx                    is a int;
+        // $sensor                 is a YSensor;
+        // $newdataset             is a YDataSet;
+        // $globprogress           is a int;
+        // $currprogress           is a int;
+        // $currnexttim            is a float;
+        // $newvalue               is a float;
+        $measures = Array();    // YMeasureArr;
+        // $nexttime               is a float;
+        //
+        // Ensure the dataset have been retrieved
+        //
+        if ($this->_nsensors == -1) {
+            $this->_nsensors = sizeof($this->_sensors);
+            while(sizeof($this->_datasets) > 0) { array_pop($this->_datasets); };
+            while(sizeof($this->_progresss) > 0) { array_pop($this->_progresss); };
+            while(sizeof($this->_nextidx) > 0) { array_pop($this->_nextidx); };
+            while(sizeof($this->_nexttim) > 0) { array_pop($this->_nexttim); };
+            $s = 0;
+            while ($s < $this->_nsensors) {
+                $sensor = $this->_sensors[$s];
+                $newdataset = $sensor->get_recordedData($this->_start, $this->_end);
+                $this->_datasets[] = $newdataset;
+                $this->_progresss[] = 0;
+                $this->_nextidx[] = 0;
+                $this->_nexttim[] = 0.0;
+                $s = $s + 1;
+            }
+        }
+        while(sizeof($datarec) > 0) { array_pop($datarec); };
+        //
+        // Find next timestamp to process
+        //
+        $nexttime = 0;
+        $s = 0;
+        while ($s < $this->_nsensors) {
+            $currnexttim = $this->_nexttim[$s];
+            if ($currnexttim == 0) {
+                $idx = $this->_nextidx[$s];
+                $measures = $this->_datasets[$s]->get_measures();
+                $currprogress = $this->_progresss[$s];
+                while (($idx >= sizeof($measures)) && ($currprogress < 100)) {
+                    $currprogress = $this->_datasets[$s]->loadMore();
+                    if ($currprogress < 0) {
+                        $currprogress = 100;
+                    }
+                    $this->_progresss[$s] = $currprogress;
+                    $measures = $this->_datasets[$s]->get_measures();
+                }
+                if ($idx < sizeof($measures)) {
+                    $currnexttim = $measures[$idx]->get_endTimeUTC();
+                    $this->_nexttim[$s] = $currnexttim;
+                }
+            }
+            if ($currnexttim > 0) {
+                if (($nexttime == 0) || ($nexttime > $currnexttim)) {
+                    $nexttime = $currnexttim;
+                }
+            }
+            $s = $s + 1;
+        }
+        if ($nexttime == 0) {
+            return 100;
+        }
+        //
+        // Extract data for $this timestamp
+        //
+        while(sizeof($datarec) > 0) { array_pop($datarec); };
+        $datarec[] = $nexttime;
+        $globprogress = 0;
+        $s = 0;
+        while ($s < $this->_nsensors) {
+            if ($this->_nexttim[$s] == $nexttime) {
+                $idx = $this->_nextidx[$s];
+                $measures = $this->_datasets[$s]->get_measures();
+                $newvalue = $measures[$idx]->get_averageValue();
+                $datarec[] = $newvalue;
+                $this->_nexttim[$s] = 0.0;
+                $this->_nextidx[$s] = $idx+1;
+            } else {
+                $datarec[] = NAN;
+            }
+            $currprogress = $this->_progresss[$s];
+            $globprogress = $globprogress + $currprogress;
+            $s = $s + 1;
+        }
+        if ($globprogress > 0) {
+            $globprogress = intVal(($globprogress) / ($this->_nsensors));
+            if ($globprogress > 99) {
+                $globprogress = 99;
+            }
+        }
+        return $globprogress;
+    }
+
+    //--- (end of generated code: YConsolidatedDataSet implementation)
 }
 
 
@@ -5359,14 +5652,14 @@ class YFunction
     /** @var YFunction[] */
     public static $_TimedReportCallbackList = Array();
     /** @var YFunction[] */
-    public static $_ValueCallbackList   = Array();
+    public static $_ValueCallbackList = Array();
 
-    protected $_className                = 'Function';
+    protected $_className     = 'Function';
     protected $_func;
-    protected $_lastErrorType            = YAPI_SUCCESS;
-    protected $_lastErrorMsg             = 'no error';
+    protected $_lastErrorType = YAPI_SUCCESS;
+    protected $_lastErrorMsg  = 'no error';
     protected $_dataStreams;
-    protected $_userData                 = NULL;
+    protected $_userData      = NULL;
     protected $_cache;
     //--- (generated code: YFunction attributes)
     protected $_logicalName              = Y_LOGICALNAME_INVALID;        // Text
@@ -5380,9 +5673,9 @@ class YFunction
 
     function __construct($str_func)
     {
-        $this->_func          = $str_func;
-        $this->_cache         = Array('_expiration' => 0);
-        $this->_dataStreams   = Array();
+        $this->_func = $str_func;
+        $this->_cache = Array('_expiration' => 0);
+        $this->_dataStreams = Array();
 
         //--- (generated code: YFunction constructor)
         //--- (end of generated code: YFunction constructor)
@@ -5393,6 +5686,18 @@ class YFunction
     {
         return $this->_hwId;
     }
+
+
+    private function isReadOnly_internal()
+    {
+        try {
+            $serial = $this->get_serialNumber();
+            return YAPI::isReadOnly($serial);
+        } catch (Exception $ignore) {
+            return true;
+        }
+    }
+
 
     //--- (generated code: YFunction implementation)
 
@@ -5604,6 +5909,34 @@ class YFunction
         return $attrVal;
     }
 
+    /**
+     * Test if the function is readOnly. Return true if the function is write protected
+     * or that the function is not available.
+     *
+     * @return boolean : true if the function is readOnly or not online.
+     */
+    public function isReadOnly()
+    {
+        return $this->isReadOnly_internal();
+    }
+
+    //cannot be generated for PHP:
+    //private function isReadOnly_internal()
+
+    /**
+     * Returns the serial number of the module, as set by the factory.
+     *
+     * @return string : a string corresponding to the serial number of the module, as set by the factory.
+     *
+     * On failure, throws an exception or returns YModule.SERIALNUMBER_INVALID.
+     */
+    public function get_serialNumber()
+    {
+        // $m                      is a YModule;
+        $m = $this->get_module();
+        return $m->get_serialNumber();
+    }
+
     public function _parserHelper()
     {
         return 0;
@@ -5668,10 +6001,10 @@ class YFunction
         $index = array_search($obj_func, self::$_ValueCallbackList);
         if ($bool_add) {
             $obj_func->isOnline();
-            if($index === false) {
+            if ($index === false) {
                 self::$_ValueCallbackList[] = $obj_func;
             }
-        } else if($index !== false) {
+        } else if ($index !== false) {
             array_splice(self::$_ValueCallbackList, $index, 1);
         }
     }
@@ -5686,21 +6019,21 @@ class YFunction
         $index = array_search($obj_func, self::$_TimedReportCallbackList);
         if ($bool_add) {
             $obj_func->isOnline();
-            if($index === false) {
+            if ($index === false) {
                 self::$_TimedReportCallbackList[] = $obj_func;
             }
-        } else if($index !== false) {
+        } else if ($index !== false) {
             array_splice(self::$_TimedReportCallbackList, $index, 1);
         }
     }
 
     // Throw an exception, keeping track of it in the object itself
-    public function _throw($int_errType, $str_errMsg, $obj_retVal=null)
+    public function _throw($int_errType, $str_errMsg, $obj_retVal = null)
     {
         $this->_lastErrorType = $int_errType;
         $this->_lastErrorMsg = $str_errMsg;
 
-        if(YAPI::$exceptionsDisabled) {
+        if (YAPI::$exceptionsDisabled) {
             return $obj_retVal;
         }
         // throw an exception
@@ -5726,10 +6059,10 @@ class YFunction
     public function describe()
     {
         $resolve = YAPI::resolveFunction($this->_className, $this->_func);
-        if($resolve->errorType != YAPI_SUCCESS && $resolve->result != $this->_func) {
-            return $this->_className."({$this->_func})=unresolved";
+        if ($resolve->errorType != YAPI_SUCCESS && $resolve->result != $this->_func) {
+            return $this->_className . "({$this->_func})=unresolved";
         }
-        return $this->_className."({$this->_func})={$resolve->result}";
+        return $this->_className . "({$this->_func})={$resolve->result}";
     }
 
     /**
@@ -5744,10 +6077,10 @@ class YFunction
     public function get_hardwareId()
     {
         $resolve = YAPI::resolveFunction($this->_className, $this->_func);
-        if($resolve->errorType != YAPI_SUCCESS) {
+        if ($resolve->errorType != YAPI_SUCCESS) {
             $this->isOnline();
             $resolve = YAPI::resolveFunction($this->_className, $this->_func);
-            if($resolve->errorType != YAPI_SUCCESS) {
+            if ($resolve->errorType != YAPI_SUCCESS) {
                 return $this->_throw($resolve->errorType, $resolve->errorMsg, Y_HARDWAREID_INVALID);
             }
         }
@@ -5765,14 +6098,14 @@ class YFunction
     public function get_functionId()
     {
         $resolve = YAPI::resolveFunction($this->_className, $this->_func);
-        if($resolve->errorType != YAPI_SUCCESS) {
+        if ($resolve->errorType != YAPI_SUCCESS) {
             $this->isOnline();
             $resolve = YAPI::resolveFunction($this->_className, $this->_func);
-            if($resolve->errorType != YAPI_SUCCESS) {
+            if ($resolve->errorType != YAPI_SUCCESS) {
                 return $this->_throw($resolve->errorType, $resolve->errorMsg, Y_FUNCTIONID_INVALID);
             }
         }
-        return substr($resolve->result,strpos($resolve->result,'.')+1);
+        return substr($resolve->result, strpos($resolve->result, '.') + 1);
     }
 
     /**
@@ -5789,10 +6122,10 @@ class YFunction
     public function get_friendlyName()
     {
         $resolve = YAPI::getFriendlyNameFunction($this->_className, $this->_func);
-        if($resolve->errorType != YAPI_SUCCESS) {
+        if ($resolve->errorType != YAPI_SUCCESS) {
             $this->isOnline();
             $resolve = YAPI::getFriendlyNameFunction($this->_className, $this->_func);
-            if($resolve->errorType != YAPI_SUCCESS) {
+            if ($resolve->errorType != YAPI_SUCCESS) {
                 return $this->_throw($resolve->errorType, $resolve->errorMsg, Y_FRIENDLYNAME_INVALID);
             }
         }
@@ -5807,11 +6140,11 @@ class YFunction
         // save the whole structure for backward-compatibility
         $yreq->result["_expiration"] = YAPI::GetTickCount() + $msValidity;
         $this->_serial = $yreq->deviceid;
-        $this->_funId  = $yreq->functionid;
-        $this->_hwId   = $yreq->hwid;
-        $this->_cache  = $yreq->result;
+        $this->_funId = $yreq->functionid;
+        $this->_hwId = $yreq->hwid;
+        $this->_cache = $yreq->result;
         // process each attribute in turn for class-oriented processing
-        foreach($yreq->result as $key => $val) {
+        foreach ($yreq->result as $key => $val) {
             $this->_parseAttr($key, $val);
         }
         $this->_parserHelper();
@@ -5821,11 +6154,11 @@ class YFunction
     // Note: the function cache is a typed (parsed) cache, contrarily to the agnostic device cache
     protected function _getAttr($str_attr)
     {
-        if($this->_cache['_expiration'] <= YAPI::GetTickCount()) {
+        if ($this->_cache['_expiration'] <= YAPI::GetTickCount()) {
             // no valid cached value, reload from device
-            if($this->load(YAPI::$defaultCacheValidity) != YAPI_SUCCESS) return null;
+            if ($this->load(YAPI::$defaultCacheValidity) != YAPI_SUCCESS) return null;
         }
-        if(!isset($this->_cache[$str_attr])) {
+        if (!isset($this->_cache[$str_attr])) {
             $this->_throw(YAPI_VERSION_MISMATCH, 'No such attribute $str_attr in function', null);
         }
         return $this->_cache[$str_attr];
@@ -5834,11 +6167,11 @@ class YFunction
     // Return the value of an attribute from function cache, after loading it from device if never done
     protected function _getFixedAttr($str_attr)
     {
-        if($this->_cache['_expiration'] == 0) {
+        if ($this->_cache['_expiration'] == 0) {
             // no cached value, load from device
-            if($this->load(YAPI::$defaultCacheValidity) != YAPI_SUCCESS) return null;
+            if ($this->load(YAPI::$defaultCacheValidity) != YAPI_SUCCESS) return null;
         }
-        if(!isset($this->_cache[$str_attr])) {
+        if (!isset($this->_cache[$str_attr])) {
             $this->_throw(YAPI_VERSION_MISMATCH, "No such attribute $str_attr in function", null);
         }
         return $this->_cache[$str_attr];
@@ -5847,8 +6180,8 @@ class YFunction
     protected function _escapeAttr($str_newval)
     {
         // urlencode according to RFC 3986 instead of php default RFC 1738
-        $safecodes = array('%21','%23','%24','%27','%28','%29','%2A','%2C','%2F','%3A','%3B','%40','%3F','%5B','%5D');
-        $safechars = array('!',  "#",  "$",  "'",  "(",  ")",  '*',  ",",  "/",  ":",  ";",  "@",  "?",  "[",  "]");
+        $safecodes = array('%21', '%23', '%24', '%27', '%28', '%29', '%2A', '%2C', '%2F', '%3A', '%3B', '%40', '%3F', '%5B', '%5D');
+        $safechars = array('!', "#", "$", "'", "(", ")", '*', ",", "/", ":", ";", "@", "?", "[", "]");
         return str_replace($safecodes, $safechars, urlencode($str_newval));
     }
 
@@ -5857,19 +6190,19 @@ class YFunction
     // Note: the function cache is a typed (parsed) cache, contrarily to the agnostic device cache
     protected function _setAttr($str_attr, $str_newval)
     {
-        if(!isset($str_newval)) {
+        if (!isset($str_newval)) {
             $this->_throw(YAPI_INVALID_ARGUMENT, "Undefined value to set for attribute $str_attr", null);
         }
         // urlencode according to RFC 3986 instead of php default RFC 1738
-        $safecodes = array('%21','%23','%24','%27','%28','%29','%2A','%2C','%2F','%3A','%3B','%40','%3F','%5B','%5D');
-        $safechars = array('!',  "#",  "$",  "'",  "(",  ")",  '*',  ",",  "/",  ":",  ";",  "@",  "?",  "[",  "]");
+        $safecodes = array('%21', '%23', '%24', '%27', '%28', '%29', '%2A', '%2C', '%2F', '%3A', '%3B', '%40', '%3F', '%5B', '%5D');
+        $safechars = array('!', "#", "$", "'", "(", ")", '*', ",", "/", ":", ";", "@", "?", "[", "]");
         $attrname = str_replace($safecodes, $safechars, urlencode($str_attr));
         $extra = "/$attrname?$attrname=" . $this->_escapeAttr($str_newval) . "&.";
         $yreq = YAPI::funcRequest($this->_className, $this->_func, $extra);
-        if($this->_cache['_expiration'] != 0){
+        if ($this->_cache['_expiration'] != 0) {
             $this->_cache['_expiration'] = YAPI::GetTickCount();
         }
-        if($yreq->errorType != YAPI_SUCCESS) {
+        if ($yreq->errorType != YAPI_SUCCESS) {
             return $this->_throw($yreq->errorType, $yreq->errorMsg, $yreq->errorType);
         }
         return YAPI_SUCCESS;
@@ -5882,11 +6215,11 @@ class YFunction
         // get the device serial number
         /** @noinspection PhpUndefinedMethodInspection */
         $devid = $this->module()->get_serialNumber();
-        if($devid == Y_SERIALNUMBER_INVALID) {
+        if ($devid == Y_SERIALNUMBER_INVALID) {
             return '';
         }
         $yreq = YAPI::devRequest($devid, "GET /$str_path");
-        if($yreq->errorType != YAPI_SUCCESS) {
+        if ($yreq->errorType != YAPI_SUCCESS) {
             return $this->_throw($yreq->errorType, $yreq->errorMsg, '');
         }
         return $yreq->result;
@@ -5900,29 +6233,55 @@ class YFunction
         // get the device serial number
         /** @noinspection PhpUndefinedMethodInspection */
         $devid = $this->module()->get_serialNumber();
-        if($devid == Y_SERIALNUMBER_INVALID) {
+        if ($devid == Y_SERIALNUMBER_INVALID) {
             return $this->get_errorType();
         }
-        if(is_array($bin_content)) {
+        if (is_array($bin_content)) {
             $bin_content = call_user_func_array('pack', array_merge(array("C*"), $bin_content));
         }
         $httpreq = 'POST /upload.html';
         $body = "Content-Disposition: form-data; name=\"$str_path\"; filename=\"api\"\r\n" .
-                "Content-Type: application/octet-stream\r\n".
-                "Content-Transfer-Encoding: binary\r\n\r\n".$bin_content;
+            "Content-Type: application/octet-stream\r\n" .
+            "Content-Transfer-Encoding: binary\r\n\r\n" . $bin_content;
         $yreq = YAPI::devRequest($devid, $httpreq, true, $body);
-        if($yreq->errorType != YAPI_SUCCESS) {
+        if ($yreq->errorType != YAPI_SUCCESS) {
             return $yreq->errorType;
         }
         return YAPI_SUCCESS;
     }
+
+    // Upload a file to the filesystem, to the specified full path name.
+    // If a file already exists with the same path name, its content is overwritten.
+    //
+    public function _uploadEx($str_path, $bin_content)
+    {
+        // get the device serial number
+        /** @noinspection PhpUndefinedMethodInspection */
+        $devid = $this->module()->get_serialNumber();
+        if ($devid == Y_SERIALNUMBER_INVALID) {
+            return $this->get_errorType();
+        }
+        if (is_array($bin_content)) {
+            $bin_content = call_user_func_array('pack', array_merge(array("C*"), $bin_content));
+        }
+        $httpreq = 'POST /upload.html';
+        $body = "Content-Disposition: form-data; name=\"$str_path\"; filename=\"api\"\r\n" .
+            "Content-Type: application/octet-stream\r\n" .
+            "Content-Transfer-Encoding: binary\r\n\r\n" . $bin_content;
+        $yreq = YAPI::devRequest($devid, $httpreq, false, $body);
+        if ($yreq->errorType != YAPI_SUCCESS) {
+            return $this->_throw($yreq->errorType, $yreq->errorMsg, '');
+        }
+        return $yreq->result;
+    }
+
 
     // Get a value from a JSON buffer
     //
     public function _json_get_key($bin_jsonbuff, $str_key)
     {
         $loadval = json_decode($bin_jsonbuff, true);
-        if(isset($loadval[$str_key])) {
+        if (isset($loadval[$str_key])) {
             return $loadval[$str_key];
         }
         return "";
@@ -5941,7 +6300,7 @@ class YFunction
     {
         $loadval = json_decode($bin_jsonbuff, true);
         $res = Array();
-        foreach($loadval as $record) {
+        foreach ($loadval as $record) {
             $res[] = json_encode($record);
         }
         return $res;
@@ -5951,10 +6310,10 @@ class YFunction
     {
         $json = json_decode($str_json, true);
         $paths = explode('|', $path);
-        foreach($paths as $key){
-            if (array_key_exists($key,$json)) {
+        foreach ($paths as $key) {
+            if (array_key_exists($key, $json)) {
                 $json = $json[$key];
-            }else{
+            } else {
                 return '';
             }
         }
@@ -5975,13 +6334,13 @@ class YFunction
      */
     public function _findDataStream($obj_dataset, $str_def)
     {
-        $key = $obj_dataset->get_functionId().":".$str_def;
-        if(isset($this->_dataStreams[$key]))
+        $key = $obj_dataset->get_functionId() . ":" . $str_def;
+        if (isset($this->_dataStreams[$key]))
             return $this->_dataStreams[$key];
 
         $words = YAPI::_decodeWords($str_def);
         if (sizeof($words) < 14) {
-            $this->_throw(YAPI_VERSION_MISMATCH,"device firmware is too old");
+            $this->_throw(YAPI_VERSION_MISMATCH, "device firmware is too old");
             return null;
         }
         $newDataStream = new YDataStream($this, $obj_dataset, $words);
@@ -6013,11 +6372,11 @@ class YFunction
     public function isOnline()
     {
         // A valid value in cache means that the device is online
-        if($this->_cache['_expiration'] > YAPI::GetTickCount()) return true;
+        if ($this->_cache['_expiration'] > YAPI::GetTickCount()) return true;
 
         // Check that the function is available without throwing exceptions
         $yreq = YAPI::funcRequest($this->_className, $this->_func, '');
-        if($yreq->errorType != YAPI_SUCCESS) {
+        if ($yreq->errorType != YAPI_SUCCESS) {
             return false;
         }
         // save result in cache anyway
@@ -6038,10 +6397,12 @@ class YFunction
     {
         return $this->_lastErrorType;
     }
+
     public function errorType()
     {
         return $this->_lastErrorType;
     }
+
     public function errType()
     {
         return $this->_lastErrorType;
@@ -6059,10 +6420,12 @@ class YFunction
     {
         return $this->_lastErrorMsg;
     }
+
     public function errorMessage()
     {
         return $this->_lastErrorMsg;
     }
+
     public function errMessage()
     {
         return $this->_lastErrorMsg;
@@ -6085,7 +6448,7 @@ class YFunction
     public function load($msValidity)
     {
         $yreq = YAPI::funcRequest($this->_className, $this->_func, '');
-        if($yreq->errorType != YAPI_SUCCESS) {
+        if ($yreq->errorType != YAPI_SUCCESS) {
             return $this->_throw($yreq->errorType, $yreq->errorMsg, $yreq->errorType);
         }
         $this->_parse($yreq, $msValidity);
@@ -6102,15 +6465,15 @@ class YFunction
     public function clearCache()
     {
         $resolve = YAPI::resolveFunction($this->_className, $this->_func);
-        if($resolve->errorType != YAPI_SUCCESS) {
+        if ($resolve->errorType != YAPI_SUCCESS) {
             return;
         }
         $str_func = $resolve->result;
         $dotpos = strpos($str_func, '.');
-        $devid = substr($str_func,0,$dotpos);
-        $funcid = substr($str_func,$dotpos+1);
+        $devid = substr($str_func, 0, $dotpos);
+        $funcid = substr($str_func, $dotpos + 1);
         $dev = YAPI::getDevice($devid);
-        if(is_null($dev)) {
+        if (is_null($dev)) {
             return;
         }
         $dev->dropCache();
@@ -6129,35 +6492,38 @@ class YFunction
     public function get_module()
     {
         // try to resolve the function name to a device id without query
-        if($this->_serial != '') {
-            return yFindModule($this->_serial.'.module');
+        if ($this->_serial != '') {
+            return yFindModule($this->_serial . '.module');
         }
         $hwid = $this->_func;
-        if(strpos($hwid, '.') === FALSE) {
+        if (strpos($hwid, '.') === FALSE) {
             $resolve = YAPI::resolveFunction($this->_className, $this->_func);
-            if($resolve->errorType == YAPI_SUCCESS) $hwid = $resolve->result;
+            if ($resolve->errorType == YAPI_SUCCESS) $hwid = $resolve->result;
         }
         $dotidx = strpos($hwid, '.');
-        if($dotidx !== FALSE) {
+        if ($dotidx !== FALSE) {
             // resolution worked
-            return yFindModule(substr($hwid, 0, $dotidx).'.module');
+            return yFindModule(substr($hwid, 0, $dotidx) . '.module');
         }
 
         // device not resolved for now, force a communication for a last chance resolution
-        if($this->load(YAPI::$defaultCacheValidity) == YAPI_SUCCESS) {
+        if ($this->load(YAPI::$defaultCacheValidity) == YAPI_SUCCESS) {
             $resolve = YAPI::resolveFunction($this->_className, $this->_func);
-            if($resolve->errorType == YAPI_SUCCESS) $hwid = $resolve->result;
+            if ($resolve->errorType == YAPI_SUCCESS) $hwid = $resolve->result;
         }
         $dotidx = strpos($hwid, '.');
-        if($dotidx !== FALSE) {
+        if ($dotidx !== FALSE) {
             // resolution worked
-            return yFindModule(substr($hwid, 0, $dotidx).'.module');
+            return yFindModule(substr($hwid, 0, $dotidx) . '.module');
         }
         // return a true yFindModule object even if it is not a module valid for communicating
-        return yFindModule('module_of_'.$this->_className.'_'.$this->_func);
+        return yFindModule('module_of_' . $this->_className . '_' . $this->_func);
     }
+
     public function module()
-    { return $this->get_module(); }
+    {
+        return $this->get_module();
+    }
 
     /**
      * Returns a unique identifier of type YFUN_DESCR corresponding to the function.
@@ -6172,19 +6538,22 @@ class YFunction
     {
         // try to resolve the function name to a device id without query
         $hwid = $this->_func;
-        if(strpos($hwid, '.') === FALSE) {
+        if (strpos($hwid, '.') === FALSE) {
             $resolve = YAPI::resolveFunction($this->_className, $this->_func);
-            if($resolve->errorType != YAPI_SUCCESS) $hwid = $resolve->result;
+            if ($resolve->errorType != YAPI_SUCCESS) $hwid = $resolve->result;
         }
         $dotidx = strpos($hwid, '.');
-        if($dotidx !== FALSE) {
+        if ($dotidx !== FALSE) {
             // resolution worked
             return $hwid;
         }
         return Y_FUNCTIONDESCRIPTOR_INVALID;
     }
+
     public function getFunctionDescriptor()
-    { return $this->get_functionDescriptor(); }
+    {
+        return $this->get_functionDescriptor();
+    }
 
     /**
      * Returns the value of the userData attribute, as previously stored using method
@@ -6198,6 +6567,7 @@ class YFunction
     {
         return $this->_userData;
     }
+
     public function userData()
     {
         return $this->_userData;
@@ -6214,6 +6584,7 @@ class YFunction
     {
         $this->_userData = $data;
     }
+
     public function setUserData($data)
     {
         $this->_userData = $data;
@@ -6252,7 +6623,7 @@ class YSensor extends YFunction
     const RESOLUTION_INVALID             = YAPI_INVALID_DOUBLE;
     const SENSORSTATE_INVALID            = YAPI_INVALID_INT;
     //--- (end of generated code: YSensor declaration)
-    const DATA_INVALID                   = YAPI_INVALID_DOUBLE;
+    const DATA_INVALID = YAPI_INVALID_DOUBLE;
 
     //--- (generated code: YSensor attributes)
     protected $_unit                     = Y_UNIT_INVALID;               // Text
@@ -6356,6 +6727,13 @@ class YSensor extends YFunction
 
     /**
      * Returns the current value of the measure, in the specified unit, as a floating point number.
+     * Note that a get_currentValue() call will *not* start a measure in the device, it
+     * will just return the last measure that occurred in the device. Indeed, internally, each Yoctopuce
+     * devices is continuously making measurements at a hardware specific frequency.
+     *
+     * If continuously calling  get_currentValue() leads you to performances issues, then
+     * you might consider to switch to callback programming model. Check the "advanced
+     * programming" chapter in in your device user manual for more information.
      *
      * @return double : a floating point number corresponding to the current value of the measure, in the
      * specified unit, as a floating point number
@@ -6456,11 +6834,11 @@ class YSensor extends YFunction
     }
 
     /**
-     * Returns the uncalibrated, unrounded raw value returned by the sensor, in the specified unit, as a
-     * floating point number.
+     * Returns the uncalibrated, unrounded raw value returned by the
+     * sensor, in the specified unit, as a floating point number.
      *
-     * @return double : a floating point number corresponding to the uncalibrated, unrounded raw value
-     * returned by the sensor, in the specified unit, as a floating point number
+     * @return double : a floating point number corresponding to the uncalibrated, unrounded raw value returned by the
+     *         sensor, in the specified unit, as a floating point number
      *
      * On failure, throws an exception or returns Y_CURRENTRAWVALUE_INVALID.
      */
@@ -6502,7 +6880,10 @@ class YSensor extends YFunction
      * The frequency can be specified as samples per second,
      * as sample per minute (for instance "15/m") or in samples per
      * hour (eg. "4/h"). To disable recording for this function, use
-     * the value "OFF".
+     * the value "OFF". Note that setting the  datalogger recording frequency
+     * to a greater value than the sensor native sampling frequency is useless,
+     * and even counterproductive: those two frequencies are not related.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
      * @param string $newval : a string corresponding to the datalogger recording frequency for this function
      *
@@ -6542,7 +6923,11 @@ class YSensor extends YFunction
      * The frequency can be specified as samples per second,
      * as sample per minute (for instance "15/m") or in samples per
      * hour (e.g. "4/h"). To disable timed value notifications for this
-     * function, use the value "OFF".
+     * function, use the value "OFF". Note that setting the  timed value
+     * notification frequency to a greater value than the sensor native
+     * sampling frequency is unless, and even counterproductive: those two
+     * frequencies are not related.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
      * @param string $newval : a string corresponding to the timed value notification frequency for this function
      *
@@ -6578,6 +6963,7 @@ class YSensor extends YFunction
 
     /**
      * Changes the measuring mode used for the advertised value pushed to the parent hub.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
      * @param integer $newval : a value among Y_ADVMODE_IMMEDIATE, Y_ADVMODE_PERIOD_AVG,
      * Y_ADVMODE_PERIOD_MIN and Y_ADVMODE_PERIOD_MAX corresponding to the measuring mode used for the
@@ -6614,6 +7000,7 @@ class YSensor extends YFunction
     /**
      * Changes the resolution of the measured physical values. The resolution corresponds to the numerical precision
      * when displaying value. It does not change the precision of the measure itself.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
      * @param double $newval : a floating point number corresponding to the resolution of the measured physical values
      *
@@ -6630,6 +7017,7 @@ class YSensor extends YFunction
     /**
      * Returns the resolution of the measured values. The resolution corresponds to the numerical precision
      * of the measures, which is not always the same as the actual precision of the sensor.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
      * @return double : a floating point number corresponding to the resolution of the measured values
      *
@@ -7373,9 +7761,9 @@ class YModule extends YFunction
     {
         $devid = $this->_func;
         $dotidx = strpos($devid, '.');
-        if($dotidx !== false) $devid = substr($devid, 0, $dotidx);
+        if ($dotidx !== false) $devid = substr($devid, 0, $dotidx);
         $dev = YAPI::getDevice($devid);
-        if(is_null($dev)) {
+        if (is_null($dev)) {
             $this->_throw(YAPI_DEVICE_NOT_FOUND, "Device [$devid] is not online", null);
         }
         return $dev;
@@ -7458,7 +7846,7 @@ class YModule extends YFunction
     {
         $devid = $this->_func;
         $dotidx = strpos($devid, '.');
-        if($dotidx !== FALSE) $devid = substr($devid, 0, $dotidx);
+        if ($dotidx !== FALSE) $devid = substr($devid, 0, $dotidx);
         $dev = YAPI::getDevice($devid);
         return $dev->functionName($functionIndex);
     }
@@ -7492,7 +7880,7 @@ class YModule extends YFunction
             if ($function_name == "services")
                 continue;
             foreach ($fuction_attrs as $attr_name => $attr_value) {
-                if(is_object($attr_value)) {
+                if (is_object($attr_value)) {
                     // skip complext attributes (move and pulse)
                     continue;
                 }
@@ -7534,6 +7922,7 @@ class YModule extends YFunction
             $dev->registerLogCallback($this->_logCallback);
         }
     }
+
     //--- (generated code: YModule implementation)
 
     function _parseAttr($name, $val)
@@ -7652,16 +8041,18 @@ class YModule extends YFunction
     }
 
     /**
-     * Returns the hardware release version of the module.
+     * Returns the release number of the module hardware, preprogrammed at the factory.
+     * The original hardware release returns value 1, revision B returns value 2, etc.
      *
-     * @return integer : an integer corresponding to the hardware release version of the module
+     * @return integer : an integer corresponding to the release number of the module hardware,
+     * preprogrammed at the factory
      *
      * On failure, throws an exception or returns Y_PRODUCTRELEASE_INVALID.
      */
     public function get_productRelease()
     {
         // $res                    is a int;
-        if ($this->_cacheExpiration <= YAPI::GetTickCount()) {
+        if ($this->_cacheExpiration == 0) {
             if ($this->load(YAPI::$_yapiContext->GetCacheValidity()) != YAPI_SUCCESS) {
                 return Y_PRODUCTRELEASE_INVALID;
             }
@@ -7919,12 +8310,35 @@ class YModule extends YFunction
     public static function FindModule($func)
     {
         // $obj                    is a YModule;
-        $obj = YFunction::_FindFromCache('Module', $func);
+        // $cleanHwId              is a str;
+        // $modpos                 is a int;
+        $cleanHwId = $func;
+        $modpos = Ystrpos($func,'.module');
+        if ($modpos != (strlen($func) - 7)) {
+            $cleanHwId = $func . '.module';
+        }
+        $obj = YFunction::_FindFromCache('Module', $cleanHwId);
         if ($obj == null) {
-            $obj = new YModule($func);
-            YFunction::_AddToCache('Module', $func, $obj);
+            $obj = new YModule($cleanHwId);
+            YFunction::_AddToCache('Module', $cleanHwId, $obj);
         }
         return $obj;
+    }
+
+    public function get_productNameAndRevision()
+    {
+        // $prodname               is a str;
+        // $prodrel                is a int;
+        // $fullname               is a str;
+
+        $prodname = $this->get_productName();
+        $prodrel = $this->get_productRelease();
+        if ($prodrel > 1) {
+            $fullname = sprintf('%s rev. %c', $prodname, 64+$prodrel);
+        } else {
+            $fullname = $prodname;
+        }
+        return $fullname;
     }
 
     /**
@@ -8186,15 +8600,17 @@ class YModule extends YFunction
             if (intVal($this->get_firmwareRelease()) > 9000) {
                 $url = sprintf('api/%s/sensorType',$each);
                 $t_type = $this->_download($url);
-                if ($t_type == 'RES_NTC') {
+                if ($t_type == 'RES_NTC' || $t_type == 'RES_LINEAR') {
                     $id = substr($each,  11, strlen($each) - 11);
-                    $temp_data_bin = $this->_download(sprintf('extra.json?page=%s', $id));
-                    if (strlen($temp_data_bin) == 0) {
-                        return $temp_data_bin;
+                    if ($id == '') {
+                        $id = '1';
                     }
-                    $item = sprintf('%s{"fid":"%s", "json":%s}'."\n".'', $sep, $each, $temp_data_bin);
-                    $ext_settings = $ext_settings . $item;
-                    $sep = ',';
+                    $temp_data_bin = $this->_download(sprintf('extra.json?page=%s', $id));
+                    if (strlen($temp_data_bin) > 0) {
+                        $item = sprintf('%s{"fid":"%s", "json":%s}'."\n".'', $sep, $each, $temp_data_bin);
+                        $ext_settings = $ext_settings . $item;
+                        $sep = ',';
+                    }
                 }
             }
         }
@@ -8239,7 +8655,7 @@ class YModule extends YFunction
         while ($ofs + 1 < $size) {
             $curr = $values[$ofs];
             $currTemp = $values[$ofs + 1];
-            $url = sprintf('api/%s/.json?command=m%s:%s',  $funcId, $curr,  $currTemp);
+            $url = sprintf('api/%s.json?command=m%s:%s', $funcId, $curr, $currTemp);
             $this->_download($url);
             $ofs = $ofs + 2;
         }
@@ -8313,8 +8729,7 @@ class YModule extends YFunction
             }
         }
         // Apply settings a second time for file-dependent settings and dynamic sensor nodes
-        $this->set_allSettings($json_api);
-        return YAPI_SUCCESS;
+        return $this->set_allSettings($json_api);
     }
 
     /**
@@ -8602,6 +9017,30 @@ class YModule extends YFunction
         return $param;
     }
 
+    public function _tryExec($url)
+    {
+        // $res                    is a int;
+        // $done                   is a int;
+        $res = YAPI_SUCCESS;
+        $done = 1;
+        try {
+            $this->_download($url);
+        } catch (Exception $ex) {
+            $done = 0;
+        }
+        if ($done == 0) {
+            // retry silently after a short wait
+            try {
+                YAPI.Sleep(500);
+                $this->_download($url);
+            } catch (Exception $ex) {
+                // second failure, return error code
+                $res = $this->get_errorType();
+            }
+        }
+        return $res;
+    }
+
     /**
      * Restores all the settings of the device. Useful to restore all the logical names and calibrations parameters
      * of a module from a backup.Remember to call the saveToFlash() method of the module if the
@@ -8631,6 +9070,8 @@ class YModule extends YFunction
         // $leng                   is a int;
         // $i                      is a int;
         // $j                      is a int;
+        // $subres                 is a int;
+        // $res                    is a int;
         // $njpath                 is a str;
         // $jpath                  is a str;
         // $fun                    is a str;
@@ -8647,6 +9088,7 @@ class YModule extends YFunction
         // $each_str               is a str;
         // $do_update              is a bool;
         // $found                  is a bool;
+        $res = YAPI_SUCCESS;
         $tmp = $settings;
         $tmp = $this->_get_json_path($tmp, 'api');
         if (!($tmp == '')) {
@@ -8673,7 +9115,13 @@ class YModule extends YFunction
             $old_val_arr[] = $value;
         }
 
-        $actualSettings = $this->_download('api.json');
+        try {
+            $actualSettings = $this->_download('api.json');
+        } catch (Exception $ex) {
+            // retry silently after a short wait
+            YAPI.Sleep(500);
+            $actualSettings = $this->_download('api.json');
+        }
         $actualSettings = $this->_flattenJsonStruct($actualSettings);
         $new_dslist = $this->_json_get_array($actualSettings);
         foreach($new_dslist as $each) {
@@ -8762,6 +9210,9 @@ class YModule extends YFunction
             if (($do_update) && ($attr == 'message')) {
                 $do_update = false;
             }
+            if (($do_update) && ($attr == 'signalValue')) {
+                $do_update = false;
+            }
             if (($do_update) && ($attr == 'currentValue')) {
                 $do_update = false;
             }
@@ -8814,6 +9265,12 @@ class YModule extends YFunction
                 $do_update = false;
             }
             if (($do_update) && ($attr == 'msgCount')) {
+                $do_update = false;
+            }
+            if (($do_update) && ($attr == 'rxMsgCount')) {
+                $do_update = false;
+            }
+            if (($do_update) && ($attr == 'txMsgCount')) {
                 $do_update = false;
             }
             if ($do_update) {
@@ -8869,23 +9326,32 @@ class YModule extends YFunction
                     }
                     $newval = $this->calibConvert($old_calib, $new_val_arr[$i], $unit_name, $sensorType);
                     $url = 'api/' . $fun . '.json?' . $attr . '=' . $this->_escapeAttr($newval);
-                    $this->_download($url);
+                    $subres = $this->_tryExec($url);
+                    if (($res == YAPI_SUCCESS) && ($subres != YAPI_SUCCESS)) {
+                        $res = $subres;
+                    }
                 } else {
                     $url = 'api/' . $fun . '.json?' . $attr . '=' . $this->_escapeAttr($oldval);
                     if ($attr == 'resolution') {
                         $restoreLast[] = $url;
                     } else {
-                        $this->_download($url);
+                        $subres = $this->_tryExec($url);
+                        if (($res == YAPI_SUCCESS) && ($subres != YAPI_SUCCESS)) {
+                            $res = $subres;
+                        }
                     }
                 }
             }
             $i = $i + 1;
         }
         foreach($restoreLast as $each) {
-            $this->_download($each);
+            $subres = $this->_tryExec($each);
+            if (($res == YAPI_SUCCESS) && ($subres != YAPI_SUCCESS)) {
+                $res = $subres;
+            }
         }
         $this->clearCache();
-        return YAPI_SUCCESS;
+        return $res;
     }
 
     /**
@@ -9167,9 +9633,9 @@ function yGetAPIVersion()
  *
  * On failure, throws an exception or returns a negative error code.
  */
-function yInitAPI($mode=0,&$errmsg="")
+function yInitAPI($mode = 0, &$errmsg = "")
 {
-    return YAPI::InitAPI($mode,$errmsg);
+    return YAPI::InitAPI($mode, $errmsg);
 }
 
 /**
@@ -9252,9 +9718,9 @@ function yEnableExceptions()
  *
  * On failure, throws an exception or returns a negative error code.
  */
-function yRegisterHub($url,&$errmsg="")
+function yRegisterHub($url, &$errmsg = "")
 {
-    return YAPI::RegisterHub($url,$errmsg);
+    return YAPI::RegisterHub($url, $errmsg);
 }
 
 /**
@@ -9272,9 +9738,9 @@ function yRegisterHub($url,&$errmsg="")
  *
  * On failure, throws an exception or returns a negative error code.
  */
-function yPreregisterHub($url,&$errmsg="")
+function yPreregisterHub($url, &$errmsg = "")
 {
-    return YAPI::PreregisterHub($url,$errmsg);
+    return YAPI::PreregisterHub($url, $errmsg);
 }
 
 /**
@@ -9304,7 +9770,7 @@ function yUnregisterHub($url)
  *
  * On failure returns a negative error code.
  */
-function yTestHub($url, $mstimeout, &$errmsg="")
+function yTestHub($url, $mstimeout, &$errmsg = "")
 {
     return YAPI::TestHub($url, $mstimeout, $errmsg);
 }
@@ -9322,9 +9788,9 @@ function yTestHub($url, $mstimeout, &$errmsg="")
  *
  * On failure, throws an exception or returns a negative error code.
  */
-function yForwardHTTPCallback($url,&$errmsg="")
+function yForwardHTTPCallback($url, &$errmsg = "")
 {
-    return YAPI::ForwardHTTPCallback($url,$errmsg);
+    return YAPI::ForwardHTTPCallback($url, $errmsg);
 }
 
 /**
@@ -9334,7 +9800,9 @@ function yForwardHTTPCallback($url,&$errmsg="")
  * in case a change in the list of connected devices is detected.
  *
  * This function can be called as frequently as desired to refresh the device list
- * and to make the application aware of hot-plug events.
+ * and to make the application aware of hot-plug events. However, since device
+ * detection is quite a heavy process, UpdateDeviceList shouldn't be called more
+ * than once every two seconds.
  *
  * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
  *
@@ -9342,7 +9810,7 @@ function yForwardHTTPCallback($url,&$errmsg="")
  *
  * On failure, throws an exception or returns a negative error code.
  */
-function yUpdateDeviceList(&$errmsg="")
+function yUpdateDeviceList(&$errmsg = "")
 {
     return YAPI::UpdateDeviceList($errmsg);
 }
@@ -9364,7 +9832,7 @@ function yUpdateDeviceList(&$errmsg="")
  *
  * On failure, throws an exception or returns a negative error code.
  */
-function yHandleEvents(&$errmsg="")
+function yHandleEvents(&$errmsg = "")
 {
     return YAPI::HandleEvents($errmsg);
 }
@@ -9388,7 +9856,7 @@ function yHandleEvents(&$errmsg="")
  *
  * On failure, throws an exception or returns a negative error code.
  */
-function ySleep($ms_duration, &$errmsg="")
+function ySleep($ms_duration, &$errmsg = "")
 {
     return YAPI::Sleep($ms_duration, $errmsg);
 }
@@ -9468,10 +9936,10 @@ function yLinearCalibrationHandler($int_calibType, $float_rawValue, $arr_calibPa
                                    $arr_calibRawValues, $arr_calibRefValues)
 {
     return YAPI::LinearCalibrationHandler($int_calibType, $float_rawValue, $arr_calibParams,
-                                          $arr_calibRawValues, $arr_calibRefValues);
+        $arr_calibRawValues, $arr_calibRefValues);
 }
 
-for($yHdlrIdx = 1; $yHdlrIdx <= 20; $yHdlrIdx++) {
+for ($yHdlrIdx = 1; $yHdlrIdx <= 20; $yHdlrIdx++) {
     yRegisterCalibrationHandler($yHdlrIdx, 'yLinearCalibrationHandler');
 }
 yRegisterCalibrationHandler(YOCTO_CALIB_TYPE_OFS, 'yLinearCalibrationHandler');
@@ -9645,7 +10113,8 @@ if(!defined('Y_USAGE_INVALID'))              define('Y_USAGE_INVALID',          
  * Yoctopuce sensors include a non-volatile memory capable of storing ongoing measured
  * data automatically, without requiring a permanent connection to a computer.
  * The DataLogger function controls the global parameters of the internal data
- * logger.
+ * logger. Recording control (start/stop) as well as data retreival is done at
+ * sensor objects level.
  */
 class YDataLogger extends YFunction
 {
@@ -9691,22 +10160,22 @@ class YDataLogger extends YFunction
     //
     public function getData($runIdx, $timeIdx, &$loadval)
     {
-        if(is_null($this->dataLoggerURL)) {
+        if (is_null($this->dataLoggerURL)) {
             $this->dataLoggerURL = "/logger.json";
         }
 
         // get the device serial number
         $devid = $this->module()->get_serialNumber();
-        if($devid == Y_SERIALNUMBER_INVALID) {
+        if ($devid == Y_SERIALNUMBER_INVALID) {
             return $this->get_errorType();
         }
-        $httpreq = "GET ".$this->dataLoggerURL;
-        if(!is_null($timeIdx)) {
+        $httpreq = "GET " . $this->dataLoggerURL;
+        if (!is_null($timeIdx)) {
             $httpreq .= "?run={$runIdx}&time={$timeIdx}";
         }
         $yreq = YAPI::devRequest($devid, $httpreq);
-        if($yreq->errorType != YAPI_SUCCESS) {
-            if(strpos($yreq->errorMsg, 'HTTP status 404') !== false && $this->dataLoggerURL != "/dataLogger.json") {
+        if ($yreq->errorType != YAPI_SUCCESS) {
+            if (strpos($yreq->errorMsg, 'HTTP status 404') !== false && $this->dataLoggerURL != "/dataLogger.json") {
                 $this->dataLoggerURL = "/dataLogger.json";
                 return $this->getData($runIdx, $timeIdx, $loadval);
             }
@@ -9861,8 +10330,10 @@ class YDataLogger extends YFunction
 
     /**
      * Changes the default activation state of the data logger on power up.
-     * Remember to call the saveToFlash() method of the module if the
-     * modification must be kept.
+     * Do not forget to call the saveToFlash() method of the module to save the
+     * configuration change.  Note: if the device doesn't have any time source at his disposal when
+     * starting up, it will wait for ~8 seconds before automatically starting to record  with
+     * an arbitrary timestamp
      *
      * @param integer $newval : either Y_AUTOSTART_OFF or Y_AUTOSTART_ON, according to the default
      * activation state of the data logger on power up

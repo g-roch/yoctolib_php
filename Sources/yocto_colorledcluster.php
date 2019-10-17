@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_colorledcluster.php 33716 2018-12-14 14:21:46Z seb $
+ *  $Id: yocto_colorledcluster.php 37000 2019-09-03 06:40:17Z mvuilleu $
  *
  *  Implements YColorLedCluster, the high-level API for ColorLedCluster functions
  *
@@ -144,6 +144,8 @@ class YColorLedCluster extends YFunction
 
     /**
      * Changes the number of LEDs currently handled by the device.
+     * Remember to call the matching module
+     * saveToFlash() method to save the setting permanently.
      *
      * @param integer $newval : an integer corresponding to the number of LEDs currently handled by the device
      *
@@ -179,6 +181,8 @@ class YColorLedCluster extends YFunction
 
     /**
      * Changes the RGB LED type currently handled by the device.
+     * Remember to call the matching module
+     * saveToFlash() method to save the setting permanently.
      *
      * @param integer $newval : either Y_LEDTYPE_RGB or Y_LEDTYPE_RGBW, according to the RGB LED type
      * currently handled by the device

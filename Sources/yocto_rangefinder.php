@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_rangefinder.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_rangefinder.php 37149 2019-09-12 21:24:53Z mvuilleu $
  *
  *  Implements YRangeFinder, the high-level API for RangeFinder functions
  *
@@ -46,6 +46,8 @@ if(!defined('Y_RANGEFINDERMODE_LONG_RANGE')) define('Y_RANGEFINDERMODE_LONG_RANG
 if(!defined('Y_RANGEFINDERMODE_HIGH_ACCURACY')) define('Y_RANGEFINDERMODE_HIGH_ACCURACY', 2);
 if(!defined('Y_RANGEFINDERMODE_HIGH_SPEED')) define('Y_RANGEFINDERMODE_HIGH_SPEED', 3);
 if(!defined('Y_RANGEFINDERMODE_INVALID'))    define('Y_RANGEFINDERMODE_INVALID',   -1);
+if(!defined('Y_TIMEFRAME_INVALID'))          define('Y_TIMEFRAME_INVALID',         YAPI_INVALID_LONG);
+if(!defined('Y_QUALITY_INVALID'))            define('Y_QUALITY_INVALID',           YAPI_INVALID_UINT);
 if(!defined('Y_HARDWARECALIBRATION_INVALID')) define('Y_HARDWARECALIBRATION_INVALID', YAPI_INVALID_STRING);
 if(!defined('Y_CURRENTTEMPERATURE_INVALID')) define('Y_CURRENTTEMPERATURE_INVALID', YAPI_INVALID_DOUBLE);
 if(!defined('Y_COMMAND_INVALID'))            define('Y_COMMAND_INVALID',           YAPI_INVALID_STRING);
@@ -70,6 +72,8 @@ class YRangeFinder extends YSensor
     const RANGEFINDERMODE_HIGH_ACCURACY  = 2;
     const RANGEFINDERMODE_HIGH_SPEED     = 3;
     const RANGEFINDERMODE_INVALID        = -1;
+    const TIMEFRAME_INVALID              = YAPI_INVALID_LONG;
+    const QUALITY_INVALID                = YAPI_INVALID_UINT;
     const HARDWARECALIBRATION_INVALID    = YAPI_INVALID_STRING;
     const CURRENTTEMPERATURE_INVALID     = YAPI_INVALID_DOUBLE;
     const COMMAND_INVALID                = YAPI_INVALID_STRING;
@@ -77,6 +81,8 @@ class YRangeFinder extends YSensor
 
     //--- (YRangeFinder attributes)
     protected $_rangeFinderMode          = Y_RANGEFINDERMODE_INVALID;    // RangeFinderMode
+    protected $_timeFrame                = Y_TIMEFRAME_INVALID;          // Time
+    protected $_quality                  = Y_QUALITY_INVALID;            // Percent
     protected $_hardwareCalibration      = Y_HARDWARECALIBRATION_INVALID; // RangeFinderCalib
     protected $_currentTemperature       = Y_CURRENTTEMPERATURE_INVALID; // MeasureVal
     protected $_command                  = Y_COMMAND_INVALID;            // Text
@@ -98,6 +104,12 @@ class YRangeFinder extends YSensor
         switch($name) {
         case 'rangeFinderMode':
             $this->_rangeFinderMode = intval($val);
+            return 1;
+        case 'timeFrame':
+            $this->_timeFrame = intval($val);
+            return 1;
+        case 'quality':
+            $this->_quality = intval($val);
             return 1;
         case 'hardwareCalibration':
             $this->_hardwareCalibration = $val;
@@ -155,6 +167,7 @@ class YRangeFinder extends YSensor
     /**
      * Changes the rangefinder running mode, allowing you to put priority on
      * precision, speed or maximum range.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
      * @param integer $newval : a value among Y_RANGEFINDERMODE_DEFAULT, Y_RANGEFINDERMODE_LONG_RANGE,
      * Y_RANGEFINDERMODE_HIGH_ACCURACY and Y_RANGEFINDERMODE_HIGH_SPEED corresponding to the rangefinder
@@ -169,6 +182,68 @@ class YRangeFinder extends YSensor
     {
         $rest_val = strval($newval);
         return $this->_setAttr("rangeFinderMode",$rest_val);
+    }
+
+    /**
+     * Returns the time frame used to measure the distance and estimate the measure
+     * reliability. The time frame is expressed in milliseconds.
+     *
+     * @return integer : an integer corresponding to the time frame used to measure the distance and
+     * estimate the measure
+     *         reliability
+     *
+     * On failure, throws an exception or returns Y_TIMEFRAME_INVALID.
+     */
+    public function get_timeFrame()
+    {
+        // $res                    is a long;
+        if ($this->_cacheExpiration <= YAPI::GetTickCount()) {
+            if ($this->load(YAPI::$_yapiContext->GetCacheValidity()) != YAPI_SUCCESS) {
+                return Y_TIMEFRAME_INVALID;
+            }
+        }
+        $res = $this->_timeFrame;
+        return $res;
+    }
+
+    /**
+     * Changes the time frame used to measure the distance and estimate the measure
+     * reliability. The time frame is expressed in milliseconds. A larger timeframe
+     * improves stability and reliability, at the cost of higher latency, but prevents
+     * the detection of events shorter than the time frame.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
+     *
+     * @param integer $newval : an integer corresponding to the time frame used to measure the distance
+     * and estimate the measure
+     *         reliability
+     *
+     * @return integer : YAPI_SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    public function set_timeFrame($newval)
+    {
+        $rest_val = strval($newval);
+        return $this->_setAttr("timeFrame",$rest_val);
+    }
+
+    /**
+     * Returns a measure quality estimate, based on measured dispersion.
+     *
+     * @return integer : an integer corresponding to a measure quality estimate, based on measured dispersion
+     *
+     * On failure, throws an exception or returns Y_QUALITY_INVALID.
+     */
+    public function get_quality()
+    {
+        // $res                    is a int;
+        if ($this->_cacheExpiration <= YAPI::GetTickCount()) {
+            if ($this->load(YAPI::$_yapiContext->GetCacheValidity()) != YAPI_SUCCESS) {
+                return Y_QUALITY_INVALID;
+            }
+        }
+        $res = $this->_quality;
+        return $res;
     }
 
     public function get_hardwareCalibration()
@@ -378,6 +453,15 @@ class YRangeFinder extends YSensor
 
     public function setRangeFinderMode($newval)
     { return $this->set_rangeFinderMode($newval); }
+
+    public function timeFrame()
+    { return $this->get_timeFrame(); }
+
+    public function setTimeFrame($newval)
+    { return $this->set_timeFrame($newval); }
+
+    public function quality()
+    { return $this->get_quality(); }
 
     public function hardwareCalibration()
     { return $this->get_hardwareCalibration(); }

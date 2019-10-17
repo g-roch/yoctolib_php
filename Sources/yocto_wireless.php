@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- * $Id: yocto_wireless.php 33716 2018-12-14 14:21:46Z seb $
+ * $Id: yocto_wireless.php 34651 2019-03-15 17:21:54Z seb $
  *
  * Implements yFindWireless(), the high-level API for Wireless functions
  *
@@ -67,7 +67,9 @@ if(!defined('Y_WLANCONFIG_INVALID'))         define('Y_WLANCONFIG_INVALID',     
 /**
  * YWlanRecord Class: Description of a wireless network
  *
- *
+ * YWlanRecord objects are used to describe a wireless network.
+ * These objects are  used in particular in conjunction with the
+ * YWireless class.
  */
 class YWlanRecord
 {
@@ -94,21 +96,41 @@ class YWlanRecord
 
     //--- (generated code: YWlanRecord implementation)
 
+    /**
+     * Returns the name of the wireless network (SSID).
+     *
+     * @return string : a string with the name of the wireless network (SSID).
+     */
     public function get_ssid()
     {
         return $this->_ssid;
     }
 
+    /**
+     * Returns the 802.11 channel.
+     *
+     * @return integer : the 802.11 channel.
+     */
     public function get_channel()
     {
         return $this->_channel;
     }
 
+    /**
+     * Returns the security algorithm used by the wireless network.
+     *
+     * @return string : a string with the security algorithm.
+     */
     public function get_security()
     {
         return $this->_sec;
     }
 
+    /**
+     * Returns the quality of the wireless network link, in per cents.
+     *
+     * @return integer : the quality of the wireless network link, in per cents.
+     */
     public function get_linkQuality()
     {
         return $this->_rssi;

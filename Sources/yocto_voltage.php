@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_voltage.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_voltage.php 35360 2019-05-09 09:02:29Z mvuilleu $
  *
  *  Implements YVoltage, the high-level API for Voltage functions
  *
@@ -88,6 +88,13 @@ class YVoltage extends YSensor
         return parent::_parseAttr($name, $val);
     }
 
+    /**
+     * Returns the activation state of this input.
+     *
+     * @return integer : either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to the activation state of this input
+     *
+     * On failure, throws an exception or returns Y_ENABLED_INVALID.
+     */
     public function get_enabled()
     {
         // $res                    is a enumBOOL;
@@ -100,6 +107,18 @@ class YVoltage extends YSensor
         return $res;
     }
 
+    /**
+     * Changes the activation state of this input. When an input is disabled,
+     * its value is no more updated. On some devices, disabling an input can
+     * improve the refresh rate of the other active inputs.
+     *
+     * @param integer $newval : either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to the activation
+     * state of this input
+     *
+     * @return integer : YAPI_SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
     public function set_enabled($newval)
     {
         $rest_val = strval($newval);

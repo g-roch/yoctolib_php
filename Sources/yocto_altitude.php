@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_altitude.php 32950 2018-11-05 17:15:46Z seb $
+ *  $Id: yocto_altitude.php 34115 2019-01-23 14:23:54Z seb $
  *
  *  Implements YAltitude, the high-level API for Altitude functions
  *
@@ -93,7 +93,7 @@ class YAltitude extends YSensor
     }
 
     /**
-     * Changes the current estimated altitude. This allows to compensate for
+     * Changes the current estimated altitude. This allows one to compensate for
      * ambient pressure variations and to work in relative mode.
      *
      * @param double $newval : a floating point number corresponding to the current estimated altitude

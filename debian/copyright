@@ -35,6 +35,7 @@ License: yoctopuce-nonfree
 
 Files: debian/*
 Copyright: 2018 Gabriel Roch <gabriel@g-roch.ch>
+Copyright: 2019 Gabriel Roch <gabriel@g-roch.ch>
 License: GPL-2+
  This package is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by

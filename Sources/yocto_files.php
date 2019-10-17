@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- * $Id: yocto_files.php 33716 2018-12-14 14:21:46Z seb $
+ * $Id: yocto_files.php 34651 2019-03-15 17:21:54Z seb $
  *
  * Implements yFindFiles(), the high-level API for Files functions
  *
@@ -53,7 +53,8 @@ if(!defined('Y_FREESPACE_INVALID'))          define('Y_FREESPACE_INVALID',      
 /**
  * YFileRecord Class: Description of a file on the device filesystem
  *
- *
+ * YFileRecord objects are used to describe a file that is stored on a Yoctopuce device.
+ * These objects are used in particular in conjunction with the YFiles class.
  */
 class YFileRecord
 {
@@ -78,16 +79,31 @@ class YFileRecord
 
     //--- (generated code: YFileRecord implementation)
 
+    /**
+     * Returns the name of the file.
+     *
+     * @return string : a string with the name of the file.
+     */
     public function get_name()
     {
         return $this->_name;
     }
 
+    /**
+     * Returns the size of the file in bytes.
+     *
+     * @return integer : the size of the file.
+     */
     public function get_size()
     {
         return $this->_size;
     }
 
+    /**
+     * Returns the 32-bit CRC of the file content.
+     *
+     * @return integer : the 32-bit CRC of the file content.
+     */
     public function get_crc()
     {
         return $this->_crc;

@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_refframe.php 33716 2018-12-14 14:21:46Z seb $
+ *  $Id: yocto_refframe.php 37000 2019-09-03 06:40:17Z mvuilleu $
  *
  *  Implements YRefFrame, the high-level API for RefFrame functions
  *
@@ -244,6 +244,14 @@ class YRefFrame extends YFunction
         return $this->_setAttr("calibrationParam",$rest_val);
     }
 
+    /**
+     * Returns the BNO055 fusion mode. Note this feature is only availabe on Yocto-3D-V2.
+     *
+     * @return integer : a value among Y_FUSIONMODE_NDOF, Y_FUSIONMODE_NDOF_FMC_OFF, Y_FUSIONMODE_M4G,
+     * Y_FUSIONMODE_COMPASS and Y_FUSIONMODE_IMU corresponding to the BNO055 fusion mode
+     *
+     * On failure, throws an exception or returns Y_FUSIONMODE_INVALID.
+     */
     public function get_fusionMode()
     {
         // $res                    is a enumFUSIONMODE;
@@ -256,6 +264,17 @@ class YRefFrame extends YFunction
         return $res;
     }
 
+    /**
+     * Change the BNO055 fusion mode. Note: this feature is only availabe on Yocto-3D-V2.
+     * Remember to call the matching module saveToFlash() method to save the setting permanently.
+     *
+     * @param integer $newval : a value among Y_FUSIONMODE_NDOF, Y_FUSIONMODE_NDOF_FMC_OFF,
+     * Y_FUSIONMODE_M4G, Y_FUSIONMODE_COMPASS and Y_FUSIONMODE_IMU
+     *
+     * @return integer : YAPI_SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
     public function set_fusionMode($newval)
     {
         $rest_val = strval($newval);

@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_digitalio.php 33722 2018-12-14 15:04:43Z seb $
+ *  $Id: yocto_digitalio.php 37149 2019-09-12 21:24:53Z mvuilleu $
  *
  *  Implements YDigitalIO, the high-level API for DigitalIO functions
  *
@@ -338,7 +338,7 @@ class YDigitalIO extends YFunction
     public function get_portSize()
     {
         // $res                    is a int;
-        if ($this->_cacheExpiration <= YAPI::GetTickCount()) {
+        if ($this->_cacheExpiration == 0) {
             if ($this->load(YAPI::$_yapiContext->GetCacheValidity()) != YAPI_SUCCESS) {
                 return Y_PORTSIZE_INVALID;
             }

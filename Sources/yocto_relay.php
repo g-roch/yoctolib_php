@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_relay.php 33716 2018-12-14 14:21:46Z seb $
+ *  $Id: yocto_relay.php 34976 2019-04-05 06:47:49Z seb $
  *
  *  Implements YRelay, the high-level API for Relay functions
  *
@@ -100,6 +100,7 @@ class YRelay extends YFunction
     protected $_pulseTimer               = Y_PULSETIMER_INVALID;         // Time
     protected $_delayedPulseTimer        = Y_DELAYEDPULSETIMER_INVALID;  // DelayedPulse
     protected $_countdown                = Y_COUNTDOWN_INVALID;          // Time
+    protected $_firm                     = 0;                            // int
     //--- (end of YRelay attributes)
 
     function __construct($str_func)
@@ -463,6 +464,42 @@ class YRelay extends YFunction
             YFunction::_AddToCache('Relay', $func, $obj);
         }
         return $obj;
+    }
+
+    /**
+     * Switch the relay to the opposite state.
+     *
+     * @return integer : YAPI_SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    public function toggle()
+    {
+        // $sta                    is a int;
+        // $fw                     is a str;
+        // $mo                     is a YModule;
+        if ($this->_firm == 0) {
+            $mo = $this->get_module();
+            $fw = $mo->get_firmwareRelease();
+            if ($fw == Y_FIRMWARERELEASE_INVALID) {
+                return Y_STATE_INVALID;
+            }
+            $this->_firm = intVal($fw);
+        }
+        if ($this->_firm < 34921) {
+            $sta = $this->get_state();
+            if ($sta == Y_STATE_INVALID) {
+                return Y_STATE_INVALID;
+            }
+            if ($sta == Y_STATE_B) {
+                $this->set_state(Y_STATE_A);
+            } else {
+                $this->set_state(Y_STATE_B);
+            }
+            return YAPI_SUCCESS;
+        } else {
+            return $this->_setAttr('state','X');
+        }
     }
 
     public function state()

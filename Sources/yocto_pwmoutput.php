@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_pwmoutput.php 33716 2018-12-14 14:21:46Z seb $
+ *  $Id: yocto_pwmoutput.php 37000 2019-09-03 06:40:17Z mvuilleu $
  *
  *  Implements YPwmOutput, the high-level API for PwmOutput functions
  *
@@ -170,7 +170,8 @@ class YPwmOutput extends YFunction
      * Changes the PWM frequency. The duty cycle is kept unchanged thanks to an
      * automatic pulse width change, in other words, the change will not be applied
      * before the end of the current period. This can significantly affect reaction
-     * time at low frequencies.
+     * time at low frequencies. If you call the matching module saveToFlash()
+     * method, the frequency will be kept after a device power cycle.
      * To stop the PWM signal, do not set the frequency to zero, use the set_enabled()
      * method instead.
      *

@@ -1,3 +1,10 @@
+yoctolib-php (1.10.37304-1) buster; urgency=medium
+
+  * Update from upstream
+  * Change maintainer
+
+ -- Ciol Hcor <ciol@hcor.ch>  Thu, 17 Oct 2019 12:57:10 +0200
+
 yoctolib-php (1.10.33736-1) unstable; urgency=medium
 
   * Update from upstream

@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- * $Id: yocto_display.php 33716 2018-12-14 14:21:46Z seb $
+ * $Id: yocto_display.php 37000 2019-09-03 06:40:17Z mvuilleu $
  *
  * Implements yFindDisplay(), the high-level API for Display functions
  *
@@ -360,7 +360,8 @@ class YDisplayLayer
      * file, check the device logs for any error message such as missing font file or bad font
      * file format.
      *
-     * @param string $fontname : the font file name
+     * @param string $fontname : the font file name, embedded fonts are 8x8.yfm, Small.yfm, Medium.yfm,
+     * Large.yfm (not available on Yocto-MiniDisplay).
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.
      *
@@ -926,7 +927,7 @@ class YDisplay extends YFunction
     public function get_displayWidth()
     {
         // $res                    is a int;
-        if ($this->_cacheExpiration <= YAPI::GetTickCount()) {
+        if ($this->_cacheExpiration == 0) {
             if ($this->load(YAPI::$_yapiContext->GetCacheValidity()) != YAPI_SUCCESS) {
                 return Y_DISPLAYWIDTH_INVALID;
             }
@@ -945,7 +946,7 @@ class YDisplay extends YFunction
     public function get_displayHeight()
     {
         // $res                    is a int;
-        if ($this->_cacheExpiration <= YAPI::GetTickCount()) {
+        if ($this->_cacheExpiration == 0) {
             if ($this->load(YAPI::$_yapiContext->GetCacheValidity()) != YAPI_SUCCESS) {
                 return Y_DISPLAYHEIGHT_INVALID;
             }

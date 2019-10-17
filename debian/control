@@ -1,7 +1,7 @@
 Source: yoctolib-php
 Section: non-free/php
 Priority: extra
-Maintainer: Gabriel Roch <gabriel@g-roch.ch>
+Maintainer: Ciol Hcor <ciol@hcor.ch>
 Build-Depends:
  debhelper (>= 10)
 Standards-Version: 3.9.8

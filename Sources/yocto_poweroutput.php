@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_poweroutput.php 33716 2018-12-14 14:21:46Z seb $
+ *  $Id: yocto_poweroutput.php 35465 2019-05-16 14:40:41Z seb $
  *
  *  Implements YPowerOutput, the high-level API for PowerOutput functions
  *
@@ -44,6 +44,8 @@
 if(!defined('Y_VOLTAGE_OFF'))                define('Y_VOLTAGE_OFF',               0);
 if(!defined('Y_VOLTAGE_OUT3V3'))             define('Y_VOLTAGE_OUT3V3',            1);
 if(!defined('Y_VOLTAGE_OUT5V'))              define('Y_VOLTAGE_OUT5V',             2);
+if(!defined('Y_VOLTAGE_OUT4V7'))             define('Y_VOLTAGE_OUT4V7',            3);
+if(!defined('Y_VOLTAGE_OUT1V8'))             define('Y_VOLTAGE_OUT1V8',            4);
 if(!defined('Y_VOLTAGE_INVALID'))            define('Y_VOLTAGE_INVALID',           -1);
 //--- (end of YPowerOutput definitions)
     #--- (YPowerOutput yapiwrapper)
@@ -61,6 +63,8 @@ class YPowerOutput extends YFunction
     const VOLTAGE_OFF                    = 0;
     const VOLTAGE_OUT3V3                 = 1;
     const VOLTAGE_OUT5V                  = 2;
+    const VOLTAGE_OUT4V7                 = 3;
+    const VOLTAGE_OUT1V8                 = 4;
     const VOLTAGE_INVALID                = -1;
     //--- (end of YPowerOutput declaration)
 
@@ -92,8 +96,8 @@ class YPowerOutput extends YFunction
     /**
      * Returns the voltage on the power output featured by the module.
      *
-     * @return integer : a value among Y_VOLTAGE_OFF, Y_VOLTAGE_OUT3V3 and Y_VOLTAGE_OUT5V corresponding
-     * to the voltage on the power output featured by the module
+     * @return integer : a value among Y_VOLTAGE_OFF, Y_VOLTAGE_OUT3V3, Y_VOLTAGE_OUT5V, Y_VOLTAGE_OUT4V7
+     * and Y_VOLTAGE_OUT1V8 corresponding to the voltage on the power output featured by the module
      *
      * On failure, throws an exception or returns Y_VOLTAGE_INVALID.
      */
@@ -114,8 +118,8 @@ class YPowerOutput extends YFunction
      * module. Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param integer $newval : a value among Y_VOLTAGE_OFF, Y_VOLTAGE_OUT3V3 and Y_VOLTAGE_OUT5V
-     * corresponding to the voltage on the power output provided by the
+     * @param integer $newval : a value among Y_VOLTAGE_OFF, Y_VOLTAGE_OUT3V3, Y_VOLTAGE_OUT5V,
+     * Y_VOLTAGE_OUT4V7 and Y_VOLTAGE_OUT1V8 corresponding to the voltage on the power output provided by the
      *         module
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.

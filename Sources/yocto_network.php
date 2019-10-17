@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_network.php 33716 2018-12-14 14:21:46Z seb $
+ *  $Id: yocto_network.php 34604 2019-03-11 14:49:45Z seb $
  *
  *  Implements YNetwork, the high-level API for Network functions
  *
@@ -508,7 +508,8 @@ class YNetwork extends YFunction
     }
 
     /**
-     * Changes the IP address of the NTP server to be used by the module.
+     * Changes the IP address of the NTP server to be used by the module. Use an empty
+     * string to restore the factory set  address.
      * Remember to call the saveToFlash() method and then to reboot the module to apply this setting.
      *
      * @param string $newval : a string corresponding to the IP address of the NTP server to be used by the module

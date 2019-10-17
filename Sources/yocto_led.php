@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_led.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_led.php 36554 2019-07-29 12:21:31Z mvuilleu $
  *
  *  Implements YLed, the high-level API for Led functions
  *
@@ -166,7 +166,8 @@ class YLed extends YFunction
     }
 
     /**
-     * Changes the current LED intensity (in per cent).
+     * Changes the current LED intensity (in per cent). Remember to call the
+     * saveToFlash() method of the module if the modification must be kept.
      *
      * @param integer $newval : an integer corresponding to the current LED intensity (in per cent)
      *

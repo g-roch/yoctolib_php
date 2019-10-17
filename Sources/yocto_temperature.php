@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_temperature.php 33716 2018-12-14 14:21:46Z seb $
+ *  $Id: yocto_temperature.php 35465 2019-05-16 14:40:41Z seb $
  *
  *  Implements YTemperature, the high-level API for Temperature functions
  *
@@ -57,6 +57,7 @@ if(!defined('Y_SENSORTYPE_RES_NTC'))         define('Y_SENSORTYPE_RES_NTC',     
 if(!defined('Y_SENSORTYPE_RES_LINEAR'))      define('Y_SENSORTYPE_RES_LINEAR',     13);
 if(!defined('Y_SENSORTYPE_RES_INTERNAL'))    define('Y_SENSORTYPE_RES_INTERNAL',   14);
 if(!defined('Y_SENSORTYPE_IR'))              define('Y_SENSORTYPE_IR',             15);
+if(!defined('Y_SENSORTYPE_RES_PT1000'))      define('Y_SENSORTYPE_RES_PT1000',     16);
 if(!defined('Y_SENSORTYPE_INVALID'))         define('Y_SENSORTYPE_INVALID',        -1);
 if(!defined('Y_SIGNALVALUE_INVALID'))        define('Y_SIGNALVALUE_INVALID',       YAPI_INVALID_DOUBLE);
 if(!defined('Y_SIGNALUNIT_INVALID'))         define('Y_SIGNALUNIT_INVALID',        YAPI_INVALID_STRING);
@@ -93,6 +94,7 @@ class YTemperature extends YSensor
     const SENSORTYPE_RES_LINEAR          = 13;
     const SENSORTYPE_RES_INTERNAL        = 14;
     const SENSORTYPE_IR                  = 15;
+    const SENSORTYPE_RES_PT1000          = 16;
     const SENSORTYPE_INVALID             = -1;
     const SIGNALVALUE_INVALID            = YAPI_INVALID_DOUBLE;
     const SIGNALUNIT_INVALID             = YAPI_INVALID_STRING;
@@ -166,7 +168,8 @@ class YTemperature extends YSensor
      * Y_SENSORTYPE_TYPE_J, Y_SENSORTYPE_TYPE_N, Y_SENSORTYPE_TYPE_R, Y_SENSORTYPE_TYPE_S,
      * Y_SENSORTYPE_TYPE_T, Y_SENSORTYPE_PT100_4WIRES, Y_SENSORTYPE_PT100_3WIRES,
      * Y_SENSORTYPE_PT100_2WIRES, Y_SENSORTYPE_RES_OHM, Y_SENSORTYPE_RES_NTC, Y_SENSORTYPE_RES_LINEAR,
-     * Y_SENSORTYPE_RES_INTERNAL and Y_SENSORTYPE_IR corresponding to the temperature sensor type
+     * Y_SENSORTYPE_RES_INTERNAL, Y_SENSORTYPE_IR and Y_SENSORTYPE_RES_PT1000 corresponding to the
+     * temperature sensor type
      *
      * On failure, throws an exception or returns Y_SENSORTYPE_INVALID.
      */
@@ -193,7 +196,8 @@ class YTemperature extends YSensor
      * Y_SENSORTYPE_TYPE_E, Y_SENSORTYPE_TYPE_J, Y_SENSORTYPE_TYPE_N, Y_SENSORTYPE_TYPE_R,
      * Y_SENSORTYPE_TYPE_S, Y_SENSORTYPE_TYPE_T, Y_SENSORTYPE_PT100_4WIRES, Y_SENSORTYPE_PT100_3WIRES,
      * Y_SENSORTYPE_PT100_2WIRES, Y_SENSORTYPE_RES_OHM, Y_SENSORTYPE_RES_NTC, Y_SENSORTYPE_RES_LINEAR,
-     * Y_SENSORTYPE_RES_INTERNAL and Y_SENSORTYPE_IR corresponding to the temperature sensor type
+     * Y_SENSORTYPE_RES_INTERNAL, Y_SENSORTYPE_IR and Y_SENSORTYPE_RES_PT1000 corresponding to the
+     * temperature sensor type
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.
      *
@@ -424,6 +428,9 @@ class YTemperature extends YSensor
 
         $id = $this->get_functionId();
         $id = substr($id,  11, strlen($id) - 11);
+        if ($id == '') {
+            $id = '1';
+        }
         $bin_json = $this->_download(sprintf('extra.json?page=%s', $id));
         $paramlist = $this->_json_get_array($bin_json);
         // first convert all temperatures to float

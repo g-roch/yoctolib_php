@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_wakeupmonitor.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_wakeupmonitor.php 37000 2019-09-03 06:40:17Z mvuilleu $
  *
  *  Implements YWakeUpMonitor, the high-level API for WakeUpMonitor functions
  *
@@ -152,6 +152,8 @@ class YWakeUpMonitor extends YFunction
 
     /**
      * Changes the maximal wake up time (seconds) before automatically going to sleep.
+     * Remember to call the saveToFlash() method of the module if the
+     * modification must be kept.
      *
      * @param integer $newval : an integer corresponding to the maximal wake up time (seconds) before
      * automatically going to sleep

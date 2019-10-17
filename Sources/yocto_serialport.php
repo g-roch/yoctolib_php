@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- * $Id: yocto_serialport.php 32907 2018-11-02 10:18:55Z seb $
+ * $Id: yocto_serialport.php 37168 2019-09-13 17:25:10Z mvuilleu $
  *
  * Implements YSerialPort, the high-level API for SerialPort functions
  *
@@ -48,6 +48,7 @@ if(!defined('Y_VOLTAGELEVEL_TTL5V'))         define('Y_VOLTAGELEVEL_TTL5V',     
 if(!defined('Y_VOLTAGELEVEL_TTL5VR'))        define('Y_VOLTAGELEVEL_TTL5VR',       4);
 if(!defined('Y_VOLTAGELEVEL_RS232'))         define('Y_VOLTAGELEVEL_RS232',        5);
 if(!defined('Y_VOLTAGELEVEL_RS485'))         define('Y_VOLTAGELEVEL_RS485',        6);
+if(!defined('Y_VOLTAGELEVEL_TTL1V8'))        define('Y_VOLTAGELEVEL_TTL1V8',       7);
 if(!defined('Y_VOLTAGELEVEL_INVALID'))       define('Y_VOLTAGELEVEL_INVALID',      -1);
 if(!defined('Y_RXCOUNT_INVALID'))            define('Y_RXCOUNT_INVALID',           YAPI_INVALID_UINT);
 if(!defined('Y_TXCOUNT_INVALID'))            define('Y_TXCOUNT_INVALID',           YAPI_INVALID_UINT);
@@ -135,6 +136,7 @@ class YSerialPort extends YFunction
     const CURRENTJOB_INVALID             = YAPI_INVALID_STRING;
     const STARTUPJOB_INVALID             = YAPI_INVALID_STRING;
     const COMMAND_INVALID                = YAPI_INVALID_STRING;
+    const PROTOCOL_INVALID               = YAPI_INVALID_STRING;
     const VOLTAGELEVEL_OFF               = 0;
     const VOLTAGELEVEL_TTL3V             = 1;
     const VOLTAGELEVEL_TTL3VR            = 2;
@@ -142,8 +144,8 @@ class YSerialPort extends YFunction
     const VOLTAGELEVEL_TTL5VR            = 4;
     const VOLTAGELEVEL_RS232             = 5;
     const VOLTAGELEVEL_RS485             = 6;
+    const VOLTAGELEVEL_TTL1V8            = 7;
     const VOLTAGELEVEL_INVALID           = -1;
-    const PROTOCOL_INVALID               = YAPI_INVALID_STRING;
     const SERIALMODE_INVALID             = YAPI_INVALID_STRING;
     //--- (end of generated code: YSerialPort declaration)
 
@@ -157,8 +159,8 @@ class YSerialPort extends YFunction
     protected $_currentJob               = Y_CURRENTJOB_INVALID;         // Text
     protected $_startupJob               = Y_STARTUPJOB_INVALID;         // Text
     protected $_command                  = Y_COMMAND_INVALID;            // Text
-    protected $_voltageLevel             = Y_VOLTAGELEVEL_INVALID;       // SerialVoltageLevel
     protected $_protocol                 = Y_PROTOCOL_INVALID;           // Protocol
+    protected $_voltageLevel             = Y_VOLTAGELEVEL_INVALID;       // SerialVoltageLevel
     protected $_serialMode               = Y_SERIALMODE_INVALID;         // SerialMode
     protected $_rxptr                    = 0;                            // int
     protected $_rxbuff                   = "";                           // bin
@@ -206,11 +208,11 @@ class YSerialPort extends YFunction
         case 'command':
             $this->_command = $val;
             return 1;
-        case 'voltageLevel':
-            $this->_voltageLevel = intval($val);
-            return 1;
         case 'protocol':
             $this->_protocol = $val;
+            return 1;
+        case 'voltageLevel':
+            $this->_voltageLevel = intval($val);
             return 1;
         case 'serialMode':
             $this->_serialMode = $val;
@@ -354,11 +356,10 @@ class YSerialPort extends YFunction
     }
 
     /**
-     * Changes the job to use when the device is powered on.
-     * Remember to call the saveToFlash() method of the module if the
-     * modification must be kept.
+     * Selects a job file to run immediately. If an empty string is
+     * given as argument, stops running current job file.
      *
-     * @param string $newval : a string corresponding to the job to use when the device is powered on
+     * @param string $newval : a string
      *
      * @return integer : YAPI_SUCCESS if the call succeeds.
      *
@@ -425,48 +426,6 @@ class YSerialPort extends YFunction
     }
 
     /**
-     * Returns the voltage level used on the serial line.
-     *
-     * @return integer : a value among Y_VOLTAGELEVEL_OFF, Y_VOLTAGELEVEL_TTL3V, Y_VOLTAGELEVEL_TTL3VR,
-     * Y_VOLTAGELEVEL_TTL5V, Y_VOLTAGELEVEL_TTL5VR, Y_VOLTAGELEVEL_RS232 and Y_VOLTAGELEVEL_RS485
-     * corresponding to the voltage level used on the serial line
-     *
-     * On failure, throws an exception or returns Y_VOLTAGELEVEL_INVALID.
-     */
-    public function get_voltageLevel()
-    {
-        // $res                    is a enumSERIALVOLTAGELEVEL;
-        if ($this->_cacheExpiration <= YAPI::GetTickCount()) {
-            if ($this->load(YAPI::$_yapiContext->GetCacheValidity()) != YAPI_SUCCESS) {
-                return Y_VOLTAGELEVEL_INVALID;
-            }
-        }
-        $res = $this->_voltageLevel;
-        return $res;
-    }
-
-    /**
-     * Changes the voltage type used on the serial line. Valid
-     * values  will depend on the Yoctopuce device model featuring
-     * the serial port feature.  Check your device documentation
-     * to find out which values are valid for that specific model.
-     * Trying to set an invalid value will have no effect.
-     *
-     * @param integer $newval : a value among Y_VOLTAGELEVEL_OFF, Y_VOLTAGELEVEL_TTL3V,
-     * Y_VOLTAGELEVEL_TTL3VR, Y_VOLTAGELEVEL_TTL5V, Y_VOLTAGELEVEL_TTL5VR, Y_VOLTAGELEVEL_RS232 and
-     * Y_VOLTAGELEVEL_RS485 corresponding to the voltage type used on the serial line
-     *
-     * @return integer : YAPI_SUCCESS if the call succeeds.
-     *
-     * On failure, throws an exception or returns a negative error code.
-     */
-    public function set_voltageLevel($newval)
-    {
-        $rest_val = strval($newval);
-        return $this->_setAttr("voltageLevel",$rest_val);
-    }
-
-    /**
      * Returns the type of protocol used over the serial line, as a string.
      * Possible values are "Line" for ASCII messages separated by CR and/or LF,
      * "Frame:[timeout]ms" for binary messages separated by a delay time,
@@ -505,6 +464,8 @@ class YSerialPort extends YFunction
      * "Byte" for a continuous binary stream.
      * The suffix "/[wait]ms" can be added to reduce the transmit rate so that there
      * is always at lest the specified number of milliseconds between each bytes sent.
+     * Remember to call the saveToFlash() method of the module if the
+     * modification must be kept.
      *
      * @param string $newval : a string corresponding to the type of protocol used over the serial line
      *
@@ -516,6 +477,50 @@ class YSerialPort extends YFunction
     {
         $rest_val = $newval;
         return $this->_setAttr("protocol",$rest_val);
+    }
+
+    /**
+     * Returns the voltage level used on the serial line.
+     *
+     * @return integer : a value among Y_VOLTAGELEVEL_OFF, Y_VOLTAGELEVEL_TTL3V, Y_VOLTAGELEVEL_TTL3VR,
+     * Y_VOLTAGELEVEL_TTL5V, Y_VOLTAGELEVEL_TTL5VR, Y_VOLTAGELEVEL_RS232, Y_VOLTAGELEVEL_RS485 and
+     * Y_VOLTAGELEVEL_TTL1V8 corresponding to the voltage level used on the serial line
+     *
+     * On failure, throws an exception or returns Y_VOLTAGELEVEL_INVALID.
+     */
+    public function get_voltageLevel()
+    {
+        // $res                    is a enumSERIALVOLTAGELEVEL;
+        if ($this->_cacheExpiration <= YAPI::GetTickCount()) {
+            if ($this->load(YAPI::$_yapiContext->GetCacheValidity()) != YAPI_SUCCESS) {
+                return Y_VOLTAGELEVEL_INVALID;
+            }
+        }
+        $res = $this->_voltageLevel;
+        return $res;
+    }
+
+    /**
+     * Changes the voltage type used on the serial line. Valid
+     * values  will depend on the Yoctopuce device model featuring
+     * the serial port feature.  Check your device documentation
+     * to find out which values are valid for that specific model.
+     * Trying to set an invalid value will have no effect.
+     * Remember to call the saveToFlash() method of the module if the
+     * modification must be kept.
+     *
+     * @param integer $newval : a value among Y_VOLTAGELEVEL_OFF, Y_VOLTAGELEVEL_TTL3V,
+     * Y_VOLTAGELEVEL_TTL3VR, Y_VOLTAGELEVEL_TTL5V, Y_VOLTAGELEVEL_TTL5VR, Y_VOLTAGELEVEL_RS232,
+     * Y_VOLTAGELEVEL_RS485 and Y_VOLTAGELEVEL_TTL1V8 corresponding to the voltage type used on the serial line
+     *
+     * @return integer : YAPI_SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    public function set_voltageLevel($newval)
+    {
+        $rest_val = strval($newval);
+        return $this->_setAttr("voltageLevel",$rest_val);
     }
 
     /**
@@ -550,6 +555,8 @@ class YSerialPort extends YFunction
      * to enable flow control: "CtsRts" for hardware handshake, "XOnXOff"
      * for logical flow control and "Simplex" for acquiring a shared bus using
      * the RTS line (as used by some RS485 adapters for instance).
+     * Remember to call the saveToFlash() method of the module if the
+     * modification must be kept.
      *
      * @param string $newval : a string corresponding to the serial port communication parameters, with a
      * string such as
@@ -606,6 +613,208 @@ class YSerialPort extends YFunction
     public function sendCommand($text)
     {
         return $this->set_command($text);
+    }
+
+    /**
+     * Reads a single line (or message) from the receive buffer, starting at current stream position.
+     * This function is intended to be used when the serial port is configured for a message protocol,
+     * such as 'Line' mode or frame protocols.
+     *
+     * If data at current stream position is not available anymore in the receive buffer,
+     * the function returns the oldest available line and moves the stream position just after.
+     * If no new full line is received, the function returns an empty line.
+     *
+     * @return string : a string with a single line of text
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    public function readLine()
+    {
+        // $url                    is a str;
+        // $msgbin                 is a bin;
+        $msgarr = Array();      // strArr;
+        // $msglen                 is a int;
+        // $res                    is a str;
+
+        $url = sprintf('rxmsg.json?pos=%d&len=1&maxw=1', $this->_rxptr);
+        $msgbin = $this->_download($url);
+        $msgarr = $this->_json_get_array($msgbin);
+        $msglen = sizeof($msgarr);
+        if ($msglen == 0) {
+            return '';
+        }
+        // last element of array is the new position
+        $msglen = $msglen - 1;
+        $this->_rxptr = intVal($msgarr[$msglen]);
+        if ($msglen == 0) {
+            return '';
+        }
+        $res = $this->_json_get_string($msgarr[0]);
+        return $res;
+    }
+
+    /**
+     * Searches for incoming messages in the serial port receive buffer matching a given pattern,
+     * starting at current position. This function will only compare and return printable characters
+     * in the message strings. Binary protocols are handled as hexadecimal strings.
+     *
+     * The search returns all messages matching the expression provided as argument in the buffer.
+     * If no matching message is found, the search waits for one up to the specified maximum timeout
+     * (in milliseconds).
+     *
+     * @param string $pattern : a limited regular expression describing the expected message format,
+     *         or an empty string if all messages should be returned (no filtering).
+     *         When using binary protocols, the format applies to the hexadecimal
+     *         representation of the message.
+     * @param integer $maxWait : the maximum number of milliseconds to wait for a message if none is found
+     *         in the receive buffer.
+     *
+     * @return string[] : an array of strings containing the messages found, if any.
+     *         Binary messages are converted to hexadecimal representation.
+     *
+     * On failure, throws an exception or returns an empty array.
+     */
+    public function readMessages($pattern,$maxWait)
+    {
+        // $url                    is a str;
+        // $msgbin                 is a bin;
+        $msgarr = Array();      // strArr;
+        // $msglen                 is a int;
+        $res = Array();         // strArr;
+        // $idx                    is a int;
+
+        $url = sprintf('rxmsg.json?pos=%d&maxw=%d&pat=%s', $this->_rxptr, $maxWait, $pattern);
+        $msgbin = $this->_download($url);
+        $msgarr = $this->_json_get_array($msgbin);
+        $msglen = sizeof($msgarr);
+        if ($msglen == 0) {
+            return $res;
+        }
+        // last element of array is the new position
+        $msglen = $msglen - 1;
+        $this->_rxptr = intVal($msgarr[$msglen]);
+        $idx = 0;
+        while ($idx < $msglen) {
+            $res[] = $this->_json_get_string($msgarr[$idx]);
+            $idx = $idx + 1;
+        }
+        return $res;
+    }
+
+    /**
+     * Changes the current internal stream position to the specified value. This function
+     * does not affect the device, it only changes the value stored in the API object
+     * for the next read operations.
+     *
+     * @param integer $absPos : the absolute position index for next read operations.
+     *
+     * @return integer : nothing.
+     */
+    public function read_seek($absPos)
+    {
+        $this->_rxptr = $absPos;
+        return YAPI_SUCCESS;
+    }
+
+    /**
+     * Returns the current absolute stream position pointer of the API object.
+     *
+     * @return integer : the absolute position index for next read operations.
+     */
+    public function read_tell()
+    {
+        return $this->_rxptr;
+    }
+
+    /**
+     * Returns the number of bytes available to read in the input buffer starting from the
+     * current absolute stream position pointer of the API object.
+     *
+     * @return integer : the number of bytes available to read
+     */
+    public function read_avail()
+    {
+        // $buff                   is a bin;
+        // $bufflen                is a int;
+        // $res                    is a int;
+
+        $buff = $this->_download(sprintf('rxcnt.bin?pos=%d', $this->_rxptr));
+        $bufflen = strlen($buff) - 1;
+        while (($bufflen > 0) && (ord($buff[$bufflen]) != 64)) {
+            $bufflen = $bufflen - 1;
+        }
+        $res = intVal(substr($buff,  0, $bufflen));
+        return $res;
+    }
+
+    /**
+     * Sends a text line query to the serial port, and reads the reply, if any.
+     * This function is intended to be used when the serial port is configured for 'Line' protocol.
+     *
+     * @param string $query : the line query to send (without CR/LF)
+     * @param integer $maxWait : the maximum number of milliseconds to wait for a reply.
+     *
+     * @return string : the next text line received after sending the text query, as a string.
+     *         Additional lines can be obtained by calling readLine or readMessages.
+     *
+     * On failure, throws an exception or returns an empty string.
+     */
+    public function queryLine($query,$maxWait)
+    {
+        // $url                    is a str;
+        // $msgbin                 is a bin;
+        $msgarr = Array();      // strArr;
+        // $msglen                 is a int;
+        // $res                    is a str;
+
+        $url = sprintf('rxmsg.json?len=1&maxw=%d&cmd=!%s', $maxWait, $this->_escapeAttr($query));
+        $msgbin = $this->_download($url);
+        $msgarr = $this->_json_get_array($msgbin);
+        $msglen = sizeof($msgarr);
+        if ($msglen == 0) {
+            return '';
+        }
+        // last element of array is the new position
+        $msglen = $msglen - 1;
+        $this->_rxptr = intVal($msgarr[$msglen]);
+        if ($msglen == 0) {
+            return '';
+        }
+        $res = $this->_json_get_string($msgarr[0]);
+        return $res;
+    }
+
+    /**
+     * Saves the job definition string (JSON data) into a job file.
+     * The job file can be later enabled using selectJob().
+     *
+     * @param string $jobfile : name of the job file to save on the device filesystem
+     * @param string $jsonDef : a string containing a JSON definition of the job
+     *
+     * @return integer : YAPI_SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    public function uploadJob($jobfile,$jsonDef)
+    {
+        $this->_upload($jobfile, $jsonDef);
+        return YAPI_SUCCESS;
+    }
+
+    /**
+     * Load and start processing the specified job file. The file must have
+     * been previously created using the user interface or uploaded on the
+     * device filesystem using the uploadJob() function.
+     *
+     * @param string $jobfile : name of the job file (on the device filesystem)
+     *
+     * @return integer : YAPI_SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    public function selectJob($jobfile)
+    {
+        return $this->set_currentJob($jobfile);
     }
 
     /**
@@ -944,7 +1153,7 @@ class YSerialPort extends YFunction
      *
      * @return Integer[] : a sequence of bytes with receive buffer contents
      *
-     * On failure, throws an exception or returns a negative error code.
+     * On failure, throws an exception or returns an empty array.
      */
     public function readArray($nChars)
     {
@@ -1023,208 +1232,6 @@ class YSerialPort extends YFunction
             $ofs = $ofs + 1;
         }
         return $res;
-    }
-
-    /**
-     * Reads a single line (or message) from the receive buffer, starting at current stream position.
-     * This function is intended to be used when the serial port is configured for a message protocol,
-     * such as 'Line' mode or frame protocols.
-     *
-     * If data at current stream position is not available anymore in the receive buffer,
-     * the function returns the oldest available line and moves the stream position just after.
-     * If no new full line is received, the function returns an empty line.
-     *
-     * @return string : a string with a single line of text
-     *
-     * On failure, throws an exception or returns a negative error code.
-     */
-    public function readLine()
-    {
-        // $url                    is a str;
-        // $msgbin                 is a bin;
-        $msgarr = Array();      // strArr;
-        // $msglen                 is a int;
-        // $res                    is a str;
-
-        $url = sprintf('rxmsg.json?pos=%d&len=1&maxw=1', $this->_rxptr);
-        $msgbin = $this->_download($url);
-        $msgarr = $this->_json_get_array($msgbin);
-        $msglen = sizeof($msgarr);
-        if ($msglen == 0) {
-            return '';
-        }
-        // last element of array is the new position
-        $msglen = $msglen - 1;
-        $this->_rxptr = intVal($msgarr[$msglen]);
-        if ($msglen == 0) {
-            return '';
-        }
-        $res = $this->_json_get_string($msgarr[0]);
-        return $res;
-    }
-
-    /**
-     * Searches for incoming messages in the serial port receive buffer matching a given pattern,
-     * starting at current position. This function will only compare and return printable characters
-     * in the message strings. Binary protocols are handled as hexadecimal strings.
-     *
-     * The search returns all messages matching the expression provided as argument in the buffer.
-     * If no matching message is found, the search waits for one up to the specified maximum timeout
-     * (in milliseconds).
-     *
-     * @param string $pattern : a limited regular expression describing the expected message format,
-     *         or an empty string if all messages should be returned (no filtering).
-     *         When using binary protocols, the format applies to the hexadecimal
-     *         representation of the message.
-     * @param integer $maxWait : the maximum number of milliseconds to wait for a message if none is found
-     *         in the receive buffer.
-     *
-     * @return string[] : an array of strings containing the messages found, if any.
-     *         Binary messages are converted to hexadecimal representation.
-     *
-     * On failure, throws an exception or returns an empty array.
-     */
-    public function readMessages($pattern,$maxWait)
-    {
-        // $url                    is a str;
-        // $msgbin                 is a bin;
-        $msgarr = Array();      // strArr;
-        // $msglen                 is a int;
-        $res = Array();         // strArr;
-        // $idx                    is a int;
-
-        $url = sprintf('rxmsg.json?pos=%d&maxw=%d&pat=%s', $this->_rxptr, $maxWait, $pattern);
-        $msgbin = $this->_download($url);
-        $msgarr = $this->_json_get_array($msgbin);
-        $msglen = sizeof($msgarr);
-        if ($msglen == 0) {
-            return $res;
-        }
-        // last element of array is the new position
-        $msglen = $msglen - 1;
-        $this->_rxptr = intVal($msgarr[$msglen]);
-        $idx = 0;
-        while ($idx < $msglen) {
-            $res[] = $this->_json_get_string($msgarr[$idx]);
-            $idx = $idx + 1;
-        }
-        return $res;
-    }
-
-    /**
-     * Changes the current internal stream position to the specified value. This function
-     * does not affect the device, it only changes the value stored in the API object
-     * for the next read operations.
-     *
-     * @param integer $absPos : the absolute position index for next read operations.
-     *
-     * @return integer : nothing.
-     */
-    public function read_seek($absPos)
-    {
-        $this->_rxptr = $absPos;
-        return YAPI_SUCCESS;
-    }
-
-    /**
-     * Returns the current absolute stream position pointer of the API object.
-     *
-     * @return integer : the absolute position index for next read operations.
-     */
-    public function read_tell()
-    {
-        return $this->_rxptr;
-    }
-
-    /**
-     * Returns the number of bytes available to read in the input buffer starting from the
-     * current absolute stream position pointer of the API object.
-     *
-     * @return integer : the number of bytes available to read
-     */
-    public function read_avail()
-    {
-        // $buff                   is a bin;
-        // $bufflen                is a int;
-        // $res                    is a int;
-
-        $buff = $this->_download(sprintf('rxcnt.bin?pos=%d', $this->_rxptr));
-        $bufflen = strlen($buff) - 1;
-        while (($bufflen > 0) && (ord($buff[$bufflen]) != 64)) {
-            $bufflen = $bufflen - 1;
-        }
-        $res = intVal(substr($buff,  0, $bufflen));
-        return $res;
-    }
-
-    /**
-     * Sends a text line query to the serial port, and reads the reply, if any.
-     * This function is intended to be used when the serial port is configured for 'Line' protocol.
-     *
-     * @param string $query : the line query to send (without CR/LF)
-     * @param integer $maxWait : the maximum number of milliseconds to wait for a reply.
-     *
-     * @return string : the next text line received after sending the text query, as a string.
-     *         Additional lines can be obtained by calling readLine or readMessages.
-     *
-     * On failure, throws an exception or returns an empty array.
-     */
-    public function queryLine($query,$maxWait)
-    {
-        // $url                    is a str;
-        // $msgbin                 is a bin;
-        $msgarr = Array();      // strArr;
-        // $msglen                 is a int;
-        // $res                    is a str;
-
-        $url = sprintf('rxmsg.json?len=1&maxw=%d&cmd=!%s', $maxWait, $query);
-        $msgbin = $this->_download($url);
-        $msgarr = $this->_json_get_array($msgbin);
-        $msglen = sizeof($msgarr);
-        if ($msglen == 0) {
-            return '';
-        }
-        // last element of array is the new position
-        $msglen = $msglen - 1;
-        $this->_rxptr = intVal($msgarr[$msglen]);
-        if ($msglen == 0) {
-            return '';
-        }
-        $res = $this->_json_get_string($msgarr[0]);
-        return $res;
-    }
-
-    /**
-     * Saves the job definition string (JSON data) into a job file.
-     * The job file can be later enabled using selectJob().
-     *
-     * @param string $jobfile : name of the job file to save on the device filesystem
-     * @param string $jsonDef : a string containing a JSON definition of the job
-     *
-     * @return integer : YAPI_SUCCESS if the call succeeds.
-     *
-     * On failure, throws an exception or returns a negative error code.
-     */
-    public function uploadJob($jobfile,$jsonDef)
-    {
-        $this->_upload($jobfile, $jsonDef);
-        return YAPI_SUCCESS;
-    }
-
-    /**
-     * Load and start processing the specified job file. The file must have
-     * been previously created using the user interface or uploaded on the
-     * device filesystem using the uploadJob() function.
-     *
-     * @param string $jobfile : name of the job file (on the device filesystem)
-     *
-     * @return integer : YAPI_SUCCESS if the call succeeds.
-     *
-     * On failure, throws an exception or returns a negative error code.
-     */
-    public function selectJob($jobfile)
-    {
-        return $this->set_currentJob($jobfile);
     }
 
     /**
@@ -1359,7 +1366,7 @@ class YSerialPort extends YFunction
         $url = sprintf('rxmsg.json?cmd=:%s&pat=:%s', $cmd, $pat);
         $msgs = $this->_download($url);
         $reps = $this->_json_get_array($msgs);
-        if (!(sizeof($reps) > 1)) return $this->_throw( YAPI_IO_ERROR, 'no reply from slave',$res);
+        if (!(sizeof($reps) > 1)) return $this->_throw( YAPI_IO_ERROR, 'no reply from MODBUS slave',$res);
         if (sizeof($reps) > 1) {
             $rep = $this->_json_get_string($reps[0]);
             $replen = ((strlen($rep) - 3) >> (1));
@@ -1871,17 +1878,17 @@ class YSerialPort extends YFunction
     public function setCommand($newval)
     { return $this->set_command($newval); }
 
-    public function voltageLevel()
-    { return $this->get_voltageLevel(); }
-
-    public function setVoltageLevel($newval)
-    { return $this->set_voltageLevel($newval); }
-
     public function protocol()
     { return $this->get_protocol(); }
 
     public function setProtocol($newval)
     { return $this->set_protocol($newval); }
+
+    public function voltageLevel()
+    { return $this->get_voltageLevel(); }
+
+    public function setVoltageLevel($newval)
+    { return $this->set_voltageLevel($newval); }
 
     public function serialMode()
     { return $this->get_serialMode(); }

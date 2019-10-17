@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_realtimeclock.php 32907 2018-11-02 10:18:55Z seb $
+ *  $Id: yocto_realtimeclock.php 37000 2019-09-03 06:40:17Z mvuilleu $
  *
  *  Implements YRealTimeClock, the high-level API for RealTimeClock functions
  *
@@ -184,6 +184,8 @@ class YRealTimeClock extends YFunction
     /**
      * Changes the number of seconds between current time and UTC time (time zone).
      * The timezone is automatically rounded to the nearest multiple of 15 minutes.
+     * Remember to call the saveToFlash() method of the module if the
+     * modification must be kept.
      *
      * @param integer $newval : an integer corresponding to the number of seconds between current time and
      * UTC time (time zone)

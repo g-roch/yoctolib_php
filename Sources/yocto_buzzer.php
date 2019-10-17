@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_buzzer.php 33716 2018-12-14 14:21:46Z seb $
+ *  $Id: yocto_buzzer.php 36554 2019-07-29 12:21:31Z mvuilleu $
  *
  *  Implements YBuzzer, the high-level API for Buzzer functions
  *
@@ -169,7 +169,8 @@ class YBuzzer extends YFunction
     }
 
     /**
-     * Changes the volume of the signal sent to the buzzer/speaker.
+     * Changes the volume of the signal sent to the buzzer/speaker. Remember to call the
+     * saveToFlash() method of the module if the modification must be kept.
      *
      * @param integer $newval : an integer corresponding to the volume of the signal sent to the buzzer/speaker
      *
@@ -564,6 +565,28 @@ class YBuzzer extends YFunction
     public function oncePlaySeq()
     {
         return $this->sendCommand('s');
+    }
+
+    /**
+     * Saves the preprogrammed playing sequence to flash memory.
+     *
+     * @return integer : YAPI_SUCCESS if the call succeeds.
+     *         On failure, throws an exception or returns a negative error code.
+     */
+    public function savePlaySeq()
+    {
+        return $this->sendCommand('W');
+    }
+
+    /**
+     * Reloads the preprogrammed playing sequence from the flash memory.
+     *
+     * @return integer : YAPI_SUCCESS if the call succeeds.
+     *         On failure, throws an exception or returns a negative error code.
+     */
+    public function reloadPlaySeq()
+    {
+        return $this->sendCommand('R');
     }
 
     /**

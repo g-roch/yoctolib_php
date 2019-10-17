@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- * $Id: yocto_messagebox.php 32907 2018-11-02 10:18:55Z seb $
+ * $Id: yocto_messagebox.php 34704 2019-03-19 15:22:53Z seb $
  *
  * Implements YMessageBox, the high-level API for MessageBox functions
  *
@@ -47,7 +47,8 @@
 /**
  * YSms Class: SMS message sent or received
  *
- *
+ * YSms objects are used to describe a SMS.
+ * These objects are used in particular in conjunction with the YMessageBox class.
  */
 class YSms
 {
@@ -152,6 +153,11 @@ class YSms
         return $this->_udata;
     }
 
+    /**
+     * Returns the content of the message.
+     *
+     * @return string :  a string with the content of the message.
+     */
     public function get_textData()
     {
         // $isolatin               is a bin;
@@ -379,6 +385,16 @@ class YSms
         return YAPI_SUCCESS;
     }
 
+    /**
+     * Add a regular text to the SMS. This function support messages
+     * of more than 160 characters. ISO-latin accented characters
+     * are supported. For messages with special unicode characters such as asian
+     * characters and emoticons, use the  addUnicodeData method.
+     *
+     * @param string $val : the text to be sent in the message
+     *
+     * @return integer : YAPI_SUCCESS when the call succeeds.
+     */
     public function addText($val)
     {
         // $udata                  is a bin;
@@ -436,6 +452,14 @@ class YSms
         return $this->set_userData($udata);
     }
 
+    /**
+     * Add a unicode text to the SMS. This function support messages
+     * of more than 160 characters, using SMS concatenation.
+     *
+     * @param Integer[] $val : an array of special unicode characters
+     *
+     * @return integer : YAPI_SUCCESS when the call succeeds.
+     */
     public function addUnicodeData($val)
     {
         // $arrlen                 is a int;
@@ -1225,6 +1249,14 @@ class YSms
         return YAPI_SUCCESS;
     }
 
+    /**
+     * Sends the SMS to the recipient. Messages of more than 160 characters are supported
+     * using SMS concatenation.
+     *
+     * @return integer : YAPI_SUCCESS when the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
     public function send()
     {
         // $i                      is a int;

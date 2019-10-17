@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_gps.php 33716 2018-12-14 14:21:46Z seb $
+ *  $Id: yocto_gps.php 37165 2019-09-13 16:57:27Z mvuilleu $
  *
  *  Implements YGps, the high-level API for Gps functions
  *
@@ -48,6 +48,14 @@ if(!defined('Y_COORDSYSTEM_GPS_DMS'))        define('Y_COORDSYSTEM_GPS_DMS',    
 if(!defined('Y_COORDSYSTEM_GPS_DM'))         define('Y_COORDSYSTEM_GPS_DM',        1);
 if(!defined('Y_COORDSYSTEM_GPS_D'))          define('Y_COORDSYSTEM_GPS_D',         2);
 if(!defined('Y_COORDSYSTEM_INVALID'))        define('Y_COORDSYSTEM_INVALID',       -1);
+if(!defined('Y_CONSTELLATION_GPS'))          define('Y_CONSTELLATION_GPS',         0);
+if(!defined('Y_CONSTELLATION_GLONASS'))      define('Y_CONSTELLATION_GLONASS',     1);
+if(!defined('Y_CONSTELLATION_GALLILEO'))     define('Y_CONSTELLATION_GALLILEO',    2);
+if(!defined('Y_CONSTELLATION_GNSS'))         define('Y_CONSTELLATION_GNSS',        3);
+if(!defined('Y_CONSTELLATION_GPS_GLONASS'))  define('Y_CONSTELLATION_GPS_GLONASS', 4);
+if(!defined('Y_CONSTELLATION_GPS_GALLILEO')) define('Y_CONSTELLATION_GPS_GALLILEO', 5);
+if(!defined('Y_CONSTELLATION_GLONASS_GALLELIO')) define('Y_CONSTELLATION_GLONASS_GALLELIO', 6);
+if(!defined('Y_CONSTELLATION_INVALID'))      define('Y_CONSTELLATION_INVALID',     -1);
 if(!defined('Y_SATCOUNT_INVALID'))           define('Y_SATCOUNT_INVALID',          YAPI_INVALID_LONG);
 if(!defined('Y_LATITUDE_INVALID'))           define('Y_LATITUDE_INVALID',          YAPI_INVALID_STRING);
 if(!defined('Y_LONGITUDE_INVALID'))          define('Y_LONGITUDE_INVALID',         YAPI_INVALID_STRING);
@@ -83,6 +91,14 @@ class YGps extends YFunction
     const COORDSYSTEM_GPS_DM             = 1;
     const COORDSYSTEM_GPS_D              = 2;
     const COORDSYSTEM_INVALID            = -1;
+    const CONSTELLATION_GPS              = 0;
+    const CONSTELLATION_GLONASS          = 1;
+    const CONSTELLATION_GALLILEO         = 2;
+    const CONSTELLATION_GNSS             = 3;
+    const CONSTELLATION_GPS_GLONASS      = 4;
+    const CONSTELLATION_GPS_GALLILEO     = 5;
+    const CONSTELLATION_GLONASS_GALLELIO = 6;
+    const CONSTELLATION_INVALID          = -1;
     const LATITUDE_INVALID               = YAPI_INVALID_STRING;
     const LONGITUDE_INVALID              = YAPI_INVALID_STRING;
     const DILUTION_INVALID               = YAPI_INVALID_DOUBLE;
@@ -99,6 +115,7 @@ class YGps extends YFunction
     protected $_isFixed                  = Y_ISFIXED_INVALID;            // Bool
     protected $_satCount                 = Y_SATCOUNT_INVALID;           // UInt
     protected $_coordSystem              = Y_COORDSYSTEM_INVALID;        // GPSCoordinateSystem
+    protected $_constellation            = Y_CONSTELLATION_INVALID;      // GPSConstellation
     protected $_latitude                 = Y_LATITUDE_INVALID;           // Text
     protected $_longitude                = Y_LONGITUDE_INVALID;          // Text
     protected $_dilution                 = Y_DILUTION_INVALID;           // MeasureVal
@@ -133,6 +150,9 @@ class YGps extends YFunction
             return 1;
         case 'coordSystem':
             $this->_coordSystem = intval($val);
+            return 1;
+        case 'constellation':
+            $this->_constellation = intval($val);
             return 1;
         case 'latitude':
             $this->_latitude = $val;
@@ -229,6 +249,8 @@ class YGps extends YFunction
 
     /**
      * Changes the representation system used for positioning data.
+     * Remember to call the saveToFlash() method of the module if the
+     * modification must be kept.
      *
      * @param integer $newval : a value among Y_COORDSYSTEM_GPS_DMS, Y_COORDSYSTEM_GPS_DM and
      * Y_COORDSYSTEM_GPS_D corresponding to the representation system used for positioning data
@@ -241,6 +263,51 @@ class YGps extends YFunction
     {
         $rest_val = strval($newval);
         return $this->_setAttr("coordSystem",$rest_val);
+    }
+
+    /**
+     * Returns the the satellites constellation used to compute
+     * positioning data.
+     *
+     * @return integer : a value among Y_CONSTELLATION_GPS, Y_CONSTELLATION_GLONASS,
+     * Y_CONSTELLATION_GALLILEO, Y_CONSTELLATION_GNSS, Y_CONSTELLATION_GPS_GLONASS,
+     * Y_CONSTELLATION_GPS_GALLILEO and Y_CONSTELLATION_GLONASS_GALLELIO corresponding to the the
+     * satellites constellation used to compute
+     *         positioning data
+     *
+     * On failure, throws an exception or returns Y_CONSTELLATION_INVALID.
+     */
+    public function get_constellation()
+    {
+        // $res                    is a enumGPSCONSTELLATION;
+        if ($this->_cacheExpiration <= YAPI::GetTickCount()) {
+            if ($this->load(YAPI::$_yapiContext->GetCacheValidity()) != YAPI_SUCCESS) {
+                return Y_CONSTELLATION_INVALID;
+            }
+        }
+        $res = $this->_constellation;
+        return $res;
+    }
+
+    /**
+     * Changes the satellites constellation used to compute
+     * positioning data. Possible  constellations are GPS, Glonass, Galileo ,
+     * GNSS ( = GPS + Glonass + Galileo) and the 3 possible pairs. This seeting has effect on Yocto-GPS rev A.
+     *
+     * @param integer $newval : a value among Y_CONSTELLATION_GPS, Y_CONSTELLATION_GLONASS,
+     * Y_CONSTELLATION_GALLILEO, Y_CONSTELLATION_GNSS, Y_CONSTELLATION_GPS_GLONASS,
+     * Y_CONSTELLATION_GPS_GALLILEO and Y_CONSTELLATION_GLONASS_GALLELIO corresponding to the satellites
+     * constellation used to compute
+     *         positioning data
+     *
+     * @return integer : YAPI_SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    public function set_constellation($newval)
+    {
+        $rest_val = strval($newval);
+        return $this->_setAttr("constellation",$rest_val);
     }
 
     /**
@@ -426,6 +493,8 @@ class YGps extends YFunction
      * Changes the number of seconds between current time and UTC time (time zone).
      * The timezone is automatically rounded to the nearest multiple of 15 minutes.
      * If current UTC time is known, the current time is automatically be updated according to the selected time zone.
+     * Remember to call the saveToFlash() method of the module if the
+     * modification must be kept.
      *
      * @param integer $newval : an integer corresponding to the number of seconds between current time and
      * UTC time (time zone)
@@ -507,6 +576,12 @@ class YGps extends YFunction
 
     public function setCoordSystem($newval)
     { return $this->set_coordSystem($newval); }
+
+    public function constellation()
+    { return $this->get_constellation(); }
+
+    public function setConstellation($newval)
+    { return $this->set_constellation($newval); }
 
     public function latitude()
     { return $this->get_latitude(); }

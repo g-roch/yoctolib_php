@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************
  *
- *  $Id: yocto_genericsensor.php 33716 2018-12-14 14:21:46Z seb $
+ *  $Id: yocto_genericsensor.php 35360 2019-05-09 09:02:29Z mvuilleu $
  *
  *  Implements YGenericSensor, the high-level API for GenericSensor functions
  *
@@ -47,6 +47,9 @@ if(!defined('Y_SIGNALSAMPLING_LOW_NOISE'))   define('Y_SIGNALSAMPLING_LOW_NOISE'
 if(!defined('Y_SIGNALSAMPLING_LOW_NOISE_FILTERED')) define('Y_SIGNALSAMPLING_LOW_NOISE_FILTERED', 3);
 if(!defined('Y_SIGNALSAMPLING_HIGHEST_RATE')) define('Y_SIGNALSAMPLING_HIGHEST_RATE', 4);
 if(!defined('Y_SIGNALSAMPLING_INVALID'))     define('Y_SIGNALSAMPLING_INVALID',    -1);
+if(!defined('Y_ENABLED_FALSE'))              define('Y_ENABLED_FALSE',             0);
+if(!defined('Y_ENABLED_TRUE'))               define('Y_ENABLED_TRUE',              1);
+if(!defined('Y_ENABLED_INVALID'))            define('Y_ENABLED_INVALID',           -1);
 if(!defined('Y_SIGNALVALUE_INVALID'))        define('Y_SIGNALVALUE_INVALID',       YAPI_INVALID_DOUBLE);
 if(!defined('Y_SIGNALUNIT_INVALID'))         define('Y_SIGNALUNIT_INVALID',        YAPI_INVALID_STRING);
 if(!defined('Y_SIGNALRANGE_INVALID'))        define('Y_SIGNALRANGE_INVALID',       YAPI_INVALID_STRING);
@@ -79,6 +82,9 @@ class YGenericSensor extends YSensor
     const SIGNALSAMPLING_LOW_NOISE_FILTERED = 3;
     const SIGNALSAMPLING_HIGHEST_RATE    = 4;
     const SIGNALSAMPLING_INVALID         = -1;
+    const ENABLED_FALSE                  = 0;
+    const ENABLED_TRUE                   = 1;
+    const ENABLED_INVALID                = -1;
     //--- (end of YGenericSensor declaration)
 
     //--- (YGenericSensor attributes)
@@ -88,6 +94,7 @@ class YGenericSensor extends YSensor
     protected $_valueRange               = Y_VALUERANGE_INVALID;         // ValueRange
     protected $_signalBias               = Y_SIGNALBIAS_INVALID;         // MeasureVal
     protected $_signalSampling           = Y_SIGNALSAMPLING_INVALID;     // SignalSampling
+    protected $_enabled                  = Y_ENABLED_INVALID;            // Bool
     //--- (end of YGenericSensor attributes)
 
     function __construct($str_func)
@@ -121,6 +128,9 @@ class YGenericSensor extends YSensor
             return 1;
         case 'signalSampling':
             $this->_signalSampling = intval($val);
+            return 1;
+        case 'enabled':
+            $this->_enabled = intval($val);
             return 1;
         }
         return parent::_parseAttr($name, $val);
@@ -340,6 +350,43 @@ class YGenericSensor extends YSensor
     }
 
     /**
+     * Returns the activation state of this input.
+     *
+     * @return integer : either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to the activation state of this input
+     *
+     * On failure, throws an exception or returns Y_ENABLED_INVALID.
+     */
+    public function get_enabled()
+    {
+        // $res                    is a enumBOOL;
+        if ($this->_cacheExpiration <= YAPI::GetTickCount()) {
+            if ($this->load(YAPI::$_yapiContext->GetCacheValidity()) != YAPI_SUCCESS) {
+                return Y_ENABLED_INVALID;
+            }
+        }
+        $res = $this->_enabled;
+        return $res;
+    }
+
+    /**
+     * Changes the activation state of this input. When an input is disabled,
+     * its value is no more updated. On some devices, disabling an input can
+     * improve the refresh rate of the other active inputs.
+     *
+     * @param integer $newval : either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to the activation
+     * state of this input
+     *
+     * @return integer : YAPI_SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    public function set_enabled($newval)
+    {
+        $rest_val = strval($newval);
+        return $this->_setAttr("enabled",$rest_val);
+    }
+
+    /**
      * Retrieves a generic sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
@@ -426,6 +473,12 @@ class YGenericSensor extends YSensor
 
     public function setSignalSampling($newval)
     { return $this->set_signalSampling($newval); }
+
+    public function enabled()
+    { return $this->get_enabled(); }
+
+    public function setEnabled($newval)
+    { return $this->set_enabled($newval); }
 
     /**
      * Continues the enumeration of generic sensors started using yFirstGenericSensor().
