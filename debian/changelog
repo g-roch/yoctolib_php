@@ -1,3 +1,12 @@
+yoctolib-php (1.10.37304-2) buster; urgency=medium
+
+  * VCS url update to github
+  * Error correction in debian/copyright
+  * Update standard
+  * Priority change from extra → optional
+
+ -- Ciol Hcor <ciol@hcor.ch>  Thu, 17 Oct 2019 13:10:59 +0200
+
 yoctolib-php (1.10.37304-1) buster; urgency=medium
 
   * Update from upstream

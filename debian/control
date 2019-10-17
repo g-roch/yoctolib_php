@@ -1,13 +1,13 @@
 Source: yoctolib-php
 Section: non-free/php
-Priority: extra
+Priority: optional
 Maintainer: Ciol Hcor <ciol@hcor.ch>
 Build-Depends:
  debhelper (>= 10)
-Standards-Version: 3.9.8
+Standards-Version: 4.3.0
 Homepage: https://www.yoctopuce.com/
-Vcs-Git: http://sodium.roch.website/git/pako/yoctolib_php.git/
-Vcs-Browser: http://sodium.roch.website/git/pako/yoctolib_php.git/
+Vcs-Git: https://github.com/g-roch/yoctolib_php.git
+Vcs-Browser: https://github.com/g-roch/yoctolib_php
 
 Package: libphp-yocto
 Architecture: all
